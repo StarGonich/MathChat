@@ -1,4 +1,4 @@
-package ru.sber.practice.MathChat;
+package ru.sber.practice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
