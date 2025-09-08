@@ -7,13 +7,16 @@ CREATE TABLE users (
 );
 
 CREATE TABLE chats (
-    id integer NOT NULL PRIMARY KEY
+    id bigint NOT NULL PRIMARY KEY
 );
 
 CREATE TABLE messages (
     id integer NOT NULL,
     user_id integer NOT NULL REFERENCES users(id),
-    chat_id integer NOT NULL REFERENCES chats(id),
+    chat_id bigint NOT NULL REFERENCES chats(id),
+--    Или же:
+--    sender_id integer NOT NULL REFERENCES chats(id),
+--    recipient_id integer NOT NULL REFERENCES chats(id),
     message_text text NOT NULL,
     date timestamp with time zone
 );
