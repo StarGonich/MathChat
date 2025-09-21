@@ -1,17 +1,23 @@
 package ru.sber.practice.MathChat;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.sber.practice.controller.AuthController;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
-@SpringBootTest
-class RegisterTest {
-    private final UserService userService;
+import java.util.Optional;
 
-    RegisterTest(UserService userService) {
-        this.userService = userService;
-    }
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@ExtendWith(MockitoExtension.class)
+class RegisterTest {
+
+    @Mock
+    UserService userService;
 
     @Test
     void regTest1() {
@@ -22,7 +28,9 @@ class RegisterTest {
         user1.setPassword("12321");
         userService.register(user1);
 
-        System.out.println(userService.findByEmail("1234567@list.ru").isPresent());
+        Optional<User> tmp = userService.findByEmail("1234567@list.ru");
+
+        assertEquals(user1, tmp);
     }
 
 }
