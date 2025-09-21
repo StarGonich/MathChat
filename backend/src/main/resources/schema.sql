@@ -20,7 +20,7 @@ CREATE TABLE chats (
     id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id_min bigint NOT NULL REFERENCES users(id),
     user_id_max bigint NOT NULL REFERENCES users(id),
-    last_message bigint -- Здесь нет NOT NULL,
+    last_message_id bigint -- Здесь нет NOT NULL,
     -- то есть сначала создаётся чат, а потом уже сообщение
 );
 
@@ -33,4 +33,4 @@ CREATE TABLE messages (
 );
 
 -- Теперь добавляем внешний ключ в messages
-ALTER TABLE chats ADD FOREIGN KEY (last_message) REFERENCES messages(id);
+ALTER TABLE chats ADD FOREIGN KEY (last_message_id) REFERENCES messages(id);

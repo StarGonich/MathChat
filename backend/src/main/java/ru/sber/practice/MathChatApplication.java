@@ -17,7 +17,7 @@ public class MathChatApplication {
 	}
 
     @Bean
-    public CommandLineRunner initUsers(UserService userService, PasswordEncoder passwordEncoder) {
+    public CommandLineRunner initData(UserService userService) {
         return (args) -> {
             User user1 = new User();
             user1.setFirstname("Егор");
