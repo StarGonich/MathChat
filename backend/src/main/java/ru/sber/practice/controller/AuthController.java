@@ -22,7 +22,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
+    public ResponseEntity<?> register(@RequestBody User user) {
+        User registeredUser = userService.register(user);
+        if (registeredUser == null) {
+            return new ResponseEntity<>("Email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }
