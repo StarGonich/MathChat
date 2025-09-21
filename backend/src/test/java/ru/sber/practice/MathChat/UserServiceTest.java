@@ -5,14 +5,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.sber.practice.controller.AuthController;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
 import ru.sber.practice.service.UserService;
-
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
@@ -28,7 +24,7 @@ class UserServiceTest {
     PasswordEncoder passwordEncoder;
 
     @Test
-    void regTest1_successfulRegistration() {
+    void successfulRegistration() {
         // given
         User user1 = new User();
         user1.setFirstname("Егор");
