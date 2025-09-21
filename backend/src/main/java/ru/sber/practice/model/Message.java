@@ -21,7 +21,7 @@ public class Message {
     @Column(nullable = false, name = "user_id")
     private Long userId;
 
-    @Column(nullable = false, name = "user_id")
+    @Column(nullable = false, name = "chat_id")
     private Long chatId;
 
     @Column(nullable = false, name = "message_text")
