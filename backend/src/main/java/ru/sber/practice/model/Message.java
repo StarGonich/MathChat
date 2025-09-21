@@ -16,13 +16,13 @@ import java.time.ZonedDateTime;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false, name = "user_id")
-    private String userId;
+    private Long userId;
 
     @Column(nullable = false, name = "user_id")
-    private String chatId;
+    private Long chatId;
 
     @Column(nullable = false, name = "message_text")
     private String messageText;
