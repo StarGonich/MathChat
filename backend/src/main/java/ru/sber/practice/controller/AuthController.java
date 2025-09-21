@@ -3,6 +3,7 @@ package ru.sber.practice.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        return new ResponseEntity<>(userService.register(user), HttpStatus.CREATED);
+    public ResponseEntity<?> register(@RequestBody User user) {
+        User registeredUser = userService.register(user);
+        if (registeredUser == null) {
+            return new ResponseEntity<>("Email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }
