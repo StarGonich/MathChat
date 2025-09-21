@@ -21,7 +21,7 @@ public class UserService{
 
     public User register(User user) {
         String email = user.getEmail();
-        if (userRepository.findByEmail(email).isPresent()) {
+        if (userRepository.existsByEmail(user.getEmail())) {
             return null;
         }
         else {
