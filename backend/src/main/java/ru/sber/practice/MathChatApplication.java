@@ -29,14 +29,14 @@ public class MathChatApplication {
             User user2 = new User();
             user2.setFirstname("Матвей");
             user2.setLastname("Ковалев");
-            user2.setEmail("matveykov@gmail.com");
+            user2.setEmail("matveykov11@gmail.com");
             user2.setPassword("12321");
             userService.register(user2);
 
             User user3 = new User();
             user3.setFirstname("Алексей");
             user3.setLastname("Величайший");
-            user3.setEmail("alexey8837@gmail.com");
+            user3.setEmail("stargonich@gmail.com");
             user3.setPassword("12321");
             userService.register(user3);
         };
