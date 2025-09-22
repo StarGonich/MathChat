@@ -1,16 +1,22 @@
 <template>
-  <RegistrationApp />
+  <p> Выбор страницы </p>
+  <select v-model="str">
+    <option value="reg">Страница регистрации</option>
+    <option value="mes">Страница мессенджера</option>
+  </select>
+  <div v-if="str === 'reg'">
+    <RegistrationApp />
+  </div>
+  <div v-else-if="str === 'mes'">
+    <MessengerApp />
+  </div>
 </template>
 
-<script>
+<script setup>
 import RegistrationApp from './components/RegistrationApp.vue'
-
-export default {
-  name: 'App',
-  components: {
-    RegistrationApp
-  }
-}
+import MessengerApp from './components/MessengerApp.vue'
+import { ref } from 'vue'
+const str = ref('reg')
 </script>
 
 <style>

@@ -24,33 +24,4 @@ public class User {
 
     @Column(nullable = false)
     private String password;
-
-    /*
-        Исправления, благодаря которым сервер запускается
-     */
-    // При компиляции lombok не создаёт реализации методов (непонятно почему)
-
-    public String getPassword(){
-        return password;
-    }
-
-    public String getEmail(){
-        return email;
-    }
-
-    public void setFirstname(String fn){
-        firstname = fn;
-    }
-
-    public void setLastname(String ln){
-        lastname = ln;
-    }
-
-    public void setEmail(String em){
-        email = em;
-    }
-
-    public void setPassword(String pass){
-        password = pass;
-    }
 }

@@ -1,6 +1,7 @@
 package ru.sber.practice.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +12,10 @@ import ru.sber.practice.service.UserService;
 
 // Настройка CORS
 @CrossOrigin(origins = "http://localhost:8080")
+@Slf4j
 @RestController
 public class AuthController {
     private final UserService userService;
-
     /*
         Исправления, благодаря которым сервер запускается
      */
@@ -33,10 +34,11 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody User user) {
         User registeredUser = userService.register(user);
         if (registeredUser == null) {
-            System.out.println("NULL");
+            log.info("Неудачная регистрация");
             return new ResponseEntity<>("Email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
         }
-        System.out.println(user);
+        log.info("Регистрация пользователя: {}", user);
+        log.info("Ответ: {}", new ResponseEntity<>(user, HttpStatus.CREATED));
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 }
