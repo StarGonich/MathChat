@@ -22,4 +22,8 @@ public class MessengerService {
     public List<Message> getMessages(Long chatId) {
         return messageRepository.findByChatId(chatId);
     }
+
+    public Message sendMessage(Message message) {
+        return messageRepository.save(message);
+    }
 }

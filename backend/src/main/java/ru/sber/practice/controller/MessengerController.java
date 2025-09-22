@@ -1,13 +1,12 @@
 package ru.sber.practice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sber.practice.model.Chat;
 import ru.sber.practice.model.Message;
+import ru.sber.practice.model.User;
 import ru.sber.practice.service.MessengerService;
 
 import java.util.List;
@@ -28,5 +27,11 @@ public class MessengerController {
     public ResponseEntity<List<Message>> getMessagesByChatId(@PathVariable Long chatId) {
         List<Message> messages = messengerService.getMessages(chatId);
         return ResponseEntity.ok(messages);
+    }
+
+    @PostMapping("/send")
+    public ResponseEntity<Message> sendMessage(@RequestBody Message message) {
+        Message sendedMessage = messengerService.sendMessage(message);
+        return new ResponseEntity<>(sendedMessage, HttpStatus.CREATED);
     }
 }
