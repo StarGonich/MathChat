@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.sber.practice.dto.SignUpDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
@@ -22,11 +23,11 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        User registeredUser = userService.register(user);
+    public ResponseEntity<?> register(@RequestBody SignUpDTO signUpDTO) {
+        User registeredUser = userService.register(signUpDTO);
         if (registeredUser == null) {
             return new ResponseEntity<>("Email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        return new ResponseEntity<>(signUpDTO, HttpStatus.CREATED);
     }
 }

@@ -1,12 +1,9 @@
 package ru.sber.practice.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.sber.practice.config.MyUserDetails;
+import ru.sber.practice.dto.SignUpDTO;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
@@ -22,8 +19,8 @@ public class UserService{
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public User register(User user) {
-        String email = user.getEmail();
+    public User register(SignUpDTO signUpDTO) {
+        User user = userMapper.toUser(signUpDTO);
         if (userRepository.existsByEmail(user.getEmail())) {
             return null;
         }
@@ -38,9 +35,5 @@ public class UserService{
                 .stream()
                 .map(userMapper::toDTO)
                 .toList();
-    }
-
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
     }
 }

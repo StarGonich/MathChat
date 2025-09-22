@@ -1,11 +1,8 @@
 package ru.sber.practice.dto;
 
-import lombok.Data;
-
-@Data
-public class SignUpDTO {
-    private String firstname;
-    private String lastname;
-    private String email;
-    private String password;
+//Сlass или record? так как в материалах и то, и другое часто используется
+public record SignUpDTO(String firstname,
+                        String lastname,
+                        String email,
+                        String password) {
 }

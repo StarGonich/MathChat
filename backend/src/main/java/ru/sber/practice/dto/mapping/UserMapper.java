@@ -8,10 +8,16 @@ import ru.sber.practice.model.User;
 
 @Service
 public class UserMapper {
-    public User toUser(SignUpDTO signUpDTO) {
-        return null;
+    public User toUser(SignUpDTO signUpDto) {
+        User user = new User();
+        user.setFirstname(signUpDto.firstname());
+        user.setLastname(signUpDto.lastname());
+        user.setEmail(signUpDto.email());
+        user.setPassword(signUpDto.password());
+        return user;
     }
 
+    // Вот это мб вообще не пригодится
     public User toUser(LoginDTO loginDTO) {
         return null;
     }
