@@ -7,6 +7,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.sber.practice.config.MyUserDetails;
+import ru.sber.practice.dto.UserDTO;
+import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
 
@@ -17,6 +19,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService{
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
 
     public User register(User user) {
@@ -30,8 +33,11 @@ public class UserService{
         }
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 
     public Optional<User> findByEmail(String email) {

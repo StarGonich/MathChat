@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
@@ -16,7 +17,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/findAll")
-    public List<User> findAllUsers() {
+    public List<UserDTO> findAllUsers() {
         return userService.findAllUsers();
     }
 
