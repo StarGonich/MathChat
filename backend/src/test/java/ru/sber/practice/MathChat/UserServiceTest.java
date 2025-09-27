@@ -6,11 +6,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.sber.practice.dto.SignUpDTO;
+import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
 import ru.sber.practice.service.UserService;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -22,36 +25,66 @@ class UserServiceTest {
     UserRepository userRepository;
     @Mock
     PasswordEncoder passwordEncoder;
+    @Mock
+    UserMapper userMapper;
 
     @Test
     void successfulRegistration() {
         // given
-        User user1 = new User();
-        user1.setFirstname("Егор");
-        user1.setLastname("Мальцев");
-        user1.setEmail("1234567@list.ru");
-        user1.setPassword("12321");
+        SignUpDTO user1 = new SignUpDTO(
+                "Егор",
+                "Мальцев",
+                "1234567@list.ru",
+                "12321"
+        );
+
+        // Создаем User, который вернет маппер
+        User userFromMapper = new User();
+        userFromMapper.setFirstname("Егор");
+        userFromMapper.setLastname("Мальцев");
+        userFromMapper.setEmail("1234567@list.ru");
+        userFromMapper.setPassword("12321"); // пароль до кодирования
+
+        // Создаем User после кодирования пароля
+        User expectedUser = new User();
+        expectedUser.setFirstname("Егор");
+        expectedUser.setLastname("Мальцев");
+        expectedUser.setEmail("1234567@list.ru");
+        expectedUser.setPassword("encodedPassword"); // пароль после кодирования
 
         // Настраиваем моки
+        when(userMapper.toUser(user1)).thenReturn(userFromMapper);
         when(userRepository.existsByEmail("1234567@list.ru")).thenReturn(false);
         when(passwordEncoder.encode("12321")).thenReturn("encodedPassword");
-        when(userRepository.save(user1)).thenReturn(user1);
+        when(userRepository.save(userFromMapper)).thenReturn(expectedUser);
 
+        // when
         User registeredUser = userService.register(user1);
 
+        // then
         assertNotNull(registeredUser);
-        assertEquals("encodedPassword", user1.getPassword()); // Проверяем кодирование
+        assertEquals("encodedPassword", registeredUser.getPassword());
+        verify(userMapper).toUser(user1); // проверяем, что маппер был вызван
     }
 
     @Test
     void userExists() {
-        User user1 = new User();
-        user1.setFirstname("Егор");
-        user1.setLastname("Мальцев");
-        user1.setEmail("1234567@list.ru");
-        user1.setPassword("12321");
+        SignUpDTO user1 = new SignUpDTO(
+                "Егор",
+                "Мальцев",
+                "0570757@list.ru",
+                "12321"
+        );
 
-        when(userRepository.existsByEmail(user1.getEmail())).thenReturn(true);
+        // Создаем User, который вернет маппер
+        User userFromMapper = new User();
+        userFromMapper.setFirstname("Егор");
+        userFromMapper.setLastname("Мальцев");
+        userFromMapper.setEmail("1234567@list.ru");
+        userFromMapper.setPassword("12321"); // пароль до кодирования
+
+        when(userMapper.toUser(user1)).thenReturn(userFromMapper);
+        when(userRepository.existsByEmail(userFromMapper.getEmail())).thenReturn(true);
 
         User tmp = userService.register(user1);
 
