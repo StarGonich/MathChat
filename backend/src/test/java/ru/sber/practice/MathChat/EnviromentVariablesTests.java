@@ -9,7 +9,7 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class CheckEnviromentVariables {
+public class EnviromentVariablesTests {
 
     @Test
     void testGitHubOAuthEnvVariables() throws IOException {
