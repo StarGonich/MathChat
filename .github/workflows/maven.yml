@@ -19,8 +19,17 @@ jobs:
         java-version: '24'
         distribution: 'temurin'
         cache: maven
+    - name: Create .env file
+      run: |
+        cd backend
+        echo "GITHUB_CLIENT_ID=${{ secrets._GITHUB_CLIENT_ID }}" > .env
+        echo "GITHUB_CLIENT_SECRET=${{ secrets._GITHUB_CLIENT_SECRET }}" >> .env
+        echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> .env
+        echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
     - name: Build with Maven
       run: mvn test -f backend/pom.xml 
       env:
-          GITHUB_CLIENT_ID: ${{ secrets.GITHUB_CLIENT_ID }}
-          GITHUB_CLIENT_SECRET: ${{ secrets.GITHUB_CLIENT_SECRET }}
+          GITHUB_CLIENT_ID: ${{ secrets._GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ secrets._GITHUB_CLIENT_SECRET }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
