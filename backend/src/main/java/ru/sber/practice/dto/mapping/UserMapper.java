@@ -14,6 +14,7 @@ public class UserMapper {
         user.setLastname(signUpDto.lastname());
         user.setEmail(signUpDto.email());
         user.setPassword(signUpDto.password());
+        user.setToken(null);
         return user;
     }
 

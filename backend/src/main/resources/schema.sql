@@ -3,7 +3,10 @@ CREATE TABLE users (
     firstname character varying(50) NOT NULL,
     lastname character varying(50) NOT NULL,
     email character varying(50) NOT NULL UNIQUE,
-    password character varying(255) NOT NULL
+    password character varying(255) NOT NULL,
+    token character varying(36),
+    token_expiry_date date,
+    enabled bit NOT NULL
 --    image_id bigint REFERENCES images(id)
 );
 

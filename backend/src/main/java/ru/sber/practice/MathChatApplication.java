@@ -20,34 +20,37 @@ public class MathChatApplication {
 		SpringApplication.run(MathChatApplication.class, args);
 	}
 
-    @Bean
-    public CommandLineRunner initData(UserService userService) {
-        return (args) -> {
-            SignUpDTO user1 = new SignUpDTO(
-                    "Егор",
-                    "Мальцев",
-                    "0570757@list.ru",
-                    "12321"
-            );
-            userService.register(user1);
-
-            SignUpDTO user2 = new SignUpDTO(
-                    "Матвей",
-                    "Ковалев",
-                    "matveykov11@gmail.com",
-                    "12321"
-            );
-            userService.register(user2);
-
-            SignUpDTO user3 = new SignUpDTO(
-                    "Алексей",
-                    "Величайший",
-                    "stargonich@gmail.com",
-                    "12321"
-            );
-            userService.register(user3);
-        };
-    }
+//    @Bean
+//    public CommandLineRunner initData(UserService userService) {
+//        return (args) -> {
+//            SignUpDTO user1 = new SignUpDTO(
+//                    "Егор",
+//                    "Мальцев",
+//                    "0570757@list.ru",
+//                    "12321",
+//                    true
+//            );
+//            userService.register(user1);
+//
+//            SignUpDTO user2 = new SignUpDTO(
+//                    "Матвей",
+//                    "Ковалев",
+//                    "matveykov11@gmail.com",
+//                    "12321",
+//                    true
+//            );
+//            userService.register(user2);
+//
+//            SignUpDTO user3 = new SignUpDTO(
+//                    "Алексей",
+//                    "Величайший",
+//                    "stargonich@gmail.com",
+//                    "12321",
+//                    true
+//            );
+//            userService.register(user3);
+//        };
+//    }
 
 //    @Bean
 //    public WebMvcConfigurer corsConfigurer() {

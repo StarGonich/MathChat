@@ -1,13 +1,11 @@
 package ru.sber.practice.controller;
 
+import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sber.practice.dto.SignUpDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
@@ -24,10 +22,19 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody SignUpDTO signUpDTO) {
-        User registeredUser = userService.register(signUpDTO);
-        if (registeredUser == null) {
+        Boolean registeredUser = userService.register(signUpDTO);
+        if (!registeredUser) {
             return new ResponseEntity<>("Email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(signUpDTO, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/activate/{token}")
+    public ResponseEntity<?> activate(Model model, @PathVariable String token) {
+        boolean isActivated = userService.activateUser(token);
+        if (isActivated) {
+            return new ResponseEntity<>("Почта подтверждена", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Неправильный токен", HttpStatus.BAD_REQUEST);
     }
 }

@@ -9,5 +9,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //    @Query(value = "select * from users where email = :email", nativeQuery = true)
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
+    User findByToken(String token);
 }
 

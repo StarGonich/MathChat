@@ -35,7 +35,8 @@ class UserServiceTest {
                 "Егор",
                 "Мальцев",
                 "1234567@list.ru",
-                "12321"
+                "12321",
+                true
         );
 
         // Создаем User, который вернет маппер
@@ -59,11 +60,11 @@ class UserServiceTest {
         when(userRepository.save(userFromMapper)).thenReturn(expectedUser);
 
         // when
-        User registeredUser = userService.register(user1);
+        Boolean registeredUser = userService.register(user1);
 
         // then
-        assertNotNull(registeredUser);
-        assertEquals("encodedPassword", registeredUser.getPassword());
+        assertTrue(registeredUser);
+        assertEquals("encodedPassword", user1.password());
         verify(userMapper).toUser(user1); // проверяем, что маппер был вызван
     }
 
@@ -73,7 +74,8 @@ class UserServiceTest {
                 "Егор",
                 "Мальцев",
                 "0570757@list.ru",
-                "12321"
+                "12321",
+                true
         );
 
         // Создаем User, который вернет маппер
@@ -86,9 +88,9 @@ class UserServiceTest {
         when(userMapper.toUser(user1)).thenReturn(userFromMapper);
         when(userRepository.existsByEmail(userFromMapper.getEmail())).thenReturn(true);
 
-        User tmp = userService.register(user1);
+        Boolean tmp = userService.register(user1);
 
-        assertNull(tmp);
+        assertFalse(tmp);
     }
 
 }
