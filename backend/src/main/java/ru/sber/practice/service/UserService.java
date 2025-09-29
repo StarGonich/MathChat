@@ -26,10 +26,11 @@ public class UserService{
      */
     // Подтягивание компонентов
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, MailSenderService mailSenderService){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userMapper = userMapper;
+        this.mailSenderService = mailSenderService;
     }
 
     public Boolean register(SignUpDTO signUpDTO) {
