@@ -4,6 +4,5 @@ package ru.sber.practice.dto;
 public record SignUpDTO(String firstname,
                         String lastname,
                         String email,
-                        String password,
-                        boolean enabled) {
+                        String password) {
 }

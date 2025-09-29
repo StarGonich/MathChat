@@ -23,14 +23,29 @@ public class UserService{
 
     public Boolean register(SignUpDTO signUpDTO) {
         User user = userMapper.toUser(signUpDTO);
-        if (userRepository.existsByEmail(user.getEmail()) && user.isEnabled()) {
-            return false;
+        if (userRepository.existsByEmail(user.getEmail())) {
+            if (user.isEnabled()) {
+                return false;
+            } else {
+                Optional<User> user1 = userRepository.findByEmail(user.getEmail());
+                user1.get().setPassword(passwordEncoder.encode(user.getPassword()));
+                user1.get().setToken(UUID.randomUUID().toString());
+                userRepository.save(user1.get());
+
+                String message = String.format(
+                        "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
+                        user1.get().getFirstname(),
+                        user1.get().getToken()
+                );
+
+                mailSender.send(user.getEmail(), "Activation code", message);
+
+                return true;
+            }
         }
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setToken(UUID.randomUUID().toString());
-//            user.setEnabled(false);
-
             userRepository.save(user);
 
             String message = String.format(
