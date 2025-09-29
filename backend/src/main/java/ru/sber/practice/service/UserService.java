@@ -19,26 +19,29 @@ public class UserService{
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
-    private final MailSender mailSender;
+    private final MailSenderService mailSenderService;
 
     public Boolean register(SignUpDTO signUpDTO) {
         User user = userMapper.toUser(signUpDTO);
         if (userRepository.existsByEmail(user.getEmail())) {
-            if (user.isEnabled()) {
+            Optional<User> tmp = userRepository.findByEmail(user.getEmail());
+            User userExisted = tmp.get();
+            if (userExisted.isEnabled()) {
                 return false;
             } else {
-                Optional<User> user1 = userRepository.findByEmail(user.getEmail());
-                user1.get().setPassword(passwordEncoder.encode(user.getPassword()));
-                user1.get().setToken(UUID.randomUUID().toString());
-                userRepository.save(user1.get());
+                userExisted.setFirstname(user.getFirstname());
+                userExisted.setLastname(user.getLastname());
+                userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
+                userExisted.setToken(UUID.randomUUID().toString());
+                userRepository.save(userExisted);
 
                 String message = String.format(
                         "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
-                        user1.get().getFirstname(),
-                        user1.get().getToken()
+                        userExisted.getFirstname(),
+                        userExisted.getToken()
                 );
 
-                mailSender.send(user.getEmail(), "Activation code", message);
+                mailSenderService.send(userExisted.getEmail(), "Activation code", message);
 
                 return true;
             }
@@ -54,7 +57,7 @@ public class UserService{
                     user.getToken()
             );
 
-            mailSender.send(user.getEmail(), "Activation code", message);
+            mailSenderService.send(user.getEmail(), "Activation code", message);
 
             return true;
         }
