@@ -17,10 +17,16 @@ import java.util.List;
 public class MessengerController {
     private final MessengerService messengerService;
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<List<Chat>> getChats(@PathVariable Long userId) {
-        List<Chat> chats = messengerService.getChats(userId);
+    @GetMapping("/search/local/{userId}")
+    public ResponseEntity<List<Chat>> getLocalChats(@PathVariable Long userId) {
+        List<Chat> chats = messengerService.getLocalChats(userId);
         return ResponseEntity.ok(chats);
+    }
+
+    @GetMapping("/search/global/{search}")
+    public ResponseEntity<List<User>> getAllChats(@PathVariable String search) {
+        List<User> users = messengerService.getGlobalChats(search);
+        return ResponseEntity.ok(users);
     }
 
     @GetMapping("/chat/{chatId}")
