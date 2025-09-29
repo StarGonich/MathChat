@@ -4,9 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.Chat;
 import ru.sber.practice.model.Message;
-import ru.sber.practice.model.User;
 import ru.sber.practice.service.MessengerService;
 
 import java.util.List;
@@ -24,8 +24,8 @@ public class MessengerController {
     }
 
     @GetMapping("/search/global/{search}")
-    public ResponseEntity<List<User>> getAllChats(@PathVariable String search) {
-        List<User> users = messengerService.getGlobalChats(search);
+    public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
+        List<UserDTO> users = messengerService.getGlobalChats(search);
         return ResponseEntity.ok(users);
     }
 
