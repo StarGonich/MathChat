@@ -1,0 +1,39 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up JDK 24
+      uses: actions/setup-java@v4
+      with:
+        java-version: '24'
+        distribution: 'temurin'
+        cache: maven
+    - name: Create .env file
+      run: |
+        cd backend
+        echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
+        echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
+        echo "GITHUB_CLIENT_ID=${{ secrets._GITHUB_CLIENT_ID }}" > .env
+        echo "GITHUB_CLIENT_SECRET=${{ secrets._GITHUB_CLIENT_SECRET }}" >> .env
+        echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> .env
+        echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
+    - name: Build with Maven
+      run: mvn test -f backend/pom.xml 
+      env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
+          GITHUB_CLIENT_ID: ${{ secrets._GITHUB_CLIENT_ID }}
+          GITHUB_CLIENT_SECRET: ${{ secrets._GITHUB_CLIENT_SECRET }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}

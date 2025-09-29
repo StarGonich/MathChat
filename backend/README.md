@@ -17,9 +17,19 @@ localhost:8080/api/user/findAll
 localhost:8080/api/messenger/chat/{chatId}
 ```
 
-Нахождение чатов по userId:
+Локальный поиск чатов по userId:
 ```
-localhost:8080/api/messenger/{userId}
+localhost:8080/api/messenger/search/local/{userId}
+```
+
+Глобальный поиск чатов(по факту пользователей) по search:
+```
+localhost:8080/api/messenger/search/global/{search}
+```
+
+Отправка сообщений:
+```
+localhost:8080/api/messenger/send
 ```
 
 *Мда, с путями запросов небольшая трабла, но это уже косметическая часть*

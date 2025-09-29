@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/findAll")
-    public List<User> findAllUsers() {
+    public List<UserDTO> findAllUsers() {
         log.info("Запрос всех пользователей");
         return userService.findAllUsers();
     }

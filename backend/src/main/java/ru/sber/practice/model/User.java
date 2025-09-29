@@ -3,6 +3,10 @@ package ru.sber.practice.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -11,7 +15,7 @@ import lombok.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String firstname;
@@ -24,4 +28,18 @@ public class User {
 
     @Column(nullable = false)
     private String password;
+
+    private String token;
+
+    private Date tokenExpiryDate;
+
+    private Date calculateExpiryDate(int expiryTimeInMinutes) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Timestamp(cal.getTime().getTime()));
+        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+        return new Date(cal.getTime().getTime());
+    }
+
+    @Column(nullable = false)
+    private boolean enabled;
 }

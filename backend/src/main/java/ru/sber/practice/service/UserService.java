@@ -2,22 +2,24 @@ package ru.sber.practice.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.sber.practice.config.MyUserDetails;
+import ru.sber.practice.dto.SignUpDTO;
+import ru.sber.practice.dto.UserDTO;
+import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService{
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final MailSenderService mailSenderService;
 
     /*
         Исправления, благодаря которым сервер запускается
@@ -29,22 +31,67 @@ public class UserService{
         this.passwordEncoder = passwordEncoder;
     }
 
-    public User register(User user) {
-        String email = user.getEmail();
-        if (userRepository.findByEmail(email).isPresent()) {
-            return null;
+    public Boolean register(SignUpDTO signUpDTO) {
+        User user = userMapper.toUser(signUpDTO);
+        if (userRepository.existsByEmail(user.getEmail())) {
+            Optional<User> tmp = userRepository.findByEmail(user.getEmail());
+            User userExisted = tmp.get();
+            if (userExisted.isEnabled()) {
+                return false;
+            } else {
+                userExisted.setFirstname(user.getFirstname());
+                userExisted.setLastname(user.getLastname());
+                userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
+                userExisted.setToken(UUID.randomUUID().toString());
+                userRepository.save(userExisted);
+
+                String message = String.format(
+                        "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
+                        userExisted.getFirstname(),
+                        userExisted.getToken()
+                );
+
+                mailSenderService.send(userExisted.getEmail(), "Activation code", message);
+
+                return true;
+            }
         }
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
+            user.setToken(UUID.randomUUID().toString());
+            userRepository.save(user);
+
+            String message = String.format(
+                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
+                    user.getFirstname(),
+                    user.getToken()
+            );
+
+            mailSenderService.send(user.getEmail(), "Activation code", message);
+
+            return true;
         }
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
     }
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public boolean activateUser(String token) {
+        User user = userRepository.findByToken(token);
+
+        if (user == null) {
+            return false;
+        }
+
+        user.setToken(null);
+        user.setEnabled(true);
+
+        userRepository.save(user);
+
+        return true;
     }
 }

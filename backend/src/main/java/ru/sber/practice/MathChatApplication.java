@@ -6,6 +6,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ru.sber.practice.dto.SignUpDTO;
+import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
@@ -16,30 +20,46 @@ public class MathChatApplication {
 		SpringApplication.run(MathChatApplication.class, args);
 	}
 
-    @Bean
-    public CommandLineRunner initData(UserService userService) {
-        return (args) -> {
-            User user1 = new User();
-            user1.setFirstname("Егор");
-            user1.setLastname("Мальцев");
-            user1.setEmail("0570757@list.ru");
-            user1.setPassword("12321");
-            userService.register(user1);
+//    @Bean
+//    public CommandLineRunner initData(UserService userService) {
+//        return (args) -> {
+//            SignUpDTO user1 = new SignUpDTO(
+//                    "Егор",
+//                    "Мальцев",
+//                    "0570757@list.ru",
+//                    "12321",
+//                    true
+//            );
+//            userService.register(user1);
+//
+//            SignUpDTO user2 = new SignUpDTO(
+//                    "Матвей",
+//                    "Ковалев",
+//                    "matveykov11@gmail.com",
+//                    "12321",
+//                    true
+//            );
+//            userService.register(user2);
+//
+//            SignUpDTO user3 = new SignUpDTO(
+//                    "Алексей",
+//                    "Величайший",
+//                    "stargonich@gmail.com",
+//                    "12321",
+//                    true
+//            );
+//            userService.register(user3);
+//        };
+//    }
 
-            User user2 = new User();
-            user2.setFirstname("Матвей");
-            user2.setLastname("Ковалев");
-            user2.setEmail("matveykov11@gmail.com");
-            user2.setPassword("12321");
-            userService.register(user2);
-
-            User user3 = new User();
-            user3.setFirstname("Алексей");
-            user3.setLastname("Величайший");
-            user3.setEmail("stargonich@gmail.com");
-            user3.setPassword("12321");
-            userService.register(user3);
-        };
-    }
+//    @Bean
+//    public WebMvcConfigurer corsConfigurer() {
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry corsRegistry) {
+//                corsRegistry.addMapping("/**").allowedOrigins("http://localhost:9000");
+//            }
+//        };
+//    }
 
 }
