@@ -1,4 +1,12 @@
 import { createApp } from 'vue'
+import SuiVue from 'semantic-ui-vue'
 import App from './App.vue'
+import 'semantic-ui-css/semantic.min.css';
 
-createApp(App).mount('#app')
+window.$ = window.jQuery = require('jquery')
+require('semantic-ui-css/semantic.css')
+require('semantic-ui-css/semantic.js')
+
+const app = createApp(App)
+app.use(SuiVue)
+app.mount('#app')
