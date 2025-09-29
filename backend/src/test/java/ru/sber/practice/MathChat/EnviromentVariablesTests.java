@@ -1,5 +1,6 @@
 package ru.sber.practice.MathChat;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileInputStream;
