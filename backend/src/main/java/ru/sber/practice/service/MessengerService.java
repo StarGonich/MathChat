@@ -25,9 +25,11 @@ public class MessengerService {
      */
     // Подтягивание компонентов
     @Autowired
-    public MessengerService(MessageRepository messageRepository, ChatRepository chatRepository){
+    public MessengerService(MessageRepository messageRepository, UserMapper userMapper, ChatRepository chatRepository, UserRepository userRepository){
         this.messageRepository = messageRepository;
+        this.userMapper = userMapper;
         this.chatRepository = chatRepository;
+        this.userRepository = userRepository;
     }
 
     public List<Chat> getLocalChats(Long userId) {
