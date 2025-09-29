@@ -22,6 +22,8 @@ jobs:
     - name: Create .env file
       run: |
         cd backend
+        echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
+        echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
         echo "GITHUB_CLIENT_ID=${{ secrets._GITHUB_CLIENT_ID }}" > .env
         echo "GITHUB_CLIENT_SECRET=${{ secrets._GITHUB_CLIENT_SECRET }}" >> .env
         echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> .env
@@ -29,6 +31,8 @@ jobs:
     - name: Build with Maven
       run: mvn test -f backend/pom.xml 
       env:
+          MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+          MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
           GITHUB_CLIENT_ID: ${{ secrets._GITHUB_CLIENT_ID }}
           GITHUB_CLIENT_SECRET: ${{ secrets._GITHUB_CLIENT_SECRET }}
           ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
