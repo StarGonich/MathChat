@@ -11,6 +11,7 @@ import ru.sber.practice.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -18,15 +19,47 @@ public class UserService{
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
+    private final MailSenderService mailSenderService;
 
-    public User register(SignUpDTO signUpDTO) {
+    public Boolean register(SignUpDTO signUpDTO) {
         User user = userMapper.toUser(signUpDTO);
         if (userRepository.existsByEmail(user.getEmail())) {
-            return null;
+            Optional<User> tmp = userRepository.findByEmail(user.getEmail());
+            User userExisted = tmp.get();
+            if (userExisted.isEnabled()) {
+                return false;
+            } else {
+                userExisted.setFirstname(user.getFirstname());
+                userExisted.setLastname(user.getLastname());
+                userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
+                userExisted.setToken(UUID.randomUUID().toString());
+                userRepository.save(userExisted);
+
+                String message = String.format(
+                        "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
+                        userExisted.getFirstname(),
+                        userExisted.getToken()
+                );
+
+                mailSenderService.send(userExisted.getEmail(), "Activation code", message);
+
+                return true;
+            }
         }
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            return userRepository.save(user);
+            user.setToken(UUID.randomUUID().toString());
+            userRepository.save(user);
+
+            String message = String.format(
+                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
+                    user.getFirstname(),
+                    user.getToken()
+            );
+
+            mailSenderService.send(user.getEmail(), "Activation code", message);
+
+            return true;
         }
     }
 
@@ -35,5 +68,20 @@ public class UserService{
                 .stream()
                 .map(userMapper::toDTO)
                 .toList();
+    }
+
+    public boolean activateUser(String token) {
+        User user = userRepository.findByToken(token);
+
+        if (user == null) {
+            return false;
+        }
+
+        user.setToken(null);
+        user.setEnabled(true);
+
+        userRepository.save(user);
+
+        return true;
     }
 }
