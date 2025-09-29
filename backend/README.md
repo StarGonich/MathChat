@@ -7,7 +7,7 @@ localhost:8080/register
 
 ## REST API
 
-Просто список всех юзеров, эксперемент
+Просто список всех юзеров, эксперементsafdsdf
 ```
 localhost:8080/api/user/findAll
 ```
