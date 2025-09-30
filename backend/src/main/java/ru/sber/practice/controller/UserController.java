@@ -13,8 +13,6 @@ import ru.sber.practice.service.UserService;
 
 import java.util.List;
 
-// Настройка CORS
-@CrossOrigin(origins = "http://localhost:8080")
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
