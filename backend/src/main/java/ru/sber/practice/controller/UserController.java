@@ -1,6 +1,7 @@
 package ru.sber.practice.controller;
 
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -16,17 +17,9 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
-
-    /*
-        Исправления, благодаря которым сервер запускается
-     */
-    // Подтягивание компонентов
-    @Autowired
-    public UserController(UserService userService){
-        this.userService = userService;
-    }
 
     @GetMapping("/findAll")
     public List<UserDTO> findAllUsers() {

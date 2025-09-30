@@ -12,20 +12,11 @@ import ru.sber.practice.dto.SignUpDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
-// Настройка CORS
-@CrossOrigin(origins = "http://localhost:8080")
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-    /*
-        Исправления, благодаря которым сервер запускается
-     */
-    // Подтягивание компонентов
-    @Autowired
-    public AuthController(UserService userService){
-        this.userService = userService;
-    }
 
     @GetMapping("/")
     public String welcome(){

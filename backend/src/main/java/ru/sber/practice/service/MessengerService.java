@@ -14,23 +14,12 @@ import ru.sber.practice.repository.UserRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MessengerService {
     private final MessageRepository messageRepository;
     private final UserMapper userMapper;
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
-
-    /*
-        Исправления, благодаря которым сервер запускается
-     */
-    // Подтягивание компонентов
-    @Autowired
-    public MessengerService(MessageRepository messageRepository, UserMapper userMapper, ChatRepository chatRepository, UserRepository userRepository){
-        this.messageRepository = messageRepository;
-        this.userMapper = userMapper;
-        this.chatRepository = chatRepository;
-        this.userRepository = userRepository;
-    }
 
     public List<Chat> getLocalChats(Long userId) {
         return chatRepository.findByUserId(userId);

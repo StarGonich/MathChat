@@ -14,17 +14,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/messenger/")
+@RequiredArgsConstructor
 public class MessengerController {
     private final MessengerService messengerService;
-
-    /*
-        Исправления, благодаря которым сервер запускается
-     */
-    // Подтягивание компонентов
-    @Autowired
-    public MessengerController(MessengerService messengerService){
-        this.messengerService = messengerService;
-    }
 
     @GetMapping("/search/local/{userId}")
     public ResponseEntity<List<Chat>> getLocalChats(@PathVariable Long userId) {

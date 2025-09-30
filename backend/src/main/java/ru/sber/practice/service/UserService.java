@@ -15,23 +15,12 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class UserService{
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
-
-    /*
-        Исправления, благодаря которым сервер запускается
-     */
-    // Подтягивание компонентов
-    @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserMapper userMapper, MailSenderService mailSenderService){
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userMapper = userMapper;
-        this.mailSenderService = mailSenderService;
-    }
 
     public Boolean register(SignUpDTO signUpDTO) {
         User user = userMapper.toUser(signUpDTO);
