@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "browserify-zlib": "^0.2.0"
+  }
+}

@@ -1,6 +1,7 @@
 package ru.sber.practice.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.Chat;
