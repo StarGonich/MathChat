@@ -12,8 +12,6 @@ import ru.sber.practice.service.MessengerService;
 
 import java.util.List;
 
-// Настройка CORS
-@CrossOrigin(origins = "http://localhost:8080")
 @RestController
 @RequestMapping("/api/messenger/")
 public class MessengerController {
