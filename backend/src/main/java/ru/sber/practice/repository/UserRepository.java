@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
     User findByToken(String token);
 
+//    User findByProviderId(String providerId);
+
     @Query("SELECT u FROM User u WHERE " +
             "LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +

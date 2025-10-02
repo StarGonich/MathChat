@@ -3,11 +3,13 @@ CREATE TABLE users (
     firstname character varying(50) NOT NULL,
     lastname character varying(50) NOT NULL,
     email character varying(50) NOT NULL UNIQUE,
-    password character varying(255) NOT NULL,
+    password character varying(255),
     token character varying(36),
     token_expiry_date date,
+    provider character varying(36) NOT NULL DEFAULT 'LOCAL',  -- LOCAL, GITHUB, GOOGLE
+    provider_id varchar,
+    image_url character varying(255),
     enabled bit NOT NULL
---    image_id bigint REFERENCES images(id)
 );
 
 --CREATE TABLE images (

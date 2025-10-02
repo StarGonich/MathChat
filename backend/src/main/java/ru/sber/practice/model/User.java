@@ -26,12 +26,30 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false)
     private String password;
 
     private String token;
 
+    @Column(name = "token_expiry_date")
     private Date tokenExpiryDate;
+
+    // OAuth2 провайдер (github, google, etc.)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AuthProvider provider;
+
+    // ID пользователя в системе провайдера
+    @Column(name = "provider_id")
+    private String providerId;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(nullable = false)
+    private boolean enabled;
+
+
+
 
     private Date calculateExpiryDate(int expiryTimeInMinutes) {
         Calendar cal = Calendar.getInstance();
@@ -39,7 +57,4 @@ public class User {
         cal.add(Calendar.MINUTE, expiryTimeInMinutes);
         return new Date(cal.getTime().getTime());
     }
-
-    @Column(nullable = false)
-    private boolean enabled;
 }
