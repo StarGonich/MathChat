@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id bigint AUTO_INCREMENT PRIMARY KEY,
     firstname character varying(50) NOT NULL,
     lastname character varying(50) NOT NULL,
     email character varying(50) NOT NULL UNIQUE,
@@ -22,7 +22,7 @@ CREATE TABLE users (
 --)
 
 CREATE TABLE chats (
-    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id bigint AUTO_INCREMENT PRIMARY KEY,
     user_id_min bigint NOT NULL REFERENCES users(id),
     user_id_max bigint NOT NULL REFERENCES users(id),
     last_message_id bigint -- Здесь нет NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE chats (
 );
 
 CREATE TABLE messages (
-    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id bigint AUTO_INCREMENT PRIMARY KEY,
     user_id bigint NOT NULL REFERENCES users(id),
     chat_id bigint NOT NULL REFERENCES chats(id),
     message_text text NOT NULL,
