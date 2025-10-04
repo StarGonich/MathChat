@@ -27,13 +27,13 @@ public class UserService{
         if (userRepository.existsByEmail(user.getEmail())) {
             Optional<User> tmp = userRepository.findByEmail(user.getEmail());
             User userExisted = tmp.get();
-            if (userExisted.isEnabled()) {
+            if (userExisted.getToken() == null) {
                 return false;
             } else {
                 userExisted.setFirstname(user.getFirstname());
                 userExisted.setLastname(user.getLastname());
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
-                userExisted.setToken(UUID.randomUUID().toString());
+                userExisted.setToken(UUID.randomUUID());
                 userRepository.save(userExisted);
 
                 String message = String.format(
@@ -49,7 +49,7 @@ public class UserService{
         }
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setToken(UUID.randomUUID().toString());
+            user.setToken(UUID.randomUUID());
             userRepository.save(user);
 
             String message = String.format(
@@ -71,7 +71,7 @@ public class UserService{
                 .toList();
     }
 
-    public boolean activateUser(String token) {
+    public boolean activateUser(UUID token) {
         User user = userRepository.findByToken(token);
 
         if (user == null) {
@@ -79,7 +79,7 @@ public class UserService{
         }
 
         user.setToken(null);
-        user.setEnabled(true);
+//        user.setEnabled(true);
 
         userRepository.save(user);
 

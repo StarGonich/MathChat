@@ -6,12 +6,13 @@ import ru.sber.practice.model.User;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<User, Long> {
     //    @Query(value = "select * from users where email = :email", nativeQuery = true)
     Optional<User> findByEmail(String email);
     boolean existsByEmail(String email);
-    User findByToken(String token);
+    User findByToken(UUID token);
 
     @Query("SELECT u FROM User u WHERE " +
             "LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +

@@ -12,6 +12,8 @@ import ru.sber.practice.dto.SignUpDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class AuthController {
     }
 
     @GetMapping("/activate/{token}")
-    public ResponseEntity<?> activate(Model model, @PathVariable String token) {
+    public ResponseEntity<?> activate(Model model, @PathVariable UUID token) {
         boolean isActivated = userService.activateUser(token);
         if (isActivated) {
             return new ResponseEntity<>("Почта подтверждена", HttpStatus.OK);

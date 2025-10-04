@@ -5,7 +5,8 @@ import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
-import java.util.Date;
+import java.sql.Date;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -23,23 +24,24 @@ public class User {
     @Column(nullable = false)
     private String lastname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    private String token;
+    private UUID token;
 
-    private Date tokenExpiryDate;
+    @Column(name = "token_creation_date")
+    private Date tokenDate;
 
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
-    }
+//    private Date calculateExpiryDate(int expiryTimeInMinutes) {
+//        Calendar cal = Calendar.getInstance();
+//        cal.setTime(new Timestamp(cal.getTime().getTime()));
+//        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
+//        return new Date(cal.getTime().getTime());
+//    }
 
-    @Column(nullable = false)
-    private boolean enabled;
+//    @Column(nullable = false)
+//    private boolean enabled;
 }

@@ -48,11 +48,9 @@ public class SecurityConfig{
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                /*.authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/user/**", "/activate/*").permitAll()
-                        .anyRequest().authenticated())*/
-                 .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
-                        .anyRequest().permitAll())
+                        .anyRequest().authenticated())
                 .oauth2Login(Customizer.withDefaults())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
