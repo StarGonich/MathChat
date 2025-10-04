@@ -35,7 +35,6 @@ public class User {
 
     // OAuth2 провайдер (github, google, etc.)
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private AuthProvider provider;
 
     // ID пользователя в системе провайдера

@@ -6,7 +6,7 @@ CREATE TABLE users (
     password character varying(255),
     token character varying(36),
     token_expiry_date date,
-    provider character varying(36) NOT NULL DEFAULT 'LOCAL',  -- LOCAL, GITHUB, GOOGLE
+    provider character varying(36) DEFAULT 'LOCAL',  -- LOCAL, GITHUB, GOOGLE
     provider_id varchar,
     image_url character varying(255),
     enabled bit NOT NULL
