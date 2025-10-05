@@ -45,3 +45,4 @@ public class MyUserDetails implements UserDetails, OAuth2User {
     public String getName() {
         return user.getFirstname() + user.getLastname();
     }
+}
