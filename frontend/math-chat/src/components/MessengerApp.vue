@@ -21,8 +21,8 @@
                         <div class="results"></div>
                     </div>
                     <div class="ui segment" v-for="user in chatUsers" :key="user.id">
-                        <p>{{user.login}}</p>
-                        <p>{{user.email}}</p>
+                        <p>{{formatLdots(user.login, 40)}}</p>
+                        <p>{{formatLdots(user.email, 40)}}</p>
                         <button @click="updateChat(user.id, user.chatId)">Открыть диалог</button>
                     </div>
                 </div>
@@ -32,11 +32,20 @@
                     <h2 class="ui center header">{{chatUser.login}}</h2>
                     <div v-for="message in messages" :key="message.id">
                         <div class="ui left aligned segment" v-if="message.userId != userId">
-                            <p>{{message.messageText}}</p>
+                            <vue-latex v-if="message.isLatex" :expression="message.messageText" />
+                            <div v-else>
+                                <p v-for="line in formatArr(message.messageText, 45)" :key="line.id">
+                                    {{ line.text }}
+                                </p>
+                            </div>
                         </div>
                         <div class="ui right aligned segment" v-else>
                             <vue-latex v-if="message.isLatex" :expression="message.messageText" />
-                            <p v-else>{{message.messageText}}</p>
+                            <div v-else>
+                                <p v-for="line in formatArr(message.messageText, 45)" :key="line.id">
+                                    {{ line.text }}
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <div class="ui fluid action input">
@@ -73,7 +82,6 @@ let chatUser = ref({
     password: ''
 })
 let chatId = -1
-const latex = ref('\\frac{a_i + b^i}{1+x}')
 
 let messages = ref([])
 const props = defineProps({
@@ -430,6 +438,44 @@ async function updateChat(id1, id2) {
             messages.value = []
 	}
     }
+}
+
+function formatLdots(str, n){
+    if(str.length > n){
+        return str.slice(0, n-3) + '...'
+    }else{
+        return str
+    }
+}
+
+function formatArr(str, n){
+    let ss = []
+    let s = str.split(' ')
+    let i = 0
+    let j = 0
+    let cur = ''
+    while(i < s.length){
+        if(cur.length + s[i].length <= n){
+            cur += ' ' + s[i]
+        }else{
+            ss.push(
+                {
+                    id: j,
+                    text: cur.slice(0)
+                }
+            )
+            j++
+            cur = s[i]
+        }
+        i++
+    }
+    ss.push(
+        {
+            id: j,
+            text: cur.slice(0)
+        }
+    )
+    return ss
 }
 
 function post(){
