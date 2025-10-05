@@ -19,8 +19,10 @@ public class UserController {
 
     @GetMapping("/findAll")
     public List<UserDTO> findAllUsers() {
-        log.info("Запрос всех пользователей");
-        return userService.findAllUsers();
+        log.info("Request /api/user/findAll.");
+        List<UserDTO> allUsers = userService.findAllUsers();
+        log.info("Response /api/user/findAll: {}", allUsers);
+        return allUsers;
     }
 
 }
