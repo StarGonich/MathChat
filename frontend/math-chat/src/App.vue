@@ -12,7 +12,7 @@
     <AuthApp @regEvent="(msg) => str = msg"/>
   </div>
   <div v-else-if="str === 'mes'">
-    <MessengerApp :userId="4" @quitEvent="(msg) => str = msg"/>
+    <MessengerApp :userId="0" @quitEvent="(msg) => str = msg"/>
   </div>
 </template>
 

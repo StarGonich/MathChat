@@ -103,6 +103,104 @@ onMounted(async () => {
             .then(response => allUsers.value = response.data)
     } catch (e) {
         console.log(e)
+        allUsers.value = [
+            {
+                id: 0,
+                firstname: 'Алиса',
+                lastname: 'Артемьева',
+                email: 'a@mail.ru'
+            },
+            {
+                id: 1,
+                firstname: 'Боб',
+                lastname: 'Бутчер',
+                email: 'b@mail.ru'
+            },
+            {
+                id: 2,
+                firstname: 'Витя',
+                lastname: 'Величайший',
+                email: 'v@mail.ru'
+            },
+            {
+                id: 3,
+                firstname: 'Длинный',
+                lastname:  'Очень длииииииииииииииииииииииинный ник',
+                email:  'dddddddddddddddddddddddddddddddddddddddd@mail.ru'
+            },
+            {
+                id: 4,
+                firstname: 'Глеб',
+                lastname: 'Горячий',
+                email: 'g@mail.ru'
+            },
+            {
+                id: 5,
+                firstname: 'Егор',
+                lastname: 'Елесин',
+                email: 'e@mail.ru'
+            },
+            {
+                id: 6,
+                firstname: 'Ёжик',
+                lastname: 'Ёлочный',
+                email: 'yo@mail.ru'
+            },
+            {
+                id: 7,
+                firstname: 'Жора',
+                lastname: 'Жирный',
+                email: 'j@mail.ru'
+            },
+            {
+                id: 8,
+                firstname: 'Зина',
+                lastname: 'Зиновьева',
+                email: 'z@mail.ru'
+            },
+            {
+                id: 9,
+                firstname: 'Игорь',
+                lastname: 'Иванов',
+                email: 'i@mail.ru'
+            },
+            {
+                id: 10,
+                firstname: 'Йорик',
+                lastname: 'Йог',
+                email: 'y@mail.ru'
+            },
+            {
+                id: 11,
+                firstname:'Кирилл',
+                lastname: 'Капустин',
+                email: 'k@mail.ru'
+            },
+            {
+                id: 12,
+                firstname: 'Лида',
+                lastname: 'Лосева',
+                email: 'l@mail.ru'
+            },
+            {
+                id: 13,
+                firstname: 'Матвей',
+                lastname: 'Мальцев',
+                email:  'm@mail.ru'
+            },
+            {
+                id: 14,
+                firstname: 'Никита',
+                lastname: 'Носа',
+                email: 'n@mail.ru'
+            },
+            {
+                id: 15,
+                firstname: 'Олег',
+                lastname: 'Оботуров',
+                email: 'o@mail.ru'
+            }
+        ]
     }
     for(let i = 0; i < allUsers.value.length; i++){
         allUsers1.value.push({
@@ -111,12 +209,44 @@ onMounted(async () => {
             email: allUsers.value[i].email
         })
     }
-    user = allUsers1.value[props.userId-1]
+    user = allUsers1.value[props.userId]
     try {
         await axios.get('http://localhost:8080/api/messenger/' + props.userId)
             .then(response => chats.value = response.data)
     } catch (e) {
         console.log(e)
+        chats.value = [
+            {
+                id: 0,
+                userIdMin: 0,
+                userIdMax: 1
+            },
+            {
+                id: 1,
+                userIdMin: 0,
+                userIdMax: 2
+            },
+            {
+                id: 2,
+                userIdMin: 0,
+                userIdMax: 3
+            },
+            {
+                id: 3,
+                userIdMin: 0,
+                userIdMax: 4
+            },
+            {
+                id: 4,
+                userIdMin: 0,
+                userIdMax: 5
+            },
+            {
+                id: 5,
+                userIdMin: 0,
+                userIdMax: 6
+            }
+        ]
     }
     for(let i = 0; i < chats.value.length; i++){
         chatUsers.value.push({
