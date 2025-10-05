@@ -3,13 +3,10 @@ package ru.sber.practice.controller;
 import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.practice.dto.SignUpDTO;
-import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
 @Slf4j
