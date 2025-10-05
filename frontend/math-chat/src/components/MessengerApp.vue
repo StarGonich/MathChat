@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="ten wide column">
-                <div class="ui fluid container" v-if="chatId.id != -1">
+                <div class="ui fluid segment" v-if="chatId.id != -1">
                     <h2 class="ui center header">{{chatUser.login}}</h2>
                     <div v-for="message in messages" :key="message.id">
                         <div class="ui left aligned segment" v-if="message.userId != userId">
@@ -38,7 +38,7 @@
                             <p>{{message.messageText}}</p>
                         </div>
                     </div>
-                    <div class="ui fluid action input" v-if="chatId.id != -1">
+                    <div class="ui fluid action input">
                         <input type="text" v-model="textMessage" placeholder="Сообщение">
                         <button class="ui button" @click="post">Отправить</button>
                     </div>
@@ -266,6 +266,156 @@ async function updateChat(id1, id2) {
             .then(response => messages.value = response.data)
     } catch (e) {
         alert(e)
+        if(chatId == 0){
+            messages.value = [
+                {
+                    id: 0,
+                    chatId: 0,
+                    userId: 0,
+                    messageText: 'Привет! Как планы на вечер?'
+                },
+                {
+                    id: 1,
+                    chatId: 0,
+                    userId: 1,
+                    messageText: 'Привет! Пока свободен. А что?'
+                },
+                {
+                    id: 2,
+                    chatId: 0,
+                    userId: 0,
+                    messageText: 'Да думаю сходить в тот новый бар на Пестеля. Соскучилась по хорошему бургеру)'
+                },
+                {
+                    id: 3,
+                    chatId: 0,
+                    userId: 1,
+                    messageText: 'О, я как раз про него читал! Иду?'
+                },
+                {
+                    id: 4,
+                    chatId: 0,
+                    userId: 0,
+                    messageText: 'Конечно! Встречаемся в семь у входа?'
+                },
+                {
+                    id: 5,
+                    chatId: 0,
+                    userId: 1,
+                    messageText: 'Договорились. Только я с работы могу немного задержаться.'
+                },
+                {
+                    id: 6,
+                    chatId: 0,
+                    userId: 0,
+                    messageText: 'Ничего страшного. Я как раз успею заскочить домой. Тогда в семь!'
+                },
+                {
+                    id: 7,
+                    chatId: 0,
+                    userId: 1,
+                    messageText: 'Ага! Увидимся'
+                }
+            ]
+        }else if (chatId == 1){
+            messages.value = [
+                {
+                    id: 0,
+                    chatId: 1,
+                    userId: 0,
+                    messageText: 'Мария, добрый день. Выслали презентацию клиенту?'
+                },
+                {
+                    id: 1,
+                    chatId: 1,
+                    userId: 2,
+                    messageText: 'Добрый день, Сергей Петрович! Только что отправила. Жду ответа.'
+                },
+                {
+                    id: 2,
+                    chatId: 1,
+                    userId: 0,
+                    messageText: 'Хорошо. По итогам вчерaшнего созвона нужно внести правки в смету. Посмотрите, пожалуйста, пункты 3.1 и 4.5.'
+                },
+                {
+                    id: 3,
+                    chatId: 1,
+                    userId: 2,
+                    messageText: 'Хорошо, я уже открыла файл. По пункту 4.5 у меня вопрос: мы учитываем доставку?'
+                },
+                {
+                    id: 4,
+                    chatId: 1,
+                    userId: 0,
+                    messageText: 'Да, учитываем. Добавьте отдельной строкой.'
+                },
+                {
+                    id: 5,
+                    chatId: 1,
+                    userId: 2,
+                    messageText: 'Поняла. Исправлю и вышлю итоговую версию до 17:00.'
+                },
+                {
+                    id: 6,
+                    chatId: 1,
+                    userId: 0,
+                    messageText: 'Отлично. Спасибо.'
+                }
+            ]
+        }else if (chatId == 2){
+            messages.value = [
+                {
+                    id: 0,
+                    chatId: 2,
+                    userId: 0,
+                    messageText: 'Ты жив вообще?'
+                },
+                {
+                    id: 1,
+                    chatId: 2,
+                    userId: 3,
+                    messageText: 'Еле-еле. На работе аврал. Я уже три дня во сне вижу Excel-таблицы.'
+                },
+                {
+                    id: 2,
+                    chatId: 2,
+                    userId: 0,
+                    messageText: 'Кошмар! Спасать тебя в субботу? Приезжаю с пиццей и сериалами.'
+                },
+                {
+                    id: 3,
+                    chatId: 2,
+                    userId: 3,
+                    messageText: 'Ты ангел! Только без сериалов про врачей, а то усну.'
+                },
+                {
+                    id: 4,
+                    chatId: 2,
+                    userId: 0,
+                    messageText: 'Драконы и железный трон ок?'
+                },
+                {
+                    id: 5,
+                    chatId: 2,
+                    userId: 3,
+                    messageText: 'Идеально! Я за колой и чипсами.'
+                },
+                {
+                    id: 6,
+                    chatId: 2,
+                    userId: 0,
+                    messageText: 'Договорились! Только дождись меня, не усни за компом.'
+                },
+                {
+                    id: 7,
+                    chatId: 2,
+                    userId: 3,
+                    messageText: 'Обещаю ничего не обещать. Пока!'
+                }
+            ]
+        }else{
+            messages.value = []
+	}
     }
 }
 
