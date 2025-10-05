@@ -51,24 +51,6 @@
             </div>
         </div>
     </div>
-    <div class="ui container">
-        <div>
-            <p> Список пользователей </p>
-            <p>{{allUsers1}}</p>
-        </div>
-        <div>
-            <p> Список чатов пользователя </p>
-            <p>{{chats}}</p>
-        </div>
-        <div>
-            <p> Сообщения </p>
-            <button @click="getMessages">Открыть беседу</button>
-            <p>{{messages}}</p>
-            <p>{{userId}}</p>
-            <p>{{chatId}}</p>
-            <vue-latex :expression="latex" />
-        </div>
-    </div>
 </template>
 
 <script setup>
@@ -464,20 +446,4 @@ function post(){
 function quit() {
     emit('quitEvent', 'auth')
 }
-
-var content = [
-    {
-      title: 'Horse'
-    },
-    {
-      title: 'Cow'
-    }
-];
-
-$('.ui.search')
-  .search({
-    source: content,
-    fullTextSearch: false
-  })
-;
 </script>
