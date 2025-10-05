@@ -61,6 +61,7 @@
             <p>{{messages}}</p>
             <p>{{userId}}</p>
             <p>{{chatId}}</p>
+            <vue-latex :expression="latex" />
         </div>
     </div>
 </template>
@@ -85,6 +86,7 @@ let chatUser = ref({
     password: ''
 })
 let chatId = -1
+const latex = ref('\\frac{a_i + b^i}{1+x}')
 
 let messages = ref([])
 const props = defineProps({
@@ -272,49 +274,57 @@ async function updateChat(id1, id2) {
                     id: 0,
                     chatId: 0,
                     userId: 0,
-                    messageText: 'Привет! Как планы на вечер?'
+                    messageText: 'Привет! Как планы на вечер?',
+                    isLatex: false
                 },
                 {
                     id: 1,
                     chatId: 0,
                     userId: 1,
-                    messageText: 'Привет! Пока свободен. А что?'
+                    messageText: 'Привет! Пока свободен. А что?',
+                    isLatex: false
                 },
                 {
                     id: 2,
                     chatId: 0,
                     userId: 0,
-                    messageText: 'Да думаю сходить в тот новый бар на Пестеля. Соскучилась по хорошему бургеру)'
+                    messageText: 'Да думаю сходить в тот новый бар на Пестеля. Соскучилась по хорошему бургеру)',
+                    isLatex: false
                 },
                 {
                     id: 3,
                     chatId: 0,
                     userId: 1,
-                    messageText: 'О, я как раз про него читал! Иду?'
+                    messageText: 'О, я как раз про него читал! Иду?',
+                    isLatex: false
                 },
                 {
                     id: 4,
                     chatId: 0,
                     userId: 0,
-                    messageText: 'Конечно! Встречаемся в семь у входа?'
+                    messageText: 'Конечно! Встречаемся в семь у входа?',
+                    isLatex: false
                 },
                 {
                     id: 5,
                     chatId: 0,
                     userId: 1,
-                    messageText: 'Договорились. Только я с работы могу немного задержаться.'
+                    messageText: 'Договорились. Только я с работы могу немного задержаться.',
+                    isLatex: false
                 },
                 {
                     id: 6,
                     chatId: 0,
                     userId: 0,
-                    messageText: 'Ничего страшного. Я как раз успею заскочить домой. Тогда в семь!'
+                    messageText: 'Ничего страшного. Я как раз успею заскочить домой. Тогда в семь!',
+                    isLatex: false
                 },
                 {
                     id: 7,
                     chatId: 0,
                     userId: 1,
-                    messageText: 'Ага! Увидимся'
+                    messageText: 'Ага! Увидимся',
+                    isLatex: false
                 }
             ]
         }else if (chatId == 1){
@@ -323,43 +333,50 @@ async function updateChat(id1, id2) {
                     id: 0,
                     chatId: 1,
                     userId: 0,
-                    messageText: 'Мария, добрый день. Выслали презентацию клиенту?'
+                    messageText: 'Мария, добрый день. Выслали презентацию клиенту?',
+                    isLatex: false
                 },
                 {
                     id: 1,
                     chatId: 1,
                     userId: 2,
-                    messageText: 'Добрый день, Сергей Петрович! Только что отправила. Жду ответа.'
+                    messageText: 'Добрый день, Сергей Петрович! Только что отправила. Жду ответа.',
+                    isLatex: false
                 },
                 {
                     id: 2,
                     chatId: 1,
                     userId: 0,
-                    messageText: 'Хорошо. По итогам вчерaшнего созвона нужно внести правки в смету. Посмотрите, пожалуйста, пункты 3.1 и 4.5.'
+                    messageText: 'Хорошо. По итогам вчерaшнего созвона нужно внести правки в смету. Посмотрите, пожалуйста, пункты 3.1 и 4.5.',
+                    isLatex: false
                 },
                 {
                     id: 3,
                     chatId: 1,
                     userId: 2,
-                    messageText: 'Хорошо, я уже открыла файл. По пункту 4.5 у меня вопрос: мы учитываем доставку?'
+                    messageText: 'Хорошо, я уже открыла файл. По пункту 4.5 у меня вопрос: мы учитываем доставку?',
+                    isLatex: false
                 },
                 {
                     id: 4,
                     chatId: 1,
                     userId: 0,
-                    messageText: 'Да, учитываем. Добавьте отдельной строкой.'
+                    messageText: 'Да, учитываем. Добавьте отдельной строкой.',
+                    isLatex: false
                 },
                 {
                     id: 5,
                     chatId: 1,
                     userId: 2,
-                    messageText: 'Поняла. Исправлю и вышлю итоговую версию до 17:00.'
+                    messageText: 'Поняла. Исправлю и вышлю итоговую версию до 17:00.',
+                    isLatex: false
                 },
                 {
                     id: 6,
                     chatId: 1,
                     userId: 0,
-                    messageText: 'Отлично. Спасибо.'
+                    messageText: 'Отлично. Спасибо.',
+                    isLatex: false
                 }
             ]
         }else if (chatId == 2){
@@ -368,49 +385,57 @@ async function updateChat(id1, id2) {
                     id: 0,
                     chatId: 2,
                     userId: 0,
-                    messageText: 'Ты жив вообще?'
+                    messageText: 'Ты жив вообще?',
+                    isLatex: false
                 },
                 {
                     id: 1,
                     chatId: 2,
                     userId: 3,
-                    messageText: 'Еле-еле. На работе аврал. Я уже три дня во сне вижу Excel-таблицы.'
+                    messageText: 'Еле-еле. На работе аврал. Я уже три дня во сне вижу Excel-таблицы.',
+                    isLatex: false
                 },
                 {
                     id: 2,
                     chatId: 2,
                     userId: 0,
-                    messageText: 'Кошмар! Спасать тебя в субботу? Приезжаю с пиццей и сериалами.'
+                    messageText: 'Кошмар! Спасать тебя в субботу? Приезжаю с пиццей и сериалами.',
+                    isLatex: false
                 },
                 {
                     id: 3,
                     chatId: 2,
                     userId: 3,
-                    messageText: 'Ты ангел! Только без сериалов про врачей, а то усну.'
+                    messageText: 'Ты ангел! Только без сериалов про врачей, а то усну.',
+                    isLatex: false
                 },
                 {
                     id: 4,
                     chatId: 2,
                     userId: 0,
-                    messageText: 'Драконы и железный трон ок?'
+                    messageText: 'Драконы и железный трон ок?',
+                    isLatex: false
                 },
                 {
                     id: 5,
                     chatId: 2,
                     userId: 3,
-                    messageText: 'Идеально! Я за колой и чипсами.'
+                    messageText: 'Идеально! Я за колой и чипсами.',
+                    isLatex: false
                 },
                 {
                     id: 6,
                     chatId: 2,
                     userId: 0,
-                    messageText: 'Договорились! Только дождись меня, не усни за компом.'
+                    messageText: 'Договорились! Только дождись меня, не усни за компом.',
+                    isLatex: false
                 },
                 {
                     id: 7,
                     chatId: 2,
                     userId: 3,
-                    messageText: 'Обещаю ничего не обещать. Пока!'
+                    messageText: 'Обещаю ничего не обещать. Пока!',
+                    isLatex: false
                 }
             ]
         }else{
