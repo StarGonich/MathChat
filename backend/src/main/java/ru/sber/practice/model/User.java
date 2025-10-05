@@ -32,4 +32,15 @@ public class User {
 
     @Column(name = "token_creation_date")
     private ZonedDateTime tokenDate;
+
+    // OAuth2 провайдер (github, google, etc.)
+    @Enumerated(EnumType.STRING)
+    private AuthProvider provider;
+
+    // ID пользователя в системе провайдера
+    @Column(name = "provider_id")
+    private String providerId;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }
