@@ -1,4 +1,4 @@
-package ru.sber.practice.MathChat;
+package ru.sber.practice;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

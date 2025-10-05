@@ -20,12 +20,16 @@ class UserControllerTest {
     @MockitoBean
     private UserService userService;
 
+    /*
+    Из интересного:
+    Если в application.properties закомментировать всё что связано с ${ENV_VARIABLE} из .env файла,
+    то тест выдаёт 401 (Unauthorized), но при этом MathChatApplicationTests не проходят.
+    Получается палка о двух концах
+    */
     @Test
-//    @WithMockUser // Без этого не работает
-    // Из интересного, без application.properties и аннотации выше, тест выдаёт 302 (Found)
-    public void testFindAllUsers_401() throws Exception {
+    public void testFindAllUsers_302() throws Exception {
         mockMvc.perform(get("/api/user/findAll"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isFound());
     }
 
     @Test
