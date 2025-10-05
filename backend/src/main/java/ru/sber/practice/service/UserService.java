@@ -1,6 +1,8 @@
 package ru.sber.practice.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.sber.practice.dto.SignUpDTO;
@@ -9,10 +11,13 @@ import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
 
+import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserService{
@@ -26,13 +31,18 @@ public class UserService{
         if (userRepository.existsByEmail(user.getEmail())) {
             Optional<User> tmp = userRepository.findByEmail(user.getEmail());
             User userExisted = tmp.get();
-            if (userExisted.isEnabled()) {
+            if (userExisted.getToken() == null) {
                 return false;
             } else {
                 userExisted.setFirstname(user.getFirstname());
                 userExisted.setLastname(user.getLastname());
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
-                userExisted.setToken(UUID.randomUUID().toString());
+                userExisted.setToken(UUID.randomUUID());
+
+                ZonedDateTime zonedDateTime = ZonedDateTime.now();
+
+                userExisted.setTokenDate(zonedDateTime);
+
                 userRepository.save(userExisted);
 
                 String message = String.format(
@@ -48,7 +58,7 @@ public class UserService{
         }
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setToken(UUID.randomUUID().toString());
+            user.setToken(UUID.randomUUID());
             userRepository.save(user);
 
             String message = String.format(
@@ -70,15 +80,23 @@ public class UserService{
                 .toList();
     }
 
-    public boolean activateUser(String token) {
+    public boolean activateUser(UUID token) {
         User user = userRepository.findByToken(token);
 
         if (user == null) {
+            log.info("Неправильный токен");
+            return false;
+        }
+
+        ZonedDateTime zonedDateTime = ZonedDateTime.now();
+        ZonedDateTime tokenDateTime = user.getTokenDate().plusMinutes(5);
+
+        if (zonedDateTime.isAfter(tokenDateTime)) {
+            log.info("Срок действия токена истёк");
             return false;
         }
 
         user.setToken(null);
-        user.setEnabled(true);
 
         userRepository.save(user);
 

@@ -38,9 +38,9 @@ public class MyUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return user.getToken() == null;
     }
-
+  
     @Override
     public String getName() {
         return user.getFirstname() + user.getLastname();

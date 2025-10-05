@@ -49,8 +49,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
             user.setProvider(AuthProvider.GITHUB);
             user.setProviderId(providerId);
             user.setImageUrl(avatarUrl);
-            user.setEnabled(true);
-            user = userRepository.save(user);;
+            user = userRepository.save(user);
         } else {
             user = optionalUser.get();
         }
