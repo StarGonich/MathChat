@@ -78,7 +78,7 @@ function onInputPass(){
 async function register() {
     try {
         let msg = ''
-        await axios.post('http://localhost:8090/register', user.value)
+        await axios.post('http://localhost:8080/register', user.value)
             .then(response => msg = 'Имя: ' + response.data.firstname + ", почта: " + response.data.email)
         alert('Успешная регистрация!\nОтвет сервера: ' + msg)
     } catch (e) {

@@ -1,10 +1,10 @@
 package ru.sber.practice.config;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
@@ -16,15 +16,17 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import ru.sber.practice.service.MyUserDetailsService;
+import ru.sber.practice.service.OAuth2Service;
 
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig{
+    private final OAuth2Service oAuth2Service;
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new MyUserDetailsService();
@@ -48,10 +50,14 @@ public class SecurityConfig{
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
+                /*.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/user/**", "/activate/*").permitAll()
-                        .anyRequest().authenticated())
-                .oauth2Login(Customizer.withDefaults())
+                        .anyRequest().authenticated())*/
+                 .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
+                        .anyRequest().permitAll())
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2Service)))
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }
