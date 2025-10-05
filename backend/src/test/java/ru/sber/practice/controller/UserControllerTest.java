@@ -22,7 +22,7 @@ class UserControllerTest {
 
     /*
     Из интересного:
-    Если в application.properties закомментировать всё что связано с ${ENV_VARIABLE} из .env файла,
+    Если в application.properties закомментировать всё что связано с OAuth Github,
     то тест выдаёт 401 (Unauthorized), но при этом MathChatApplicationTests не проходят.
     Получается палка о двух концах
     */
