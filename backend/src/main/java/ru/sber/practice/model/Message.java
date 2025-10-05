@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "messages")
@@ -27,5 +27,5 @@ public class Message {
     private String messageText;
 
     @Column(name = "message_creation_date")
-    private Date messageDate;
+    private Timestamp messageDate;
 }

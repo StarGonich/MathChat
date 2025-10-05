@@ -5,8 +5,10 @@ CREATE TABLE users (
     email character varying(50) NOT NULL UNIQUE,
     password character varying(255) NOT NULL,
     token uuid,
-    token_creation_date date
---    image_id bigint REFERENCES images(id)
+    token_creation_date timestamp with time zone,
+    provider character varying(36) DEFAULT 'LOCAL',  -- LOCAL, GITHUB, GOOGLE
+    provider_id varchar,
+    image_url character varying(255)
 );
 
 --CREATE TABLE images (
@@ -31,7 +33,7 @@ CREATE TABLE messages (
     user_id bigint NOT NULL,
     chat_id bigint NOT NULL,
     message_text text NOT NULL,
-    message_creation_date date NOT NULL
+    message_creation_date timestamp NOT NULL
 );
 
 -- Внешние ключи
