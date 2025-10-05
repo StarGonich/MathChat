@@ -28,21 +28,18 @@ public class UserService{
 
     public Boolean register(SignUpDTO signUpDTO) {
         User user = userMapper.toUser(signUpDTO);
-        if (userRepository.existsByEmail(user.getEmail())) {
-            Optional<User> tmp = userRepository.findByEmail(user.getEmail());
+        Optional<User> tmp = userRepository.findByEmail(user.getEmail());
+        if (tmp.isPresent()) {
             User userExisted = tmp.get();
             if (userExisted.getToken() == null) {
                 return false;
             } else {
+                log.info("Перерегистрация пользователя {}", userExisted);
                 userExisted.setFirstname(user.getFirstname());
                 userExisted.setLastname(user.getLastname());
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
                 userExisted.setToken(UUID.randomUUID());
-
-                ZonedDateTime zonedDateTime = ZonedDateTime.now();
-
-                userExisted.setTokenDate(zonedDateTime);
-
+                userExisted.setTokenDate(ZonedDateTime.now());
                 userRepository.save(userExisted);
 
                 String message = String.format(
@@ -59,6 +56,7 @@ public class UserService{
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setToken(UUID.randomUUID());
+            user.setTokenDate(ZonedDateTime.now());
             userRepository.save(user);
 
             String message = String.format(
