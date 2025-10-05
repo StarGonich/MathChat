@@ -35,12 +35,17 @@
                             <p>{{message.messageText}}</p>
                         </div>
                         <div class="ui right aligned segment" v-else>
-                            <p>{{message.messageText}}</p>
+                            <vue-latex v-if="message.isLatex" :expression="message.messageText" />
+                            <p v-else>{{message.messageText}}</p>
                         </div>
                     </div>
                     <div class="ui fluid action input">
                         <input type="text" v-model="textMessage" placeholder="Сообщение">
                         <button class="ui button" @click="post">Отправить</button>
+                        <div class="ui checkbox">
+                            <input type="checkbox" v-model="isLatex">
+                            <label>LaTeX</label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -96,6 +101,7 @@ const props = defineProps({
   }
 })
 const textMessage = ref('')
+const isLatex = ref(false)
 
 const emit = defineEmits(['quitEvent'])
 
@@ -449,7 +455,8 @@ function post(){
         id: messages.value.length,
         userId: props.userId,
         chatId: chatId,
-        messageText: textMessage.value
+        messageText: textMessage.value,
+        isLatex: isLatex.value
     })
     textMessage.value = ''
 }
