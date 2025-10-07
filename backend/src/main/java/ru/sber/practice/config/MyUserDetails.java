@@ -38,7 +38,7 @@ public class MyUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        return user.getToken() == null;
+        return user.isEnabled();
     }
   
     @Override

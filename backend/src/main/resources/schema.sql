@@ -5,6 +5,7 @@ CREATE TABLE users (
     email character varying(50) NOT NULL UNIQUE,
     password character varying(255) NOT NULL,
     token uuid,
+    is_enabled boolean NOT NULL DEFAULT false,
     token_creation_date timestamp with time zone,
     provider character varying(36) DEFAULT 'LOCAL',  -- LOCAL, GITHUB, GOOGLE
     provider_id varchar,
