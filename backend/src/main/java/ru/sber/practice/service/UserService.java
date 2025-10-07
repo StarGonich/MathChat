@@ -26,13 +26,14 @@ public class UserService{
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
 
-    public Boolean register(SignUpDTO signUpDTO) {
+    public User register(SignUpDTO signUpDTO) {
+        log.info("UserService: регистрация SignUpDTO {}", signUpDTO);
         User user = userMapper.toUser(signUpDTO);
         Optional<User> tmp = userRepository.findByEmail(user.getEmail());
         if (tmp.isPresent()) {
             User userExisted = tmp.get();
             if (userExisted.getToken() == null) {
-                return false;
+                return userExisted;
             } else {
                 log.info("Перерегистрация пользователя {}", userExisted);
                 userExisted.setFirstname(user.getFirstname());
@@ -40,7 +41,7 @@ public class UserService{
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
                 userExisted.setToken(UUID.randomUUID());
                 userExisted.setTokenDate(ZonedDateTime.now());
-                userRepository.save(userExisted);
+                userExisted = userRepository.save(userExisted);
 
                 String message = String.format(
                         "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
@@ -50,14 +51,14 @@ public class UserService{
 
                 mailSenderService.send(userExisted.getEmail(), "Activation code", message);
 
-                return true;
+                return userExisted;
             }
         }
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setToken(UUID.randomUUID());
             user.setTokenDate(ZonedDateTime.now());
-            userRepository.save(user);
+            user = userRepository.save(user);
 
             String message = String.format(
                     "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
@@ -67,7 +68,7 @@ public class UserService{
 
             mailSenderService.send(user.getEmail(), "Activation code", message);
 
-            return true;
+            return user;
         }
     }
 

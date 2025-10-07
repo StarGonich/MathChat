@@ -53,7 +53,7 @@ public class SecurityConfig{
                 /*.authorizeHttpRequests(auth -> auth
                         .requestMatchers("/register", "/user/**", "/activate/*").permitAll()
                         .anyRequest().authenticated())*/
-                 .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
+                .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
