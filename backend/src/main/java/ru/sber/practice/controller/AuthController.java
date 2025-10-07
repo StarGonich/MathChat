@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.sber.practice.dto.EmailDTO;
 import ru.sber.practice.dto.PasswordDTO;
 import ru.sber.practice.dto.SignUpDTO;
+import ru.sber.practice.dto.UserDTO;
+import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.MailSenderService;
 import ru.sber.practice.service.UserService;
@@ -20,6 +22,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @GetMapping("/")
     public String welcome(){
@@ -28,13 +31,15 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody SignUpDTO signUpDTO) {
-        boolean registeredUser = userService.register(signUpDTO);
-        if (!registeredUser) {
+        log.info("AuthController: signUpDTO {}", signUpDTO);
+        User registeredUser = userService.register(signUpDTO);
+        if (registeredUser.getToken() == null) {
             log.info("Неудачная регистрация");
-            return new ResponseEntity<>("Email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Пользователь с данным email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
         }
-        log.info("Регистрация пользователя: {}", signUpDTO);
-        return new ResponseEntity<>(signUpDTO, HttpStatus.CREATED);
+        UserDTO responseUser = userMapper.toDTO(registeredUser);
+        log.info("Регистрация пользователя: {}", responseUser);
+        return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
     }
 
     @GetMapping("/activate/{token}")

@@ -32,8 +32,10 @@ public class UserServiceImpl implements UserService {
     // Регистрация пользователя
     //
     @Override
-    public boolean register(SignUpDTO signUpDTO) {
+    public User register(SignUpDTO signUpDTO) {
+        log.info("UserService: регистрация SignUpDTO {}", signUpDTO);
         User user = userMapper.toUser(signUpDTO);
+
         Optional<User> tmp = userRepository.findByEmail(user.getEmail());
 
         //
@@ -47,7 +49,7 @@ public class UserServiceImpl implements UserService {
             // Если пользователь не активирован, то создаём новый токен для подтверждения почты
             //
             if (userExisted.isEnabled()) {
-                return false;
+                return userExisted;
             } else {
                 log.info("Перерегистрация пользователя {}", userExisted);
                 userExisted.setFirstname(user.getFirstname());
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
                 userExisted.setToken(UUID.randomUUID());
                 userExisted.setTokenDate(ZonedDateTime.now());
-                userRepository.save(userExisted);
+                userExisted = userRepository.save(userExisted);
 
                 String message = String.format(
                         "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
@@ -65,14 +67,14 @@ public class UserServiceImpl implements UserService {
 
                 mailSenderService.send(userExisted.getEmail(), "Activation code", message);
 
-                return true;
+                return userExisted;
             }
         }
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setToken(UUID.randomUUID());
             user.setTokenDate(ZonedDateTime.now());
-            userRepository.save(user);
+            user = userRepository.save(user);
 
             String message = String.format(
                     "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
@@ -82,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
             mailSenderService.send(user.getEmail(), "Activation code", message);
 
-            return true;
+            return user;
         }
     }
 

@@ -3,7 +3,7 @@ CREATE TABLE users (
     firstname character varying(50) NOT NULL,
     lastname character varying(50) NOT NULL,
     email character varying(50) NOT NULL UNIQUE,
-    password character varying(255) NOT NULL,
+    password character varying(255),
     token uuid,
     is_enabled boolean NOT NULL DEFAULT false,
     token_creation_date timestamp with time zone,

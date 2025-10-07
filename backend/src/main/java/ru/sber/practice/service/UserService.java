@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
-    boolean register(SignUpDTO signUpDTO);
+    User register(SignUpDTO signUpDTO);
     List<UserDTO> findAllUsers();
     User findByEmail(String email);
     boolean activateUser(UUID token);
