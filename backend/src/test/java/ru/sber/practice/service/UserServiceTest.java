@@ -11,6 +11,7 @@ import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
+import ru.sber.practice.service.impl.UserServiceImpl;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -35,7 +36,7 @@ class UserServiceTest {
     private MailSenderService mailSenderService;
 
     @InjectMocks
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Test
     void register_NewUser_Success() {
@@ -68,8 +69,8 @@ class UserServiceTest {
     void register_ExistingUserWithoutToken_ReturnsExistingUser() {
         // given
         SignUpDTO signUpDTO = new SignUpDTO("John", "Doe", "john@test.com", "password");
-        User existingUser = createUser(signUpDTO.firstname(), signUpDTO.lastname(), "john@test.com", "oldPassword");
-        existingUser.setToken(null);
+        User existingUser = createUser(signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), "oldPassword");
+        existingUser.setEnabled(true);
 
         when(userMapper.toUser(signUpDTO)).thenReturn(existingUser);
         when(userRepository.findByEmail(existingUser.getEmail())).thenReturn(Optional.of(existingUser));

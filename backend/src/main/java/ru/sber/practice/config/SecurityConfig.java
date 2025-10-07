@@ -16,8 +16,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import ru.sber.practice.service.MyUserDetailsService;
-import ru.sber.practice.service.OAuth2Service;
+import ru.sber.practice.service.impl.MyUserDetailsServiceImpl;
+import ru.sber.practice.service.impl.OAuth2ServiceImpl;
 
 import java.util.List;
 
@@ -25,11 +25,11 @@ import java.util.List;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig{
-    private final OAuth2Service oAuth2Service;
+    private final OAuth2ServiceImpl oAuth2ServiceImpl;
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return new MyUserDetailsService();
+        return new MyUserDetailsServiceImpl();
     }
 
     @Bean
@@ -57,7 +57,7 @@ public class SecurityConfig{
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuth2Service)))
+                                .userService(oAuth2ServiceImpl)))
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .build();
     }
