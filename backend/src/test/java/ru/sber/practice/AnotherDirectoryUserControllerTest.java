@@ -9,7 +9,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.sber.practice.controller.UserController;
-import ru.sber.practice.service.UserService;
+import ru.sber.practice.service.impl.UserServiceImpl;
 
 @WebMvcTest(UserController.class)
 //@Import(SecurityConfig.class) // Не работает, нужно "мокитировать" зависимости из него
@@ -19,7 +19,7 @@ class AnotherDirectoryUserControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     /*
     Из интересного:

@@ -2,8 +2,8 @@ package ru.sber.practice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 
@@ -28,8 +28,14 @@ public class User {
 
     private String password;
 
+    // Токен для подтверждения регистрации по почте
     private UUID token;
 
+    @Column(nullable = false)
+//    @ColumnDefault("true")
+    private boolean isEnabled;
+
+    // Дата создания токена
     @Column(name = "token_creation_date")
     private ZonedDateTime tokenDate;
 

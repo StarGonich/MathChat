@@ -1,28 +1,22 @@
 package ru.sber.practice;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockServletContext;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
-import ru.sber.practice.controller.AuthController;
 import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.repository.UserRepository;
-import ru.sber.practice.service.MailSenderService;
-import ru.sber.practice.service.UserService;
+import ru.sber.practice.service.impl.MailSenderServiceImpl;
+import ru.sber.practice.service.impl.UserServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,11 +36,11 @@ public class RegistrationTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
     @MockitoBean
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
     @MockitoBean
     private UserMapper userMapper;
     @MockitoBean
-    private MailSenderService mailSenderService;
+    private MailSenderServiceImpl mailSenderServiceImpl;
     @MockitoBean
     private UserRepository userRepository;
 

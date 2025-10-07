@@ -1,26 +1,14 @@
 package ru.sber.practice;
 
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.sber.practice.dto.SignUpDTO;
-import ru.sber.practice.dto.UserDTO;
-import ru.sber.practice.dto.mapping.UserMapper;
-import ru.sber.practice.model.User;
-import ru.sber.practice.repository.UserRepository;
-import ru.sber.practice.service.UserService;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @Disabled("Peredelat'")
 @ExtendWith(MockitoExtension.class)
-class UserServiceTest {
+class UserServiceImplTest {
 //
 //    @InjectMocks
 //    UserService userService;

@@ -1,6 +1,6 @@
 INSERT INTO users(firstname, lastname, email, password) VALUES ('Алексей', 'Величайший', '12321alexey8837@gmail.com', 'aboba');
 INSERT INTO users(firstname, lastname, email, password) VALUES ('Матвей', 'Ковалёв', 'matveykov@gmail.com', 'aboba2');
-    INSERT INTO users(firstname, lastname, email, password) VALUES ('Егор', 'Мальцев', 'egor@gmail.com', 'aboba3');
+INSERT INTO users(firstname, lastname, email, password) VALUES ('Егор', 'Мальцев', 'egor@gmail.com', 'aboba3');
 
 INSERT INTO chats(id, first_user_id, second_user_id) VALUES (1, 1, 2);
 INSERT INTO chats(id, first_user_id, second_user_id) VALUES (2, 1, 3);

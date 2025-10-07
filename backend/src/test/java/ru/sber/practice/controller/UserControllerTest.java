@@ -8,7 +8,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-import ru.sber.practice.service.UserService;
+import ru.sber.practice.service.impl.UserServiceImpl;
 
 @WebMvcTest(UserController.class)
 //@Import(SecurityConfig.class) // Не работает, нужно "мокитировать" зависимости из него
@@ -18,7 +18,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockitoBean
-    private UserService userService;
+    private UserServiceImpl userServiceImpl;
 
     /*
     Из интересного:

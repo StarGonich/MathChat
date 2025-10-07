@@ -6,7 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.sber.practice.dto.EmailDTO;
+import ru.sber.practice.dto.PasswordDTO;
 import ru.sber.practice.dto.SignUpDTO;
+import ru.sber.practice.model.User;
+import ru.sber.practice.service.MailSenderService;
 import ru.sber.practice.service.UserService;
 
 import java.util.UUID;
@@ -24,7 +28,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody SignUpDTO signUpDTO) {
-        Boolean registeredUser = userService.register(signUpDTO);
+        boolean registeredUser = userService.register(signUpDTO);
         if (!registeredUser) {
             log.info("Неудачная регистрация");
             return new ResponseEntity<>("Email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
@@ -38,6 +42,24 @@ public class AuthController {
         boolean isActivated = userService.activateUser(token);
         if (isActivated) {
             return new ResponseEntity<>("Почта подтверждена", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Неправильный токен", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/changePassword")
+    public ResponseEntity<?> forgotPassword(@RequestBody EmailDTO emailDTO) {
+        boolean passwordForgotten = userService.passwordForgotten(emailDTO);
+        if (passwordForgotten) {
+            return new ResponseEntity<>("Письмо для смены пароля отправлено", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Почта не найдена или не активирована", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/changePassword/{token}")
+    public ResponseEntity<?> changePassword(Model model, @PathVariable UUID token, @RequestBody PasswordDTO passwordDTO) {
+        boolean passwordChanged = userService.changePassword(token, passwordDTO);
+        if (passwordChanged) {
+            return new ResponseEntity<>("Пароль изменён", HttpStatus.OK);
         }
         return new ResponseEntity<>("Неправильный токен", HttpStatus.BAD_REQUEST);
     }
