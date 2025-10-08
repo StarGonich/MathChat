@@ -11,6 +11,7 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<User, Long> {
     //    @Query(value = "select * from users where email = :email", nativeQuery = true)
     Optional<User> findByEmail(String email);
+    Optional<User> findByUsername(String username);
     boolean existsByEmail(String email);
     User findByToken(UUID token);
 
