@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    id bigint AUTO_INCREMENT PRIMARY KEY,
     username varchar UNIQUE,
     firstname character varying(50) NOT NULL,
     lastname character varying(50) NOT NULL,

@@ -44,4 +44,9 @@ public class MessengerServiceImpl implements MessengerService {
     public Message sendMessage(Message message) {
         return messageRepository.save(message);
     }
+
+    public Long getRecipientId(Long userId, Long ChatId) {
+        return chatRepository.findRecipientIdByUserIdAndChatId(userId, ChatId)
+                .orElseThrow(() -> new RuntimeException("Не можем найти собеседника"));
+    }
 }
