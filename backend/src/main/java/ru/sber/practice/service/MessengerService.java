@@ -11,4 +11,5 @@ public interface MessengerService {
     List<UserDTO> getGlobalChats(String search);
     List<Message> getMessages(Long chatId);
     Message sendMessage(Message message);
+    Long getRecipientId(Long userId, Long ChatId);
 }
