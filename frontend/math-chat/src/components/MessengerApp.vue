@@ -99,7 +99,7 @@ const emit = defineEmits(['quitEvent'])
 
 onMounted(async () => {
     try {
-        await axios.get('http://localhost:8090/api/user/findAll')
+        await axios.get('http://localhost:8080/api/user/findAll')
             .then(response => allUsers.value = response.data)
     } catch (e) {
         console.log(e)
@@ -113,7 +113,7 @@ onMounted(async () => {
     }
     user = allUsers1.value[props.userId-1]
     try {
-        await axios.get('http://localhost:8090/api/messenger/' + props.userId)
+        await axios.get('http://localhost:8080/api/messenger/' + props.userId)
             .then(response => chats.value = response.data)
     } catch (e) {
         console.log(e)
@@ -132,7 +132,7 @@ async function updateChat(id1, id2) {
     chatUser = allUsers1.value[id1]
     chatId = id2
     try {
-        await axios.get('http://localhost:8090/api/messenger/chat/' + chatId)
+        await axios.get('http://localhost:8080/api/messenger/chat/' + chatId)
             .then(response => messages.value = response.data)
     } catch (e) {
         alert(e)

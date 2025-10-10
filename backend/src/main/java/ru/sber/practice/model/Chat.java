@@ -15,11 +15,11 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "user_id_min")
-    private Long userIdMin;
+    @Column(nullable = false, name = "first_user_id")
+    private Long firstUser;
 
-    @Column(nullable = false, name = "user_id_max")
-    private Long userIdMax;
+    @Column(nullable = false, name = "second_user_id")
+    private Long secondUser;
 
     @Column(name = "last_message_id")
     private Long lastMessageId;

@@ -2,10 +2,10 @@ package ru.sber.practice.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.ZonedDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -17,21 +17,30 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private String username;
+
     @Column(nullable = false)
     private String firstname;
 
     @Column(nullable = false)
     private String lastname;
 
-    @Column(nullable = false)
+    @Column(unique = true)
     private String email;
 
     private String password;
 
-    private String token;
+    // Токен для подтверждения регистрации по почте
+    private UUID token;
 
-    @Column(name = "token_expiry_date")
-    private Date tokenExpiryDate;
+    @Column(nullable = false)
+//    @ColumnDefault("true")
+    private boolean isEnabled;
+
+    // Дата создания токена
+    @Column(name = "token_creation_date")
+    private ZonedDateTime tokenDate;
 
     // OAuth2 провайдер (github, google, etc.)
     @Enumerated(EnumType.STRING)
@@ -43,17 +52,4 @@ public class User {
 
     @Column(name = "image_url")
     private String imageUrl;
-
-    @Column(nullable = false)
-    private boolean enabled;
-
-
-
-
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Timestamp(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
-    }
 }

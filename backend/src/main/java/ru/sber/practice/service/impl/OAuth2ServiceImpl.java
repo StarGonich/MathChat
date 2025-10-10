@@ -1,4 +1,4 @@
-package ru.sber.practice.service;
+package ru.sber.practice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class OAuth2Service extends DefaultOAuth2UserService {
+public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
 
     @Override
@@ -49,8 +49,7 @@ public class OAuth2Service extends DefaultOAuth2UserService {
             user.setProvider(AuthProvider.GITHUB);
             user.setProviderId(providerId);
             user.setImageUrl(avatarUrl);
-            user.setEnabled(true);
-            user = userRepository.save(user);;
+            user = userRepository.save(user);
         } else {
             user = optionalUser.get();
         }

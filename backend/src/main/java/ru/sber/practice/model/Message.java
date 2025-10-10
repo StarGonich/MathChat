@@ -4,9 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "messages")
@@ -27,6 +26,6 @@ public class Message {
     @Column(nullable = false, name = "message_text")
     private String messageText;
 
-    @CreationTimestamp
-    private ZonedDateTime date;
+    @Column(name = "message_creation_date")
+    private Timestamp messageDate;
 }
