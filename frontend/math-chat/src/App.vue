@@ -7,13 +7,13 @@
     <option value="mes">Страница мессенджера</option>
   </select>
   <div v-if="str === 'reg'">
-    <RegistrationApp @authEvent="(msg) => str = msg" />
+    <RegistrationApp @quitEvent="(msg) => str = msg" />
   </div>
   <div v-if="str === 'email'">
     <SendEmailApp />
   </div>
   <div v-if="str === 'auth'">
-    <AuthApp @regEvent="(msg) => str = msg"/>
+    <AuthApp @quitEvent="(msg) => str = msg"/>
   </div>
   <div v-if="str === 'mes'">
     <MessengerApp :userId="0" @quitEvent="(msg) => str = msg"/>
@@ -26,7 +26,7 @@ import SendEmailApp from './components/SendEmailApp.vue'
 import MessengerApp from './components/MessengerApp.vue'
 import AuthApp from './components/AuthApp.vue'
 import { ref } from 'vue'
-const str = ref('reg')
+const str = ref('auth')
 </script>
 
 <style>

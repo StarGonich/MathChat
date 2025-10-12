@@ -53,6 +53,7 @@ public class AuthController {
 
     @PostMapping("/changePassword")
     public ResponseEntity<?> forgotPassword(@RequestBody EmailDTO emailDTO) {
+        log.info("Запрос на смену почты: {}", emailDTO);
         boolean passwordForgotten = userService.passwordForgotten(emailDTO);
         if (passwordForgotten) {
             return new ResponseEntity<>("Письмо для смены пароля отправлено", HttpStatus.OK);
