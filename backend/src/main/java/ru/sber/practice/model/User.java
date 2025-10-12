@@ -35,11 +35,12 @@ public class User {
     private UUID token;
 
     @Column(nullable = false)
-//    @ColumnDefault("true")
+    @ColumnDefault("false")
     private boolean isEnabled;
 
     // Дата создания токена
     @Column(name = "token_creation_date")
+    @ColumnDefault("CURRENT_TIMESTAMP")
     private ZonedDateTime tokenDate;
 
     // OAuth2 провайдер (github, google, etc.)

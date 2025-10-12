@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.ZonedDateTime;
 
 @Entity
 @Table(name = "messages")
@@ -27,5 +28,5 @@ public class Message {
     private String messageText;
 
     @Column(name = "message_creation_date")
-    private Timestamp messageDate;
+    private ZonedDateTime messageDate;
 }
