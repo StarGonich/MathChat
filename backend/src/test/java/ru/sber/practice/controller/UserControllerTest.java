@@ -46,6 +46,13 @@ class UserControllerTest {
                                         "firstname": "Алексей",
                                         "lastname": "Величайший",
                                         "email": "12321alexey8837@gmail.com"
+                                    },
+                                    {
+                                        "id": 2,
+                                        "username": "NotActivated",
+                                        "firstname": "Никита",
+                                        "lastname": "Башков",
+                                        "email": "notactivated@user.com"
                                     }
                                 ]
                                 """)
