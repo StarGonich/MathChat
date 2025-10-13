@@ -33,7 +33,7 @@ public class MyUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return user.getEmail();
+        return user.getEmail() == null ? user.getId().toString() : user.getEmail();
     }
 
     @Override
@@ -43,6 +43,6 @@ public class MyUserDetails implements UserDetails, OAuth2User {
   
     @Override
     public String getName() {
-        return user.getFirstname() + user.getLastname();
+        return user.getUsername();
     }
 }

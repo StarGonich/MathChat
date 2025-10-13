@@ -20,10 +20,8 @@ public class User {
     @Column(unique = true)
     private String username;
 
-    @Column(nullable = false)
     private String firstname;
 
-    @Column(nullable = false)
     private String lastname;
 
     @Column(unique = true)

@@ -33,18 +33,13 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
         String email = (String)attributes.get("email");
-        String name = (String)attributes.get("name");
-        String login = (String)attributes.get("login");
         String avatarUrl = (String)attributes.get("avatar_url");
-        log.info("Данные о пользователе: {}, {}, {}, {}", email, name, login, avatarUrl);
+        log.info("Данные о пользователе: {}, {}", email, avatarUrl);
         String providerId = oAuth2User.getName(); // ID пользователя в GitHub
         log.info("ID пользователя в GitHub: {}", providerId);
         Optional<User> optionalUser = userRepository.findByEmail(email);
         User user = new User();
         if (optionalUser.isEmpty()) {
-            String[] nameParts = parseName(name, login);
-            user.setFirstname(nameParts[0]);
-            user.setLastname(nameParts[1]);
             user.setEmail(email);
             user.setProvider(AuthProvider.GITHUB);
             user.setProviderId(providerId);
@@ -55,21 +50,5 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
         }
 
         return new MyUserDetails(user);
-    }
-
-    private String[] parseName(String name, String fallback) {
-        String[] nameParts = name.split(" ", 3);
-        if (nameParts.length == 1) {
-            return new String[]{nameParts[0], ""};
-        }
-        else if (nameParts.length == 2) {
-            return new String[]{nameParts[0], nameParts[1]};
-        }
-        else if (nameParts.length == 3) {
-            return new String[]{nameParts[1], nameParts[0]};
-        }
-        else {
-            return new String[]{fallback, ""};
-        }
     }
 }

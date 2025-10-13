@@ -1,8 +1,8 @@
 CREATE TABLE users (
     id bigint AUTO_INCREMENT PRIMARY KEY,
     username varchar UNIQUE,
-    firstname character varying(50) NOT NULL,
-    lastname character varying(50) NOT NULL,
+    firstname character varying(50),
+    lastname character varying(50),
     email character varying(50) UNIQUE,
     password character varying(255),
     token uuid,
