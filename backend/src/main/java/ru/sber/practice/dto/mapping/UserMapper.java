@@ -10,6 +10,7 @@ import ru.sber.practice.model.User;
 public class UserMapper {
     public User toUser(SignUpDTO signUpDto) {
         User user = new User();
+        user.setUsername(signUpDto.username());
         user.setFirstname(signUpDto.firstname());
         user.setLastname(signUpDto.lastname());
         user.setEmail(signUpDto.email());

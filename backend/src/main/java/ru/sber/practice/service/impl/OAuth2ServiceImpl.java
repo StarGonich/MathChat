@@ -32,15 +32,13 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
         // Получаем атрибуты из GitHub
         Map<String, Object> attributes = oAuth2User.getAttributes();
 
-        String email = (String)attributes.get("email");
         String avatarUrl = (String)attributes.get("avatar_url");
-        log.info("Данные о пользователе: {}, {}", email, avatarUrl);
+        log.info("Данные о пользователе: {}", avatarUrl);
         String providerId = oAuth2User.getName(); // ID пользователя в GitHub
         log.info("ID пользователя в GitHub: {}", providerId);
-        Optional<User> optionalUser = userRepository.findByEmail(email);
+        Optional<User> optionalUser = userRepository.findByProviderId(providerId);
         User user = new User();
         if (optionalUser.isEmpty()) {
-            user.setEmail(email);
             user.setProvider(AuthProvider.GITHUB);
             user.setProviderId(providerId);
             user.setImageUrl(avatarUrl);
@@ -48,6 +46,8 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
         } else {
             user = optionalUser.get();
         }
+
+        log.info("test - {}", user);
 
         return new MyUserDetails(user);
     }

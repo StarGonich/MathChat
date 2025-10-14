@@ -131,7 +131,7 @@ public class AuthControllerTest {
 
         assertThat(secondUser.getFirstname()).isEqualTo("Иполлитий");
         assertThat(secondUser.getLastname()).isEqualTo("Мержевод");
-        assertThat(secondUser.getUsername()).isEqualTo(null);
+        assertThat(secondUser.getUsername()).isEqualTo("ipolit");
 
         assertThat(secondToken).isNotEqualTo(firstToken);
 
