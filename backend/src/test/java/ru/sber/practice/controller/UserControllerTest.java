@@ -32,6 +32,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @Test
+    @WithMockUser
     public void testFindAllUsers_200() throws Exception {
         var requestBuilder = get("/api/user/findAll");
         mockMvc.perform(requestBuilder)
