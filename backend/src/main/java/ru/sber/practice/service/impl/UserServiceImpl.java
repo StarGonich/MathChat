@@ -199,6 +199,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(Long id) {
+        return userRepository.findById(id).get();
+    }
+
+    @Override
     public User findByEmail(String email) {
         Optional<User> tmp = userRepository.findByEmail(email);
         return tmp.orElse(null);

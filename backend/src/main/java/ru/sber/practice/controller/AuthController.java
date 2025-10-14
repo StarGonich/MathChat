@@ -15,6 +15,7 @@ import ru.sber.practice.model.User;
 import ru.sber.practice.service.MailSenderService;
 import ru.sber.practice.service.UserService;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @Slf4j
@@ -24,9 +25,9 @@ public class AuthController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @GetMapping("/")
-    public String welcome(){
-        return "Welcome to the unprotected page";
+    @GetMapping("/whoami")
+    public User welcome(Principal principal){
+        return userService.findById(Long.parseLong(principal.getName(), 10));
     }
 
     @PostMapping("/register")

@@ -2,10 +2,9 @@ package ru.sber.practice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sber.practice.dto.UserDTO;
+import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
 import java.util.List;
@@ -25,4 +24,8 @@ public class UserController {
         return allUsers;
     }
 
+    @PostMapping("/find")
+    public User findById(@PathVariable Long id) {
+        return userService.findById(id);
+    }
 }

@@ -56,6 +56,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("/whoami")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2ServiceImpl)))
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
