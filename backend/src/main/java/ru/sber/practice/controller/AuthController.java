@@ -3,13 +3,11 @@ package ru.sber.practice.controller;
 import ch.qos.logback.core.model.Model;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.sber.practice.dto.EmailDTO;
-import ru.sber.practice.dto.PasswordDTO;
-import ru.sber.practice.dto.SignUpDTO;
-import ru.sber.practice.dto.UserDTO;
+import ru.sber.practice.dto.*;
 import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.MailSenderService;
@@ -25,11 +23,10 @@ public class AuthController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @GetMapping("/whoami")
-    public User welcome(Principal principal) {
-        return userService.findById(Long.parseLong(principal.getName(), 10));
-    }
-
+//    @GetMapping("/login/oauth2/")
+//    public User welcome(Principal principal) {
+//        return userService.findById(Long.parseLong(principal.getName(), 10));
+//    }
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody SignUpDTO signUpDTO) {
         log.info("AuthController: signUpDTO {}", signUpDTO);
@@ -62,7 +59,7 @@ public class AuthController {
     }
 
     @PostMapping("/changePassword/{token}")
-    public ResponseEntity<?> changePassword(Model model, @PathVariable UUID token, @RequestBody PasswordDTO passwordDTO) {
+    public ResponseEntity<?> changePassword(@PathVariable UUID token, @RequestBody PasswordDTO passwordDTO) {
         boolean passwordChanged = userService.changePassword(token, passwordDTO);
         if (passwordChanged) {
             return new ResponseEntity<>("Пароль изменён", HttpStatus.OK);
@@ -70,4 +67,17 @@ public class AuthController {
         return new ResponseEntity<>("Неправильный токен", HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping("/login/oauth2")
+    public ResponseEntity<?> oauth2Login(Principal principal, @RequestBody Oauth2LoginDTO oauth2LoginDTO) {
+        boolean userLogged = userService.oauth2Login(principal.getName(), oauth2LoginDTO);
+        if (userLogged) {
+            return new ResponseEntity<>("Пользователь зарегистрирован", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Пользователь не найден или уже зарегистрирован", HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/login/oauth2")
+    public User welcome(Principal principal) {
+        return userService.findByProviderId(principal.getName());
+    }
 }

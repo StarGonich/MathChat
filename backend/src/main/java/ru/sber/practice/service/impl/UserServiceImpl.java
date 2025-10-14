@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.sber.practice.dto.EmailDTO;
-import ru.sber.practice.dto.PasswordDTO;
-import ru.sber.practice.dto.SignUpDTO;
-import ru.sber.practice.dto.UserDTO;
+import ru.sber.practice.dto.*;
 import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
@@ -203,9 +200,37 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    // Регистрация пользователей через oauth2 (т.к. для них нужно дополнительно заполнить username, firstname, lastname)
+    @Override
+    public boolean oauth2Login(String providerId, Oauth2LoginDTO oauth2LoginDTO) {
+        Optional<User> tmp = userRepository.findByProviderId(providerId);
+        if (tmp.isPresent()) {
+            User user = tmp.get();
+
+            // Если пользователь уже регистрировал аккаунт через oauth2, то его по новой не регистрируем
+            if (user.isEnabled()) {
+                return false;
+            }
+
+            user.setUsername(oauth2LoginDTO.username());
+            user.setFirstname(oauth2LoginDTO.firstname());
+            user.setLastname(oauth2LoginDTO.lastname());
+            user.setEnabled(true);
+            userRepository.save(user);
+
+            log.info("Пользователь зарегистрирован {}", user);
+
+            return true;
+        } else {
+            // Если пользователя не нашло, то ничего не регистрируем
+            return false;
+        }
+    }
+
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).get();
+        Optional<User> tmp = userRepository.findById(id);
+        return tmp.orElse(null);
     }
 
     @Override
@@ -232,8 +257,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByProviderId(String id) {
-        Optional<User> tmp = userRepository.findByProviderId(id);
+    public User findByProviderId(String providerId) {
+        Optional<User> tmp = userRepository.findByProviderId(providerId);
         return tmp.orElse(null);
     }
 }

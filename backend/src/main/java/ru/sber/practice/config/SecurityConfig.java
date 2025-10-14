@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractAuthenticationFilterConfigurer;
@@ -50,13 +51,13 @@ public class SecurityConfig{
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                /*.authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/user/**", "/activate/*").permitAll()
-                        .anyRequest().authenticated())*/
-                .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
-                        .anyRequest().permitAll())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/register", "/activate/*", "/login/*").permitAll()
+                        .anyRequest().authenticated())
+//                .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
+//                        .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/whoami")
+                        .defaultSuccessUrl("/login/oauth2")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2ServiceImpl)))
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
