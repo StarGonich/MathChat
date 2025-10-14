@@ -41,9 +41,9 @@ class UserServiceTest {
     @Test
     void register_NewUser_Success() {
         // given
-        SignUpDTO signUpDTO = new SignUpDTO("John", "Doe", "john@test.com", "password");
-        User user = createUser(signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), signUpDTO.password());
-        User savedUser = createUser(user.getFirstname(), user.getLastname(), user.getEmail(), "encodedPassword");
+        SignUpDTO signUpDTO = new SignUpDTO("test", "John", "Doe", "john@test.com", "password");
+        User user = createUser(signUpDTO.username(), signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), signUpDTO.password());
+        User savedUser = createUser(user.getUsername(), user.getFirstname(), user.getLastname(), user.getEmail(), "encodedPassword");
         savedUser.setToken(UUID.randomUUID());
         savedUser.setTokenDate(ZonedDateTime.now());
 
@@ -68,8 +68,8 @@ class UserServiceTest {
     @Test
     void register_ExistingUserWithoutToken_ReturnsExistingUser() {
         // given
-        SignUpDTO signUpDTO = new SignUpDTO("John", "Doe", "john@test.com", "password");
-        User existingUser = createUser(signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), "oldPassword");
+        SignUpDTO signUpDTO = new SignUpDTO("test", "John", "Doe", "john@test.com", "password");
+        User existingUser = createUser(signUpDTO.username(), signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), "oldPassword");
         existingUser.setEnabled(true);
 
         when(userMapper.toUser(signUpDTO)).thenReturn(existingUser);
@@ -87,13 +87,13 @@ class UserServiceTest {
     @Test
     void register_ExistingUserWithToken_ReRegistration() {
         // given
-        SignUpDTO signUpDTO = new SignUpDTO("John", "NewDoe", "john@test.com", "newPassword");
-        User newUser = createUser(signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), signUpDTO.password());
-        User existingUser = createUser("OldJohn", "OldDoe", newUser.getEmail(), "oldPassword");
+        SignUpDTO signUpDTO = new SignUpDTO("test", "John", "NewDoe", "john@test.com", "newPassword");
+        User newUser = createUser(signUpDTO.username(), signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), signUpDTO.password());
+        User existingUser = createUser("test", "OldJohn", "OldDoe", newUser.getEmail(), "oldPassword");
         existingUser.setToken(UUID.randomUUID());
 //        existingUser.setTokenDate(ZonedDateTime.now().minusMinutes(10));
 
-        User updatedUser = createUser(newUser.getFirstname(), newUser.getLastname(), newUser.getEmail(), "encodedNewPassword");
+        User updatedUser = createUser(newUser.getUsername(), newUser.getFirstname(), newUser.getLastname(), newUser.getEmail(), "encodedNewPassword");
         updatedUser.setToken(UUID.randomUUID());
 //        updatedUser.setTokenDate(ZonedDateTime.now());
 
@@ -117,11 +117,11 @@ class UserServiceTest {
     void activateUser_ValidToken_ReturnsTrue() {
         // given
         UUID token = UUID.randomUUID();
-        User user = createUser("John", "Doe", "john@test.com", "password");
+        User user = createUser("test", "John", "Doe", "john@test.com", "password");
         user.setToken(token);
         user.setTokenDate(ZonedDateTime.now().minusMinutes(3)); // Токен еще действителен
 
-        when(userRepository.findByToken(token)).thenReturn(user);
+        when(userRepository.findByToken(token)).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         // when
@@ -137,7 +137,12 @@ class UserServiceTest {
     void activateUser_InvalidToken_ReturnsFalse() {
         // given
         UUID token = UUID.randomUUID();
-        when(userRepository.findByToken(token)).thenReturn(null);
+//        Optional<User> tmp = userRepository.findByToken(token);
+//        if (tmp.isPresent()) {
+//            User user2 = tmp.get();
+//            when(user2).thenReturn(null);
+//        }
+        when(userRepository.findByToken(token)).thenReturn(Optional.empty());
 
         // when
         boolean result = userService.activateUser(token);
@@ -151,11 +156,11 @@ class UserServiceTest {
     void activateUser_ExpiredToken_ReturnsFalse() {
         // given
         UUID token = UUID.randomUUID();
-        User user = createUser("John", "Doe", "john@test.com", "password");
+        User user = createUser("test", "John", "Doe", "john@test.com", "password");
         user.setToken(token);
         user.setTokenDate(ZonedDateTime.now().minusMinutes(10)); // Токен просрочен
 
-        when(userRepository.findByToken(token)).thenReturn(user);
+        when(userRepository.findByToken(token)).thenReturn(Optional.of(user));
 
         // when
         boolean result = userService.activateUser(token);
@@ -165,8 +170,9 @@ class UserServiceTest {
         verify(userRepository, never()).save(any(User.class));
     }
 
-    private User createUser(String firstname, String lastname, String email, String password) {
+    private User createUser(String username, String firstname, String lastname, String email, String password) {
         User user = new User();
+        user.setUsername(username);
         user.setFirstname(firstname);
         user.setLastname(lastname);
         user.setEmail(email);

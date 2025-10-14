@@ -52,6 +52,7 @@ public class UserServiceImpl implements UserService {
                 return userExisted;
             } else {
                 log.info("Перерегистрация пользователя {}", userExisted);
+                userExisted.setUsername(user.getUsername());
                 userExisted.setFirstname(user.getFirstname());
                 userExisted.setLastname(user.getLastname());
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -104,34 +105,32 @@ public class UserServiceImpl implements UserService {
     //
     @Override
     public boolean activateUser(UUID token) {
-        User user = userRepository.findByToken(token);
+        Optional<User> userToken = userRepository.findByToken(token);
+        if (userToken.isPresent()) {
+            User user = userToken.get();
+            ZonedDateTime zonedDateTime = ZonedDateTime.now();
+            ZonedDateTime tokenDateTime = user.getTokenDate().plusMinutes(5);
 
-        //
-        // При отсутствии пользователя с таким токеном возвращаем false
-        //
-        if (user == null) {
+            //
+            // Если срок службы токена истёк, то возвращаем false
+            // (возможно стоит переделать, чтобы пользователь понимал, истёк ли у него токен или он неправильный)
+            //
+            if (zonedDateTime.isAfter(tokenDateTime)) {
+                log.info("Срок действия токена активации почты истёк");
+                return false;
+            }
+
+            user.setToken(null);
+            user.setEnabled(true);
+
+            userRepository.save(user);
+
+            return true;
+        } else {
+            // При отсутствии пользователя с таким токеном возвращаем false
             log.info("Неправильный токен при активации почты");
             return false;
         }
-
-        ZonedDateTime zonedDateTime = ZonedDateTime.now();
-        ZonedDateTime tokenDateTime = user.getTokenDate().plusMinutes(5);
-
-        //
-        // Если срок службы токена истёк, то возвращаем false
-        // (возможно стоит переделать, чтобы пользователь понимал, истёк ли у него токен или он неправильный)
-        //
-        if (zonedDateTime.isAfter(tokenDateTime)) {
-            log.info("Срок действия токена активации почты истёк");
-            return false;
-        }
-
-        user.setToken(null);
-        user.setEnabled(true);
-
-        userRepository.save(user);
-
-        return true;
     }
 
     //
@@ -170,32 +169,38 @@ public class UserServiceImpl implements UserService {
     //
     @Override
     public boolean changePassword(UUID token, PasswordDTO passwordDTO) {
-        User user = userRepository.findByToken(token);
+        Optional<User> userToken = userRepository.findByToken(token);
+        if (userToken.isPresent()) {
+            User user = userToken.get();
+            // Если пользователь не активирован, то возвращаем false
+            if (!user.isEnabled()) {
+                log.info("Пользователь не активирован");
+                return false;
+            }
 
-        // При отсутствии пользователя с таким токеном возвращаем false
-        if ((user == null) || (!user.isEnabled())) {
+            ZonedDateTime zonedDateTime = ZonedDateTime.now();
+            ZonedDateTime tokenDateTime = user.getTokenDate().plusMinutes(5);
+
+            //
+            // Если срок службы токена истёк, то возвращаем false
+            // (возможно стоит переделать, чтобы пользователь понимал, истёк ли у него токен или он неправильный)
+            //
+            if (zonedDateTime.isAfter(tokenDateTime)) {
+                log.info("Срок действия токена сброса пароля истёк");
+                return false;
+            }
+
+            user.setPassword(passwordEncoder.encode(passwordDTO.password()));
+            user.setToken(null);
+
+            userRepository.save(user);
+
+            return true;
+        } else {
+            // При отсутствии пользователя с таким токеном возвращаем false
             log.info("Неправильный токен сброса пароля");
             return false;
         }
-
-        ZonedDateTime zonedDateTime = ZonedDateTime.now();
-        ZonedDateTime tokenDateTime = user.getTokenDate().plusMinutes(5);
-
-        //
-        // Если срок службы токена истёк, то возвращаем false
-        // (возможно стоит переделать, чтобы пользователь понимал, истёк ли у него токен или он неправильный)
-        //
-        if (zonedDateTime.isAfter(tokenDateTime)) {
-            log.info("Срок действия токена сброса пароля истёк");
-            return false;
-        }
-
-        user.setPassword(passwordEncoder.encode(passwordDTO.password()));
-        user.setToken(null);
-
-        userRepository.save(user);
-
-        return true;
     }
 
     @Override
@@ -217,6 +222,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByEmail(String email) {
         Optional<User> tmp = userRepository.findByEmail(email);
+        return tmp.orElse(null);
+    }
+
+    @Override
+    public User findByToken(UUID token) {
+        Optional<User> tmp = userRepository.findByToken(token);
+        return tmp.orElse(null);
+    }
+
+    @Override
+    public User findByProviderId(String id) {
+        Optional<User> tmp = userRepository.findByProviderId(id);
         return tmp.orElse(null);
     }
 }
