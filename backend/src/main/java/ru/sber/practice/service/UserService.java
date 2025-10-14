@@ -18,4 +18,6 @@ public interface UserService {
     boolean changePassword(UUID token, PasswordDTO passwordDTO);
 
     User findById(Long id);
+
+    User updateUser(UserDTO userDTO);
 }

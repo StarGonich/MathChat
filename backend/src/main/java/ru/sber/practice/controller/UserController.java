@@ -2,6 +2,7 @@ package ru.sber.practice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.User;
@@ -27,5 +28,11 @@ public class UserController {
     @PostMapping("/find")
     public User findById(@PathVariable Long id) {
         return userService.findById(id);
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<User> updateUser(@RequestBody UserDTO userDTO) {
+        User user = userService.updateUser(userDTO);
+        return ResponseEntity.ok(user);
     }
 }

@@ -26,7 +26,7 @@ public class AuthController {
     private final UserMapper userMapper;
 
     @GetMapping("/whoami")
-    public User welcome(Principal principal){
+    public User welcome(Principal principal) {
         return userService.findById(Long.parseLong(principal.getName(), 10));
     }
 
@@ -69,4 +69,5 @@ public class AuthController {
         }
         return new ResponseEntity<>("Неправильный токен", HttpStatus.BAD_REQUEST);
     }
+
 }

@@ -204,6 +204,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User updateUser(UserDTO userDTO) {
+        User user = findById(userDTO.id());
+        user.setUsername(userDTO.username());
+        user.setFirstname(userDTO.firstname());
+        user.setLastname(userDTO.lastname());
+        user.setUsername(userDTO.username());
+        userRepository.save(user);
+        return user;
+    }
+
+    @Override
     public User findByEmail(String email) {
         Optional<User> tmp = userRepository.findByEmail(email);
         return tmp.orElse(null);
