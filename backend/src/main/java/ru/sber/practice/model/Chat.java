@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Table(name = "chats")
 @Data
@@ -17,27 +15,12 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "first_user_id", nullable = false)
-    private User firstUser;
+    @Column(nullable = false, name = "first_user_id")
+    private Long firstUser;
 
-    @ManyToOne
-    @JoinColumn(name = "second_user_id", nullable = false)
-    private User secondUser;
+    @Column(nullable = false, name = "second_user_id")
+    private Long secondUser;
 
-    @OneToOne
-    @JoinColumn(name = "last_message_id")
-    private Message lastMessageId;
-
-    @OneToMany(mappedBy = "chatId")
-    private List<Message> chatMessages;
-
-//    @Column(nullable = false, name = "first_user_id")
-//    private Long firstUser;
-//
-//    @Column(nullable = false, name = "second_user_id")
-//    private Long secondUser;
-//
-//    @Column(name = "last_message_id")
-//    private Long lastMessageId;
+    @Column(name = "last_message_id")
+    private Long lastMessageId;
 }

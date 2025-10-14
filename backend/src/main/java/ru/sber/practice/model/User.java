@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -33,7 +32,7 @@ public class User {
     // Токен для подтверждения регистрации по почте
     private UUID token;
 
-    @Column(nullable = false, name = "is_enabled")
+    @Column(nullable = false)
     @ColumnDefault("false")
     private boolean isEnabled;
 
@@ -52,14 +51,4 @@ public class User {
 
     @Column(name = "image_url")
     private String imageUrl;
-
-    @OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL)
-    private List<Chat> firstUserChats;
-
-    @OneToMany(mappedBy = "secondUser", cascade = CascadeType.ALL)
-    private List<Chat> secondUserChats;
-
-    @OneToMany(mappedBy = "userId")
-    private List<Message> userMessages;
-
 }
