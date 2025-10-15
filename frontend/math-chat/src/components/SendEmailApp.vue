@@ -1,6 +1,11 @@
 <template>
     <div class="ui text container">
-        <h2 class="ui center header">Подтверждение почты</h2>
+         <h2 class="ui image header">
+            <img src="./static/images/icon.webp" class="image">
+            <div class="content">
+                Подтверждение почты
+            </div>
+        </h2>
         <form class="ui raised center aligned container segment">
             <div class="ui message">
                 На вашу почту пришло письмо! Для подтверждения откройте ссылку в письме.

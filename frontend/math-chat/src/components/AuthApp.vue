@@ -1,7 +1,7 @@
 <template>
     <div class="ui text container">
         <h2 class="ui image header">
-            <img src="./static/images/user.png" class="image">
+            <img src="./static/images/icon.webp" class="image">
             <div class="content">
                 Вход
             </div>
