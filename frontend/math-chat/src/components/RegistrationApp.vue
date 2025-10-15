@@ -52,8 +52,11 @@
                 </div>
             </div>
             <div class="ui clearing divider"></div>
-            <button class = "ui button primary" @click="register" :disabled="!user.firstname || !user.lastname || !user.email || !user.password || !isCorrectPass">Зарегистрироваться</button>
+            <button class = "ui button primary" @click.prevent="register" :disabled="!user.firstname || !user.lastname || !user.email || !user.password || !isCorrectPass">Зарегистрироваться</button>
             <button class = "ui button" @click="auth">Есть аккаунт? Войти</button>
+            <div class="ui message" v-if="msg" @click="close">
+                {{ msg }}
+            </div>
         </form>
     </div>
 </template>
@@ -69,7 +72,10 @@ const user = ref({
 })
 const password = ref('')
 const isCorrectPass = ref(false)
-const emit = defineEmits(['authEvent'])
+
+const msg = ref('')
+
+const emit = defineEmits(['quitEvent'])
 
 function onInputPass(){
     isCorrectPass.value = user.value.password === password.value
@@ -77,16 +83,25 @@ function onInputPass(){
 
 async function register() {
     try {
-        let msg = ''
+        let resp = {}
         await axios.post('http://localhost:8080/register', user.value)
-            .then(response => msg = 'Имя: ' + response.data.firstname + ", почта: " + response.data.email)
-        alert('Успешная регистрация!\nОтвет сервера: ' + msg)
+            .then(response => resp = response.data)
+        if (!resp.firstname){
+            msg.value = resp
+        }else{
+            emit('quitEvent', 'email')
+        }
+        console.log(resp)
     } catch (e) {
-        alert(e)
+        msg.value = 'Не удалось зарегистрироваться, повторите попытку позже'
     }
 }
 
 function auth(){
-    emit('authEvent', 'auth')
+    emit('quitEvent', 'auth')
+}
+
+function close(){
+    msg.value = ''
 }
 </script>

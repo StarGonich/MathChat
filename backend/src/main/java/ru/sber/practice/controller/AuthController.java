@@ -56,9 +56,11 @@ public class AuthController {
         log.info("Запрос на смену почты: {}", emailDTO);
         boolean passwordForgotten = userService.passwordForgotten(emailDTO);
         if (passwordForgotten) {
+            log.info("Успешный запрос: {}", emailDTO);
             return new ResponseEntity<>("Письмо для смены пароля отправлено", HttpStatus.OK);
         }
-        return new ResponseEntity<>("Почта не найдена или не активирована", HttpStatus.BAD_REQUEST);
+        log.info("Неудачный запрос: {}", emailDTO);
+        return new ResponseEntity<>("Почта не найдена или не активирована", HttpStatus.OK); // vue ругается когда встречает BAD_REQUEST
     }
 
     @PostMapping("/changePassword/{token}")

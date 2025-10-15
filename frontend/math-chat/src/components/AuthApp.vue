@@ -24,9 +24,9 @@
             <div class="ui clearing divider"></div>
             <button class = "ui button primary" @click="auth" :disabled="!user.email || !user.password">Войти</button>
             <button class = "ui button" @click="register">Нет аккаунта? Зарегистрироваться</button>
-            <button class = "ui button" @click="forgot" :disabled="!user.email">Забыли пароль?</button>
+            <button class = "ui button" @click.prevent="forgot" :disabled="!user.email">Забыли пароль?</button>
             <div class="ui info message" v-if="msg">
-                <i class="close icon"></i>
+                <i class="close icon" @click="close"></i>
                 <div class="header">
                     {{ msg }}
                 </div>
@@ -46,7 +46,7 @@ const emit = defineEmits(['quitEvent'])
 const msg=ref('')
 
 function auth() {
-    alert('Успешная авторизация!')
+    emit('quitEvent', 'mes')
 }
 
 function register(){
@@ -60,5 +60,9 @@ async function forgot(){
     }catch(e){
         msg.value = "Не удалось поменять пароль, попробуйте позже"
     }
+}
+
+function close(){
+    msg.value = ''
 }
 </script>

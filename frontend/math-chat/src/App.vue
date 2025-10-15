@@ -1,16 +1,12 @@
 <template>
-  <p> Выбор страницы </p>
-  <select v-model="str">
-    <option value="reg">Страница регистрации</option>
-    <option value="email">Страница подтверждения почты</option>
-    <option value="auth">Страница входа</option>
-    <option value="mes">Страница мессенджера</option>
-  </select>
+  <div v-if="dev">
+    <DevApp @switchEvent="(msg) => str = msg" />
+  </div>
   <div v-if="str === 'reg'">
     <RegistrationApp @quitEvent="(msg) => str = msg" />
   </div>
   <div v-if="str === 'email'">
-    <SendEmailApp />
+    <SendEmailApp @quitEvent="(msg) => str = msg" />
   </div>
   <div v-if="str === 'auth'">
     <AuthApp @quitEvent="(msg) => str = msg"/>
@@ -21,12 +17,14 @@
 </template>
 
 <script setup>
+import DevApp from './components/DevApp.vue'
 import RegistrationApp from './components/RegistrationApp.vue'
 import SendEmailApp from './components/SendEmailApp.vue'
 import MessengerApp from './components/MessengerApp.vue'
 import AuthApp from './components/AuthApp.vue'
 import { ref } from 'vue'
 const str = ref('auth')
+const dev = true
 </script>
 
 <style>
