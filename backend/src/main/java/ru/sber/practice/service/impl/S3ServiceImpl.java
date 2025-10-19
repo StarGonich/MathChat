@@ -2,13 +2,16 @@ package ru.sber.practice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.*;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -16,14 +19,17 @@ public class S3ServiceImpl {
     private final S3Client s3Client;
     private final String bucketName = "mathchat";
 
-    public void uploadFile(String key, InputStream inputStream, long contentLength) {
+    public String uploadFile(MultipartFile file) throws IOException {
+        String key = UUID.randomUUID() + "_" + file.getOriginalFilename();
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
                 .key(key)
                 .build();
 
         s3Client.putObject(putObjectRequest,
-                RequestBody.fromInputStream(inputStream, contentLength));
+                RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+
+        return key;
     }
 
     public byte[] downloadFile(String key) {

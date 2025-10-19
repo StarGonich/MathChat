@@ -20,8 +20,7 @@ public class S3Controller {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
         try {
-            String key = UUID.randomUUID() + "_" + file.getOriginalFilename();
-            s3Service.uploadFile(key, file.getInputStream(), file.getSize());
+            String key = s3Service.uploadFile(file);
             return ResponseEntity.ok("File uploaded successfully: " + key);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
