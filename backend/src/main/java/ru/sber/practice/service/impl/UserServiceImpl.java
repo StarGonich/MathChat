@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
                 userExisted.setToken(UUID.randomUUID());
                 userExisted.setTokenDate(ZonedDateTime.now());
-                userExisted = userRepository.save(userExisted);
+                userRepository.save(userExisted);
 
                 String message = String.format(
                         "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setToken(UUID.randomUUID());
             user.setTokenDate(ZonedDateTime.now());
-            user = userRepository.save(user);
+            userRepository.save(user);
 
             String message = String.format(
                     "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
@@ -196,33 +196,6 @@ public class UserServiceImpl implements UserService {
         } else {
             // При отсутствии пользователя с таким токеном возвращаем false
             log.info("Неправильный токен сброса пароля");
-            return false;
-        }
-    }
-
-    // Регистрация пользователей через oauth2 (т.к. для них нужно дополнительно заполнить username, firstname, lastname)
-    @Override
-    public boolean oauth2Login(String providerId, Oauth2LoginDTO oauth2LoginDTO) {
-        Optional<User> tmp = userRepository.findByProviderId(providerId);
-        if (tmp.isPresent()) {
-            User user = tmp.get();
-
-            // Если пользователь уже регистрировал аккаунт через oauth2, то его по новой не регистрируем
-            if (user.isEnabled()) {
-                return false;
-            }
-
-            user.setUsername(oauth2LoginDTO.username());
-            user.setFirstname(oauth2LoginDTO.firstname());
-            user.setLastname(oauth2LoginDTO.lastname());
-            user.setEnabled(true);
-            userRepository.save(user);
-
-            log.info("Пользователь зарегистрирован {}", user);
-
-            return true;
-        } else {
-            // Если пользователя не нашло, то ничего не регистрируем
             return false;
         }
     }

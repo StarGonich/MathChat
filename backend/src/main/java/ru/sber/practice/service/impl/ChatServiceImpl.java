@@ -1,0 +1,75 @@
+package ru.sber.practice.service.impl;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import ru.sber.practice.config.MyUserDetails;
+import ru.sber.practice.dto.UserDTO;
+import ru.sber.practice.model.Chat;
+import ru.sber.practice.dto.mapping.UserMapper;
+import ru.sber.practice.model.User;
+import ru.sber.practice.repository.ChatRepository;
+import ru.sber.practice.repository.MessageRepository;
+import ru.sber.practice.repository.UserRepository;
+import ru.sber.practice.service.ChatService;
+
+import java.util.List;
+import java.util.Optional;
+
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class ChatServiceImpl implements ChatService {
+    private final MessageRepository messageRepository;
+    private final UserMapper userMapper;
+    private final ChatRepository chatRepository;
+    private final UserRepository userRepository;
+
+    @Override
+    public List<Chat> getChats(Long userId) {
+        return chatRepository.findChatByUserId(userId);
+    }
+
+    @Override
+    public void createChat(MyUserDetails userDetails, UserDTO userDTO) {
+        Optional<User> User = userRepository.findByUsername(userDTO.username());
+        if (User.isPresent()) {
+            Chat chat = new Chat();
+
+            chat.setFirstUserId(userRepository.findByUsername(userDetails.getUsername()).get());
+            chat.setSecondUserId(userRepository.findByUsername(userDTO.username()).get());
+            chatRepository.save(chat);
+        } else {
+            log.info("Пользователь не найден");
+        }
+    }
+
+//    @Override
+//    public Chat getChatByChatId(Long chatId) {
+//        return chatRepository.findChatByChatId(chatId);
+//    }
+//
+//    @Override
+//    public List<UserDTO> getGlobalChats(String search) {
+//        return userRepository
+//                .findBySearchTerm(search)
+//                .stream()
+//                .map(userMapper::toDTO)
+//                .toList();
+//    }
+//
+//    @Override
+//    public List<Message> getMessages(Long chatId) {
+//        return messageRepository.findByChatId(chatId);
+//    }
+//
+//    @Override
+//    public Message sendMessage(Message message) {
+//        return messageRepository.save(message);
+//    }
+//
+//    public Long getRecipientId(Long userId, Long ChatId) {
+//        return chatRepository.findRecipientIdByUserIdAndChatId(userId, ChatId)
+//                .orElseThrow(() -> new RuntimeException("Не можем найти собеседника"));
+//    }
+}

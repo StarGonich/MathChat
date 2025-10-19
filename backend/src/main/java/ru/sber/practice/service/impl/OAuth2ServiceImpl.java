@@ -1,5 +1,7 @@
 package ru.sber.practice.service.impl;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -21,6 +23,27 @@ import java.util.Optional;
 public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
     private final UserRepository userRepository;
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public String generateUsername() {
+        String prefix = "user_";
+
+        // Получаем следующее значение sequence
+        String username = prefix + entityManager
+                .createNativeQuery("SELECT nextval('username_seq')")
+                .getSingleResult().toString();
+
+        while (userRepository.findByUsername(username).isPresent()) {
+            username = prefix + entityManager
+                    .createNativeQuery("SELECT nextval('username_seq')")
+                    .getSingleResult().toString();
+        }
+
+        return username;
+    }
+
+
     @Override
     public OAuth2User loadUser(OAuth2UserRequest oAuth2UserRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(oAuth2UserRequest);
@@ -39,10 +62,12 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
         Optional<User> optionalUser = userRepository.findByProviderId(providerId);
         User user = new User();
         if (optionalUser.isEmpty()) {
+            user.setUsername(generateUsername());
             user.setProvider(AuthProvider.GITHUB);
             user.setProviderId(providerId);
             user.setImageUrl(avatarUrl);
-            user = userRepository.save(user);
+            user.setEnabled(true);
+            userRepository.save(user);
         } else {
             user = optionalUser.get();
         }
