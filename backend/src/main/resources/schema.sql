@@ -1,5 +1,5 @@
 CREATE TABLE users (
-    id bigint AUTO_INCREMENT PRIMARY KEY,
+    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username varchar UNIQUE,
     firstname character varying(50),
     lastname character varying(50),
@@ -26,8 +26,9 @@ CREATE TABLE chats (
     id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_user_id bigint NOT NULL,
     second_user_id bigint NOT NULL,
-    last_message_id bigint -- Здесь нет NOT NULL,
+    last_message_id bigint, -- Здесь нет NOT NULL,
     -- то есть сначала создаётся чат, а потом уже сообщение
+    CONSTRAINT UC_FUserSUser UNIQUE (first_user_id, second_user_id)
 );
 
 CREATE TABLE messages (
@@ -45,3 +46,5 @@ ALTER TABLE chats ADD FOREIGN KEY (last_message_id) REFERENCES messages(id);
 
 ALTER TABLE messages ADD FOREIGN KEY (user_id) REFERENCES users(id);
 ALTER TABLE messages ADD FOREIGN KEY (chat_id) REFERENCES chats(id);
+
+CREATE SEQUENCE IF NOT EXISTS username_seq START WITH 1000 INCREMENT BY 1

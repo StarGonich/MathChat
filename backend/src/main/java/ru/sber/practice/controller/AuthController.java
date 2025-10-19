@@ -23,10 +23,6 @@ public class AuthController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-//    @GetMapping("/login/oauth2/")
-//    public User welcome(Principal principal) {
-//        return userService.findById(Long.parseLong(principal.getName(), 10));
-//    }
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody SignUpDTO signUpDTO) {
         log.info("AuthController: signUpDTO {}", signUpDTO);
@@ -41,7 +37,7 @@ public class AuthController {
     }
 
     @GetMapping("/activate/{token}")
-    public ResponseEntity<?> activate(Model model, @PathVariable UUID token) {
+    public ResponseEntity<?> activate(@PathVariable UUID token) {
         boolean isActivated = userService.activateUser(token);
         if (isActivated) {
             return new ResponseEntity<>("Почта подтверждена", HttpStatus.OK);
@@ -68,19 +64,5 @@ public class AuthController {
             return new ResponseEntity<>("Пароль изменён", HttpStatus.OK);
         }
         return new ResponseEntity<>("Неправильный токен", HttpStatus.BAD_REQUEST);
-    }
-
-    @PostMapping("/login/oauth2")
-    public ResponseEntity<?> oauth2Login(Principal principal, @RequestBody Oauth2LoginDTO oauth2LoginDTO) {
-        boolean userLogged = userService.oauth2Login(principal.getName(), oauth2LoginDTO);
-        if (userLogged) {
-            return new ResponseEntity<>("Пользователь зарегистрирован", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Пользователь не найден или уже зарегистрирован", HttpStatus.BAD_REQUEST);
-    }
-
-    @GetMapping("/login/oauth2")
-    public User welcome(Principal principal) {
-        return userService.findByProviderId(principal.getName());
     }
 }
