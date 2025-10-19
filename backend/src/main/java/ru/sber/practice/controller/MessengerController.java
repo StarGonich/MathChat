@@ -7,11 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.Chat;
 import ru.sber.practice.model.Message;
 import ru.sber.practice.service.MessengerService;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -51,5 +53,16 @@ public class MessengerController {
                 message
         );
         return new ResponseEntity<>(sendedMessage, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/change/avatar/{id}")
+    public ResponseEntity<String> changeAvatar(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
+        try {
+            String key = messengerService.changeAvatar(id, file);
+            return ResponseEntity.ok("Аватарка обновлена: " + key);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Ошибка сохранения аватарки");
+        }
     }
 }
