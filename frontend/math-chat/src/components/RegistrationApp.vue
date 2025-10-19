@@ -1,75 +1,105 @@
 <template>
     <div class="ui text container">
-        <h2 class="ui center header">Регистрация</h2>
-        <form class="ui raised left aligned segment">
-            <div>
-                <p><label>Имя: </label></p>
-                <div class="ui input">
-                    <input v-model="user.firstname" place-holder="Имя">
-                </div>
-                <div class="ui left pointing red basic  label" v-if="!user.firstname">
-                    Нет имени
-                </div>
+        <h2 class="ui image header">
+            <img src="./static/images/icon.webp" class="image">
+            <div class="content">
+                Регистрация
             </div>
-            <div class="ui clearing divider"></div>
-            <div>
-                <p><label>Фамилия: </label></p>
-                <div class="ui input">
-                    <input v-model="user.lastname" place-holder="Фамилия">
+        </h2>
+        <div class="ui raised left aligned container segment">
+            <form class="ui large form">
+                <div class="field">
+                    <div :class="firstClass">
+                        <i class="user icon"></i>
+                        <input type="text" name="firstname" v-model="user.firstname" placeholder="Имя">
+                    </div>
                 </div>
-                <div class="ui left pointing red basic  label" v-if="!user.lastname">
-                    Нет фамилии
+                <div class="field">
+                    <div :class="lastClass">
+                        <i class="user icon"></i>
+                        <input type="text" name="lastname" v-model="user.lastname" placeholder="Фамилия">
+                    </div>
                 </div>
-            </div>
-            <div class="ui clearing divider"></div>
-            <div>
-                <p><label>Почта: </label></p>
-                <div class="ui input">
-                    <input v-model="user.email" place-holder="Почта">
+                <div class="ui clearing divider"></div>
+                <div class="field">
+                    <div :class="emailClass">
+                        <i class="user icon"></i>
+                        <input type="text" name="email" v-model="user.email" placeholder="Почта">
+                    </div>
                 </div>
-                <div class="ui left pointing red basic  label" v-if="!user.email">
-                    Нет почты
+                <div class="ui clearing divider"></div>
+                <div class="field">
+                    <div :class="passClass">
+                        <i class="lock icon"></i>
+                        <input type="password" name="password" v-model="user.password" placeholder="Пароль" @input="onInputPass">
+                    </div>
                 </div>
-            </div>
-            <div class="ui clearing divider"></div>
-            <div>
-                <p><label>Пароль: </label></p>
-                <div class="ui input">
-                    <input v-model="user.password" place-holder="Пароль" type="password" @input="onInputPass">
+                <div class="field">
+                    <div class="ui left icon input">
+                        <i class="lock icon"></i>
+                        <input type="password" name="password" v-model="password" placeholder="Подтвердите пароль" @input="onInputPass">
+                    </div>
                 </div>
-                <div class="ui left pointing red basic  label" v-if="!user.password">
-                    Нет пароля
-                </div>
-            </div>
-            <div class="ui clearing divider"></div>
-            <div>
-                <p><label>Подтвердите пароль: </label></p>
-                <div class="ui input">
-                    <input v-model="password" place-holder="Пароль" type="password" @input="onInputPass">
-                </div>
-                <div class="ui left pointing red basic  label" v-if="!isCorrectPass">
+                <div class="ui left red message" v-if="!isCorrectPass">
+                    <i class="times icon"></i>
                     Пароли не совпадают
                 </div>
-            </div>
-            <div class="ui clearing divider"></div>
-            <button class = "ui button primary" @click="register" :disabled="!user.firstname || !user.lastname || !user.email || !user.password || !isCorrectPass">Зарегистрироваться</button>
-            <button class = "ui button" @click="auth">Есть аккаунт? Войти</button>
-        </form>
+                <div class="ui left green message" v-else>
+                    <i class="check icon"></i>
+                    Пароли совпадают
+                </div>
+                <div class="ui clearing divider"></div>
+                <button class = "ui button primary" @click.prevent="register" :disabled="!user.firstname || !user.lastname || !user.email || !user.password || !isCorrectPass">Зарегистрироваться</button>
+                <button class = "ui button" @click="auth">Есть аккаунт? Войти</button>
+                <div class="ui message" v-if="msg" @click="close">
+                    {{ msg }}
+                </div>
+            </form>
+        </div>
     </div>
 </template>
 
 <script setup>
 import axios from 'axios'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 const user = ref({
     firstname: '',
     lastname: '',
     email: '',
     password: ''
 })
+const firstClass = ref('ui left icon input')
+const lastClass = ref('ui left icon input')
+const emailClass = ref('ui left icon input')
+const passClass = ref('ui left icon input')
+watch(user.value, (newUser) =>{
+    if (newUser.firstname){
+        firstClass.value = 'ui left icon input'
+    }else{
+        firstClass.value = 'ui left icon error input'
+    }
+    if (newUser.lastname){
+        lastClass.value = 'ui left icon input'
+    }else{
+        lastClass.value = 'ui left icon error input'
+    }
+    if (newUser.email){
+        emailClass.value = 'ui left icon input'
+    }else{
+        emailClass.value = 'ui left icon error input'
+    }
+    if (newUser.password){
+        passClass.value = 'ui left icon input'
+    }else{
+        passClass.value = 'ui left icon error input'
+    }
+})
 const password = ref('')
 const isCorrectPass = ref(false)
-const emit = defineEmits(['authEvent'])
+
+const msg = ref('')
+
+const emit = defineEmits(['quitEvent'])
 
 function onInputPass(){
     isCorrectPass.value = user.value.password === password.value
@@ -77,16 +107,25 @@ function onInputPass(){
 
 async function register() {
     try {
-        let msg = ''
+        let resp = {}
         await axios.post('http://localhost:8080/register', user.value)
-            .then(response => msg = 'Имя: ' + response.data.firstname + ", почта: " + response.data.email)
-        alert('Успешная регистрация!\nОтвет сервера: ' + msg)
+            .then(response => resp = response.data)
+        if (!resp.firstname){
+            msg.value = resp
+        }else{
+            emit('quitEvent', 'email')
+        }
+        console.log(resp)
     } catch (e) {
-        alert(e)
+        msg.value = 'Не удалось зарегистрироваться, повторите попытку позже'
     }
 }
 
 function auth(){
-    emit('authEvent', 'auth')
+    emit('quitEvent', 'auth')
+}
+
+function close(){
+    msg.value = ''
 }
 </script>

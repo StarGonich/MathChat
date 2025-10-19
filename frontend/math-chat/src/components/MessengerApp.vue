@@ -21,9 +21,18 @@
                         <div class="results"></div>
                     </div>
                     <div class="ui segment" v-for="user in chatUsers" :key="user.id">
-                        <p>{{formatLdots(user.login, 40)}}</p>
-                        <p>{{formatLdots(user.email, 40)}}</p>
-                        <button @click="updateChat(user.id, user.chatId)">Открыть диалог</button>
+                        <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
+                            <div class="six wide column">
+                                <img src="./static/images/user.png" class="image" height="60px">
+                            </div>
+                            <div class="ten wide column">
+                                <p>
+                                    {{formatLdots(user.login, 25)}}<br/>
+                                    {{formatLdots(user.email, 25)}}<br/>
+                                    {{formatLdots(user.lastMessage, 25)}}
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -32,29 +41,25 @@
                     <h2 class="ui center header">{{chatUser.login}}</h2>
                     <div v-for="message in messages" :key="message.id">
                         <div class="ui left aligned segment" v-if="message.userId != userId">
-                            <vue-latex v-if="message.isLatex" :expression="message.messageText" />
-                            <div v-else>
-                                <p v-for="line in formatArr(message.messageText, 45)" :key="line.id">
-                                    {{ line.text }}
-                                </p>
+                            <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
+                                <div v-if="line.isLatex">
+                                    <vue-latex  :expression="line.content"/>
+                                </div>
+                                <div v-else>{{ line.content }}</div>
                             </div>
                         </div>
                         <div class="ui right aligned segment" v-else>
-                            <vue-latex v-if="message.isLatex" :expression="message.messageText" />
-                            <div v-else>
-                                <p v-for="line in formatArr(message.messageText, 45)" :key="line.id">
-                                    {{ line.text }}
-                                </p>
+                            <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
+                                <div v-if="line.isLatex">
+                                    <vue-latex  :expression="line.content"/>
+                                </div>
+                                <div v-else>{{ line.content }}</div>
                             </div>
                         </div>
                     </div>
                     <div class="ui fluid action input">
                         <input type="text" v-model="textMessage" placeholder="Сообщение">
                         <button class="ui button" @click="post">Отправить</button>
-                        <div class="ui checkbox">
-                            <input type="checkbox" v-model="isLatex">
-                            <label>LaTeX</label>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -91,7 +96,6 @@ const props = defineProps({
   }
 })
 const textMessage = ref('')
-const isLatex = ref(false)
 
 const emit = defineEmits(['quitEvent'])
 
@@ -103,97 +107,97 @@ onMounted(async () => {
         console.log(e)
         allUsers.value = [
             {
-                id: 0,
+                id: 1,
                 firstname: 'Алиса',
                 lastname: 'Артемьева',
                 email: 'a@mail.ru'
             },
             {
-                id: 1,
+                id: 2,
                 firstname: 'Боб',
                 lastname: 'Бутчер',
                 email: 'b@mail.ru'
             },
             {
-                id: 2,
+                id: 3,
                 firstname: 'Витя',
                 lastname: 'Величайший',
                 email: 'v@mail.ru'
             },
             {
-                id: 3,
+                id: 4,
                 firstname: 'Длинный',
                 lastname:  'Очень длииииииииииииииииииииииинный ник',
                 email:  'dddddddddddddddddddddddddddddddddddddddd@mail.ru'
             },
             {
-                id: 4,
+                id: 5,
                 firstname: 'Глеб',
                 lastname: 'Горячий',
                 email: 'g@mail.ru'
             },
             {
-                id: 5,
+                id: 6,
                 firstname: 'Егор',
                 lastname: 'Елесин',
                 email: 'e@mail.ru'
             },
             {
-                id: 6,
+                id: 7,
                 firstname: 'Ёжик',
                 lastname: 'Ёлочный',
                 email: 'yo@mail.ru'
             },
             {
-                id: 7,
+                id: 8,
                 firstname: 'Жора',
                 lastname: 'Жирный',
                 email: 'j@mail.ru'
             },
             {
-                id: 8,
+                id: 9,
                 firstname: 'Зина',
                 lastname: 'Зиновьева',
                 email: 'z@mail.ru'
             },
             {
-                id: 9,
+                id: 10,
                 firstname: 'Игорь',
                 lastname: 'Иванов',
                 email: 'i@mail.ru'
             },
             {
-                id: 10,
+                id: 11,
                 firstname: 'Йорик',
                 lastname: 'Йог',
                 email: 'y@mail.ru'
             },
             {
-                id: 11,
+                id: 12,
                 firstname:'Кирилл',
                 lastname: 'Капустин',
                 email: 'k@mail.ru'
             },
             {
-                id: 12,
+                id: 13,
                 firstname: 'Лида',
                 lastname: 'Лосева',
                 email: 'l@mail.ru'
             },
             {
-                id: 13,
+                id: 14,
                 firstname: 'Матвей',
                 lastname: 'Мальцев',
                 email:  'm@mail.ru'
             },
             {
-                id: 14,
+                id: 15,
                 firstname: 'Никита',
                 lastname: 'Носа',
                 email: 'n@mail.ru'
             },
             {
-                id: 15,
+                id: 16,
                 firstname: 'Олег',
                 lastname: 'Оботуров',
                 email: 'o@mail.ru'
@@ -207,7 +211,7 @@ onMounted(async () => {
             email: allUsers.value[i].email
         })
     }
-    user = allUsers1.value[props.userId]
+    user = allUsers1.value[props.userId-1]
     try {
         await axios.get('http://localhost:8080/api/messenger/' + props.userId)
             .then(response => chats.value = response.data)
@@ -215,112 +219,105 @@ onMounted(async () => {
         console.log(e)
         chats.value = [
             {
-                id: 0,
-                userIdMin: 0,
-                userIdMax: 1
-            },
-            {
                 id: 1,
-                userIdMin: 0,
+                userIdMin: 1,
                 userIdMax: 2
             },
             {
                 id: 2,
-                userIdMin: 0,
+                userIdMin: 1,
                 userIdMax: 3
             },
             {
                 id: 3,
-                userIdMin: 0,
+                userIdMin: 1,
                 userIdMax: 4
             },
             {
                 id: 4,
-                userIdMin: 0,
+                userIdMin: 1,
                 userIdMax: 5
             },
             {
                 id: 5,
-                userIdMin: 0,
+                userIdMin: 1,
                 userIdMax: 6
+            },
+            {
+                id: 6,
+                userIdMin: 1,
+                userIdMax: 7
             }
         ]
     }
     for(let i = 0; i < chats.value.length; i++){
         chatUsers.value.push({
-            id: (chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId),
-            login: allUsers1.value[(chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId)].login,
-            email: allUsers1.value[(chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId)].email,
-            chatId: chats.value[i].id
+            id: (chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId+1),
+            login: allUsers1.value[(chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId-1)].login,
+            email: allUsers1.value[(chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId-1)].email,
+            chatId: chats.value[i].id,
+            lastMessage: ''
         })
     }
 })
 
 async function updateChat(id1, id2) {
-    chatUser = allUsers1.value[id1]
+    chatUser.value = allUsers1.value[id1-2]
     chatId = id2
     try {
         await axios.get('http://localhost:8080/api/messenger/chat/' + chatId)
             .then(response => messages.value = response.data)
     } catch (e) {
-        alert(e)
+        console.log(e)
         if(chatId == 0){
             messages.value = [
                 {
                     id: 0,
                     chatId: 0,
                     userId: 0,
-                    messageText: 'Привет! Как планы на вечер?',
-                    isLatex: false
+                    messageText: 'Привет! Как планы на вечер?'
                 },
                 {
                     id: 1,
                     chatId: 0,
                     userId: 1,
-                    messageText: 'Привет! Пока свободен. А что?',
-                    isLatex: false
+                    messageText: 'Привет! Пока свободен. А что?'
                 },
                 {
                     id: 2,
                     chatId: 0,
                     userId: 0,
-                    messageText: 'Да думаю сходить в тот новый бар на Пестеля. Соскучилась по хорошему бургеру)',
-                    isLatex: false
+                    messageText: 'Да думаю сходить в тот новый бар на Пестеля. Соскучилась по хорошему бургеру)'
                 },
                 {
                     id: 3,
                     chatId: 0,
                     userId: 1,
-                    messageText: 'О, я как раз про него читал! Иду?',
-                    isLatex: false
+                    messageText: 'О, я как раз про него читал! Иду?'
                 },
                 {
                     id: 4,
                     chatId: 0,
                     userId: 0,
-                    messageText: 'Конечно! Встречаемся в семь у входа?',
-                    isLatex: false
+                    messageText: 'Конечно! Встречаемся в семь у входа?'
                 },
                 {
                     id: 5,
                     chatId: 0,
                     userId: 1,
-                    messageText: 'Договорились. Только я с работы могу немного задержаться.',
-                    isLatex: false
+                    messageText: 'Договорились. Только я с работы могу немного задержаться.'
                 },
                 {
                     id: 6,
                     chatId: 0,
                     userId: 0,
-                    messageText: 'Ничего страшного. Я как раз успею заскочить домой. Тогда в семь!',
-                    isLatex: false
+                    messageText: 'Ничего страшного. Я как раз успею заскочить домой. Тогда в семь!'
                 },
                 {
                     id: 7,
                     chatId: 0,
                     userId: 1,
-                    messageText: 'Ага! Увидимся',
-                    isLatex: false
+                    messageText: 'Ага! Увидимся'
                 }
             ]
         }else if (chatId == 1){
@@ -329,50 +326,43 @@ async function updateChat(id1, id2) {
                     id: 0,
                     chatId: 1,
                     userId: 0,
-                    messageText: 'Мария, добрый день. Выслали презентацию клиенту?',
-                    isLatex: false
+                    messageText: 'Мария, добрый день. Выслали презентацию клиенту?'
                 },
                 {
                     id: 1,
                     chatId: 1,
                     userId: 2,
-                    messageText: 'Добрый день, Сергей Петрович! Только что отправила. Жду ответа.',
-                    isLatex: false
+                    messageText: 'Добрый день, Сергей Петрович! Только что отправила. Жду ответа.'
                 },
                 {
                     id: 2,
                     chatId: 1,
                     userId: 0,
-                    messageText: 'Хорошо. По итогам вчерaшнего созвона нужно внести правки в смету. Посмотрите, пожалуйста, пункты 3.1 и 4.5.',
-                    isLatex: false
+                    messageText: 'Хорошо. По итогам вчерaшнего созвона нужно внести правки в смету. Посмотрите, пожалуйста, пункты 3.1 и 4.5.'
                 },
                 {
                     id: 3,
                     chatId: 1,
                     userId: 2,
-                    messageText: 'Хорошо, я уже открыла файл. По пункту 4.5 у меня вопрос: мы учитываем доставку?',
-                    isLatex: false
+                    messageText: 'Хорошо, я уже открыла файл. По пункту 4.5 у меня вопрос: мы учитываем доставку?'
                 },
                 {
                     id: 4,
                     chatId: 1,
                     userId: 0,
-                    messageText: 'Да, учитываем. Добавьте отдельной строкой.',
-                    isLatex: false
+                    messageText: 'Да, учитываем. Добавьте отдельной строкой.'
                 },
                 {
                     id: 5,
                     chatId: 1,
                     userId: 2,
-                    messageText: 'Поняла. Исправлю и вышлю итоговую версию до 17:00.',
-                    isLatex: false
+                    messageText: 'Поняла. Исправлю и вышлю итоговую версию до 17:00.'
                 },
                 {
                     id: 6,
                     chatId: 1,
                     userId: 0,
-                    messageText: 'Отлично. Спасибо.',
-                    isLatex: false
+                    messageText: 'Отлично. Спасибо.'
                 }
             ]
         }else if (chatId == 2){
@@ -381,57 +371,49 @@ async function updateChat(id1, id2) {
                     id: 0,
                     chatId: 2,
                     userId: 0,
-                    messageText: 'Ты жив вообще?',
-                    isLatex: false
+                    messageText: 'Ты жив вообще?'
                 },
                 {
                     id: 1,
                     chatId: 2,
                     userId: 3,
-                    messageText: 'Еле-еле. На работе аврал. Я уже три дня во сне вижу Excel-таблицы.',
-                    isLatex: false
+                    messageText: 'Еле-еле. На работе аврал. Я уже три дня во сне вижу Excel-таблицы.'
                 },
                 {
                     id: 2,
                     chatId: 2,
                     userId: 0,
-                    messageText: 'Кошмар! Спасать тебя в субботу? Приезжаю с пиццей и сериалами.',
-                    isLatex: false
+                    messageText: 'Кошмар! Спасать тебя в субботу? Приезжаю с пиццей и сериалами.'
                 },
                 {
                     id: 3,
                     chatId: 2,
                     userId: 3,
-                    messageText: 'Ты ангел! Только без сериалов про врачей, а то усну.',
-                    isLatex: false
+                    messageText: 'Ты ангел! Только без сериалов про врачей, а то усну.'
                 },
                 {
                     id: 4,
                     chatId: 2,
                     userId: 0,
-                    messageText: 'Драконы и железный трон ок?',
-                    isLatex: false
+                    messageText: 'Драконы и железный трон ок?'
                 },
                 {
                     id: 5,
                     chatId: 2,
                     userId: 3,
-                    messageText: 'Идеально! Я за колой и чипсами.',
-                    isLatex: false
+                    messageText: 'Идеально! Я за колой и чипсами.'
                 },
                 {
                     id: 6,
                     chatId: 2,
                     userId: 0,
-                    messageText: 'Договорились! Только дождись меня, не усни за компом.',
-                    isLatex: false
+                    messageText: 'Договорились! Только дождись меня, не усни за компом.'
                 },
                 {
                     id: 7,
                     chatId: 2,
                     userId: 3,
-                    messageText: 'Обещаю ничего не обещать. Пока!',
-                    isLatex: false
+                    messageText: 'Обещаю ничего не обещать. Пока!'
                 }
             ]
         }else{
@@ -454,14 +436,42 @@ function formatArr(str, n){
     let i = 0
     let j = 0
     let cur = ''
+    let latex = false
     while(i < s.length){
-        if(cur.length + s[i].length <= n){
+        if(s[i] == '$'){
+            if(latex){
+                latex = false
+                ss.push(
+                    {
+                        id: j,
+                        content: cur.slice(0),
+                        isLatex: true
+                    }
+                )
+                j++
+                cur = ''
+            }else{
+                latex = true
+                if(cur != ''){
+                    ss.push(
+                        {
+                            id: j,
+                            content: cur.slice(0),
+                            isLatex: false
+                        }
+                    )
+                    j++
+                    cur = ''
+                }
+            }
+        }else if(cur.length + s[i].length <= n){
             cur += ' ' + s[i]
-        }else{
+        }else if(!latex){
             ss.push(
                 {
                     id: j,
-                    text: cur.slice(0)
+                    content: cur.slice(0),
+                    isLatex: false
                 }
             )
             j++
@@ -472,7 +482,8 @@ function formatArr(str, n){
     ss.push(
         {
             id: j,
-            text: cur.slice(0)
+            content: cur.slice(0),
+            isLatex: false
         }
     )
     return ss
@@ -484,8 +495,8 @@ function post(){
         userId: props.userId,
         chatId: chatId,
         messageText: textMessage.value,
-        isLatex: isLatex.value
     })
+    chatUsers.value[chatUser.value.id-2].lastMessage = textMessage.value
     textMessage.value = ''
 }
 

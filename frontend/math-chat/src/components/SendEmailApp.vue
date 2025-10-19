@@ -1,6 +1,11 @@
 <template>
     <div class="ui text container">
-        <h2 class="ui center header">Подтверждение почты</h2>
+         <h2 class="ui image header">
+            <img src="./static/images/icon.webp" class="image">
+            <div class="content">
+                Подтверждение почты
+            </div>
+        </h2>
         <form class="ui raised center aligned container segment">
             <div class="ui message">
                 На вашу почту пришло письмо! Для подтверждения откройте ссылку в письме.
@@ -8,6 +13,7 @@
             <h2 class="ui center header">{{ formatTime(time) }}</h2>
             <div class="ui clearing divider"></div>
             <button class = "ui button primary" @click="post" :disabled="time > 0">Отправить письмо еще раз</button>
+            <button class = "ui button" @click="quit">Вернуться ко входу</button>
         </form>
     </div>
 </template>
@@ -41,5 +47,11 @@ function tick() {
 function post(){
     time.value = 150
     tick()
+}
+
+const emit = defineEmits(['quitEvent'])
+
+function quit(){
+    emit('quitEvent', 'auth')
 }
 </script>
