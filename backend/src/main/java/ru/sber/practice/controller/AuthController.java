@@ -6,7 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import ru.sber.practice.config.MyUserDetails;
 import ru.sber.practice.dto.*;
 import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
@@ -22,6 +24,11 @@ import java.util.UUID;
 public class AuthController {
     private final UserService userService;
     private final UserMapper userMapper;
+
+    @GetMapping("/")
+    public MyUserDetails test(@AuthenticationPrincipal MyUserDetails userDetails) {
+        return userDetails;
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody SignUpDTO signUpDTO) {
