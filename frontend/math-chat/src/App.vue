@@ -24,7 +24,7 @@ import MessengerApp from './components/MessengerApp.vue'
 import AuthApp from './components/AuthApp.vue'
 import { ref } from 'vue'
 const str = ref('auth')
-const dev = true
+const dev = false
 </script>
 
 <style>
