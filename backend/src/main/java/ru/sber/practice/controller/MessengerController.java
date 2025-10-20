@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.*;
+import ru.sber.practice.config.MyUserDetails;
+import ru.sber.practice.dto.MessageDTO;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.Chat;
 import ru.sber.practice.model.Message;
@@ -74,5 +76,10 @@ public class MessengerController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ошибка сохранения аватарки");
         }
+    }
+    @GetMapping("/search/global/{search}")
+    public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
+        List<UserDTO> users = chatService.getGlobalChats(search);
+        return ResponseEntity.ok(users);
     }
 }

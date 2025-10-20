@@ -201,12 +201,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id) {
-        Optional<User> tmp = userRepository.findById(id);
-        return tmp.orElse(null);
-    }
-
-    @Override
     public User updateUser(UserDTO userDTO) {
         User user = findById(userDTO.id());
         user.setUsername(userDTO.username());
@@ -215,6 +209,12 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDTO.username());
         userRepository.save(user);
         return user;
+    }
+
+    @Override
+    public User findById(Long id) {
+        Optional<User> tmp = userRepository.findById(id);
+        return tmp.orElse(null);
     }
 
     @Override

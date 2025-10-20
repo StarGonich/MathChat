@@ -29,12 +29,6 @@ public class Message {
     @JoinColumn(name = "chat_id", nullable = false)
     private Chat chatId;
 
-//    @Column(nullable = false, name = "user_id")
-//    private Long userId;
-//
-//    @Column(nullable = false, name = "chat_id")
-//    private Long chatId;
-
     @Column(nullable = false, name = "message_text")
     private String messageText;
 

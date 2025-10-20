@@ -1,7 +1,6 @@
 package ru.sber.practice.dto.mapping;
 
 import org.springframework.stereotype.Service;
-import ru.sber.practice.dto.LoginDTO;
 import ru.sber.practice.dto.SignUpDTO;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.User;
@@ -18,11 +17,6 @@ public class UserMapper {
         user.setToken(null);
         user.setEnabled(false);
         return user;
-    }
-
-    // Вот это мб вообще не пригодится
-    public User toUser(LoginDTO loginDTO) {
-        return null;
     }
 
     public UserDTO toDTO(User user) {

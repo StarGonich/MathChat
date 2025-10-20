@@ -44,32 +44,22 @@ public class ChatServiceImpl implements ChatService {
         }
     }
 
-//    @Override
-//    public Chat getChatByChatId(Long chatId) {
-//        return chatRepository.findChatByChatId(chatId);
-//    }
-//
-//    @Override
-//    public List<UserDTO> getGlobalChats(String search) {
-//        return userRepository
-//                .findBySearchTerm(search)
-//                .stream()
-//                .map(userMapper::toDTO)
-//                .toList();
-//    }
-//
-//    @Override
-//    public List<Message> getMessages(Long chatId) {
-//        return messageRepository.findByChatId(chatId);
-//    }
-//
-//    @Override
-//    public Message sendMessage(Message message) {
-//        return messageRepository.save(message);
-//    }
-//
-//    public Long getRecipientId(Long userId, Long ChatId) {
-//        return chatRepository.findRecipientIdByUserIdAndChatId(userId, ChatId)
-//                .orElseThrow(() -> new RuntimeException("Не можем найти собеседника"));
-//    }
+    @Override
+    public Chat getChatById(Long chatId) {
+        return chatRepository.findById(chatId).orElse(null);
+    }
+
+    @Override
+    public List<UserDTO> getGlobalChats(String search) {
+        return userRepository
+                .findBySearchTerm(search)
+                .stream()
+                .map(userMapper::toDTO)
+                .toList();
+    }
+
+    public Long getRecipientId(Long userId, Long ChatId) {
+        return chatRepository.findRecipientIdByUserIdAndChatId(userId, ChatId)
+                .orElseThrow(() -> new RuntimeException("Не можем найти собеседника"));
+    }
 }

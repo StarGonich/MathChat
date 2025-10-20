@@ -34,13 +34,4 @@ public class Chat {
     @JsonIgnore
     @OneToMany(mappedBy = "chatId", fetch = FetchType.EAGER)
     private List<Message> chatMessages;
-
-//    @Column(nullable = false, name = "first_user_id")
-//    private Long firstUser;
-//
-//    @Column(nullable = false, name = "second_user_id")
-//    private Long secondUser;
-//
-//    @Column(name = "last_message_id")
-//    private Long lastMessageId;
 }
