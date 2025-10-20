@@ -25,7 +25,6 @@ import java.util.List;
 public class MessengerController {
     private final ChatService chatService;
     private final MessageService messageService;
-    private final UserService userService;
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<List<Chat>> getChats(@PathVariable Long userId) {
