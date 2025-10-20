@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
                 userExisted.setToken(UUID.randomUUID());
                 userExisted.setTokenDate(ZonedDateTime.now());
-                userRepository.save(userExisted);
+                userExisted = userRepository.save(userExisted);
 
                 String message = String.format(
                         "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             user.setToken(UUID.randomUUID());
             user.setTokenDate(ZonedDateTime.now());
-            userRepository.save(user);
+            user = userRepository.save(user);
 
             String message = String.format(
                     "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
