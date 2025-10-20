@@ -15,7 +15,6 @@ public interface UserService {
     boolean activateUser(UUID token);
     boolean passwordForgotten(EmailDTO emailDTO);
     boolean changePassword(UUID token, PasswordDTO passwordDTO);
-//    boolean oauth2Login(String providerId, Oauth2LoginDTO oauth2LoginDTO);
 
     User findById(Long id);
 

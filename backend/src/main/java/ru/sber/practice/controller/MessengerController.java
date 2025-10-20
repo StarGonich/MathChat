@@ -47,22 +47,9 @@ public class MessengerController {
         return new ResponseEntity<>("Чат создан",HttpStatus.OK);
     }
 
-//    @GetMapping("/search/global/{search}")
-//    public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
-//        List<UserDTO> users = messengerService.getGlobalChats(search);
-//        return ResponseEntity.ok(users);
-//    }
-//
-//    @PostMapping("/send")
-//    public ResponseEntity<Message> sendMessage(@RequestBody Message message) {
-//        log.info("Отправка сообщения {}", message);
-//        Message sendedMessage = messengerService.sendMessage(message);
-//        log.info("Сообщение сохранено в БД {}", message);
-//        messagingTemplate.convertAndSendToUser(
-//                messengerService.getRecipientId(message.getUserId(), message.getChatId()).toString(),
-//                "/queue/messages",
-//                message
-//        );
-//        return new ResponseEntity<>(sendedMessage, HttpStatus.CREATED);
-//    }
+    @GetMapping("/search/global/{search}")
+    public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
+        List<UserDTO> users = chatService.getGlobalChats(search);
+        return ResponseEntity.ok(users);
+    }
 }
