@@ -2,8 +2,11 @@ package ru.sber.practice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ru.sber.practice.dto.*;
 import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
@@ -11,6 +14,7 @@ import ru.sber.practice.repository.UserRepository;
 import ru.sber.practice.service.MailSenderService;
 import ru.sber.practice.service.UserService;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
+    private final S3ServiceImpl S3Service;
 
     //
     // Регистрация пользователя
@@ -233,5 +238,15 @@ public class UserServiceImpl implements UserService {
     public User findByProviderId(String providerId) {
         Optional<User> tmp = userRepository.findByProviderId(providerId);
         return tmp.orElse(null);
+    }
+
+    public String changeAvatar(Long id, MultipartFile file) throws IOException {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Смена аватарки: не найден пользователь с id=" + id));
+        String key = S3Service.uploadFile(file);
+        user.setImageUrl(key);
+        userRepository.save(user);
+        return key;
     }
 }

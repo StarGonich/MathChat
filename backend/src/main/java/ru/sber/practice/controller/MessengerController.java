@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.sber.practice.config.MyUserDetails;
 import ru.sber.practice.dto.MessageDTO;
 import ru.sber.practice.dto.UserDTO;
@@ -13,6 +14,7 @@ import ru.sber.practice.model.Chat;
 import ru.sber.practice.model.Message;
 import ru.sber.practice.service.ChatService;
 import ru.sber.practice.service.MessageService;
+import ru.sber.practice.service.UserService;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +25,7 @@ import java.util.List;
 public class MessengerController {
     private final ChatService chatService;
     private final MessageService messageService;
+    private final UserService userService;
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<List<Chat>> getChats(@PathVariable Long userId) {
@@ -66,20 +69,4 @@ public class MessengerController {
 //        );
 //        return new ResponseEntity<>(sendedMessage, HttpStatus.CREATED);
 //    }
-
-    @PutMapping("/change/avatar/{id}")
-    public ResponseEntity<String> changeAvatar(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
-        try {
-            String key = messengerService.changeAvatar(id, file);
-            return ResponseEntity.ok("Аватарка обновлена: " + key);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ошибка сохранения аватарки");
-        }
-    }
-    @GetMapping("/search/global/{search}")
-    public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
-        List<UserDTO> users = chatService.getGlobalChats(search);
-        return ResponseEntity.ok(users);
-    }
 }

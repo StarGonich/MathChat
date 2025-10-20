@@ -1,8 +1,10 @@
 package ru.sber.practice.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.sber.practice.dto.*;
 import ru.sber.practice.model.User;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,4 +21,6 @@ public interface UserService {
     User findById(Long id);
 
     User updateUser(UserDTO userDTO);
+
+    String changeAvatar(Long id, MultipartFile file) throws IOException;
 }
