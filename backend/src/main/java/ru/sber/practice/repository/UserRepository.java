@@ -12,11 +12,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //    @Query(value = "select * from users where email = :email", nativeQuery = true)
     Optional<User> findByEmail(String email);
     Optional<User> findByUsername(String username);
-    boolean existsByEmail(String email);
     Optional<User> findByToken(UUID token);
     Optional<User> findByProviderId(String id);
-
-//    User findByProviderId(String providerId);
 
     @Query("SELECT u FROM User u WHERE " +
             "LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +

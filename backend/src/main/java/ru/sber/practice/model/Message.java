@@ -1,9 +1,11 @@
 package ru.sber.practice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.sql.Timestamp;
 import java.time.ZonedDateTime;
@@ -18,15 +20,22 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "user_id")
-    private Long userId;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userId;
 
-    @Column(nullable = false, name = "chat_id")
-    private Long chatId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "chat_id", nullable = false)
+    private Chat chatId;
 
     @Column(nullable = false, name = "message_text")
     private String messageText;
 
     @Column(name = "message_creation_date")
     private ZonedDateTime messageDate;
+
+    @JsonIgnore
+    @OneToOne(mappedBy = "lastMessageId")
+    private Chat chat;
 }

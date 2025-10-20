@@ -2,8 +2,11 @@ package ru.sber.practice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ru.sber.practice.dto.*;
 import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
@@ -11,6 +14,7 @@ import ru.sber.practice.repository.UserRepository;
 import ru.sber.practice.service.MailSenderService;
 import ru.sber.practice.service.UserService;
 
+import java.io.IOException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
+    private final S3ServiceImpl S3Service;
 
     //
     // Регистрация пользователя
@@ -200,39 +205,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    // Регистрация пользователей через oauth2 (т.к. для них нужно дополнительно заполнить username, firstname, lastname)
-    @Override
-    public boolean oauth2Login(String providerId, Oauth2LoginDTO oauth2LoginDTO) {
-        Optional<User> tmp = userRepository.findByProviderId(providerId);
-        if (tmp.isPresent()) {
-            User user = tmp.get();
-
-            // Если пользователь уже регистрировал аккаунт через oauth2, то его по новой не регистрируем
-            if (user.isEnabled()) {
-                return false;
-            }
-
-            user.setUsername(oauth2LoginDTO.username());
-            user.setFirstname(oauth2LoginDTO.firstname());
-            user.setLastname(oauth2LoginDTO.lastname());
-            user.setEnabled(true);
-            userRepository.save(user);
-
-            log.info("Пользователь зарегистрирован {}", user);
-
-            return true;
-        } else {
-            // Если пользователя не нашло, то ничего не регистрируем
-            return false;
-        }
-    }
-
-    @Override
-    public User findById(Long id) {
-        Optional<User> tmp = userRepository.findById(id);
-        return tmp.orElse(null);
-    }
-
     @Override
     public User updateUser(UserDTO userDTO) {
         User user = findById(userDTO.id());
@@ -242,6 +214,12 @@ public class UserServiceImpl implements UserService {
         user.setUsername(userDTO.username());
         userRepository.save(user);
         return user;
+    }
+
+    @Override
+    public User findById(Long id) {
+        Optional<User> tmp = userRepository.findById(id);
+        return tmp.orElse(null);
     }
 
     @Override
@@ -260,5 +238,15 @@ public class UserServiceImpl implements UserService {
     public User findByProviderId(String providerId) {
         Optional<User> tmp = userRepository.findByProviderId(providerId);
         return tmp.orElse(null);
+    }
+
+    public String changeAvatar(Long id, MultipartFile file) throws IOException {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Смена аватарки: не найден пользователь с id=" + id));
+        String key = S3Service.uploadFile(file);
+        user.setImageUrl(key);
+        userRepository.save(user);
+        return key;
     }
 }

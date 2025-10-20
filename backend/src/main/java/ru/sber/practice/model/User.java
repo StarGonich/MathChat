@@ -1,10 +1,13 @@
 package ru.sber.practice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -32,7 +35,7 @@ public class User {
     // Токен для подтверждения регистрации по почте
     private UUID token;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "is_enabled")
     @ColumnDefault("false")
     private boolean isEnabled;
 
@@ -51,4 +54,17 @@ public class User {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "firstUserId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Chat> firstUserChats;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "secondUserId", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Chat> secondUserChats;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER)
+    private List<Message> userMessages;
+
 }

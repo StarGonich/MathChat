@@ -1,12 +1,16 @@
 package ru.sber.practice.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+
+import java.util.List;
 
 @Entity
-@Table(name = "chats")
+@Table(name = "chats", uniqueConstraints={@UniqueConstraint(columnNames = {"first_user_id" , "second_user_id"})})
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,12 +19,19 @@ public class Chat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, name = "first_user_id")
-    private Long firstUser;
+    @ManyToOne
+    @JoinColumn(name = "first_user_id", nullable = false)
+    private User firstUserId;
 
-    @Column(nullable = false, name = "second_user_id")
-    private Long secondUser;
+    @ManyToOne
+    @JoinColumn(name = "second_user_id", nullable = false)
+    private User secondUserId;
 
-    @Column(name = "last_message_id")
-    private Long lastMessageId;
+    @OneToOne
+    @JoinColumn(name = "last_message_id")
+    private Message lastMessageId;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "chatId", fetch = FetchType.EAGER)
+    private List<Message> chatMessages;
 }

@@ -51,13 +51,12 @@ public class SecurityConfig{
         return http
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/activate/*", "/login/*").permitAll()
-                        .anyRequest().authenticated())
-//                .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
-//                        .anyRequest().permitAll())
+//                .authorizeHttpRequests(auth -> auth
+//                        .requestMatchers("/register", "/activate/*", "/login/*").permitAll()
+//                        .anyRequest().authenticated())
+                .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
+                        .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
-                        .defaultSuccessUrl("/login/oauth2")
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2ServiceImpl)))
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
