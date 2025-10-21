@@ -30,6 +30,7 @@ public class UserController {
 
     @GetMapping("/find/{id}")
     public User findById(@PathVariable Long id) {
+        log.info("Request /api/user/find: {}", id);
         return userService.findById(id);
     }
 

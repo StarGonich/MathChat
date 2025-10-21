@@ -210,8 +210,16 @@ onMounted(async () => {
             login: allUsers.value[i].firstname + " " + allUsers.value[i].lastname,
             email: allUsers.value[i].email
         })
+    
+    
     }
-    user = allUsers1.value[props.userId-1]
+    try {
+        await axios.get('http://localhost:8080/api/user/find/' + props.userId)
+            .then(response => user = response.data)
+    } catch (e) {
+        console.log(e)
+        user = allUsers1.value[props.userId-1]
+    }
     try {
         await axios.get('http://localhost:8080/api/messenger/' + props.userId)
             .then(response => chats.value = response.data)
