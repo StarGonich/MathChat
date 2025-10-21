@@ -58,6 +58,12 @@ public class MessengerController {
         return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
     }
 
+    @PostMapping("/chat/create/{userId}")
+    public ResponseEntity<?> createChat(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
+        chatService.createChat(userId, userDTO);
+        return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
+    }
+
     @GetMapping("/search/global/{search}")
     public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
         List<UserDTO> users = chatService.getGlobalChats(search);
