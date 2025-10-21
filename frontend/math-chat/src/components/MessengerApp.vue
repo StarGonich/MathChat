@@ -1,7 +1,7 @@
 <template>
     <div class="ui attached stackable menu">
         <div class="ui container">
-            <a class="item">
+            <a class="item" @click="showProf(user, true)">
                 <i class="user icon"></i> {{user.login}} {{user.email}}
             </a>
             <a class="right item"  @click="quit">
@@ -65,11 +65,13 @@
             </div>
         </div>
     </div>
+    <ProfileApp :user="profUser" :updated="profUpd" v-if="openProfile" @quitEvent="updateUser" />
 </template>
 
 <script setup>
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
+import ProfileApp from './ProfileApp.vue'
 
 let allUsers = ref([])
 let allUsers1 = ref([])
@@ -96,6 +98,10 @@ const props = defineProps({
   }
 })
 const textMessage = ref('')
+
+let openProfile = ref(false)
+let profUser = ref({})
+let profUpd = ref(false)
 
 const emit = defineEmits(['quitEvent'])
 
@@ -210,15 +216,13 @@ onMounted(async () => {
             login: allUsers.value[i].firstname + " " + allUsers.value[i].lastname,
             email: allUsers.value[i].email
         })
-    
-    
     }
     try {
         await axios.get('http://localhost:8080/api/user/find/' + props.userId)
-            .then(response => user = response.data)
+            .then(response => user.value = response.data)
     } catch (e) {
         console.log(e)
-        user = allUsers1.value[props.userId-1]
+        user.value = allUsers1.value[props.userId-1]
     }
     try {
         await axios.get('http://localhost:8080/api/messenger/' + props.userId)
@@ -506,6 +510,24 @@ function post(){
     })
     chatUsers.value[chatUser.value.id-2].lastMessage = textMessage.value
     textMessage.value = ''
+}
+
+function showProf(user, own){
+    profUser.value = user
+    profUpd.value = own
+    openProfile.value = true
+}
+
+async function updateUser(){
+    openProfile.value = false
+    if(profUpd.value){
+        try {
+            await axios.get('http://localhost:8080/api/user/find/' + props.userId)
+                .then(response => user.value = response.data)
+        } catch (e) {
+            console.log(e)
+        }
+    }
 }
 
 function quit() {

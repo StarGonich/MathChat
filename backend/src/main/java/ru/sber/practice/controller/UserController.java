@@ -36,6 +36,7 @@ public class UserController {
 
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody UserDTO userDTO) {
+        log.info("Request /api/user/update: {}", userDTO);
         User user = userService.updateUser(userDTO);
         return ResponseEntity.ok(user);
     }
