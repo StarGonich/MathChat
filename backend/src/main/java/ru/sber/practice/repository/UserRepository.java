@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE " +
             "LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))")
+            "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))")
     List<User> findBySearchTerm(String search);
 }
 
