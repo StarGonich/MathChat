@@ -12,6 +12,7 @@ import ru.sber.practice.dto.mapping.UserMapper;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
 import ru.sber.practice.service.MailSenderService;
+import ru.sber.practice.service.S3Service;
 import ru.sber.practice.service.UserService;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
-    private final S3ServiceImpl S3Service;
+    private final S3Service s3Service;
 
     //
     // Регистрация пользователя
@@ -205,12 +206,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateUser(UserDTO userDTO) {
-        User user = findById(userDTO.id());
-        user.setUsername(userDTO.username());
-        user.setFirstname(userDTO.firstname());
-        user.setLastname(userDTO.lastname());
-        user.setUsername(userDTO.username());
+    public User updateUser(Long userId, UpdatableUserDTO updatableUserDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Нет пользователя с данным Id"));
+        user.setUsername(updatableUserDTO.username());
+        user.setFirstname(updatableUserDTO.firstname());
+        user.setLastname(updatableUserDTO.lastname());
         userRepository.save(user);
         return user;
     }
@@ -243,7 +245,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Смена аватарки: не найден пользователь с id=" + id));
-        String key = S3Service.uploadFile(file);
+        String key = s3Service.uploadFile(file);
         user.setImageUrl(key);
         userRepository.save(user);
         return key;

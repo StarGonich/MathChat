@@ -66,9 +66,10 @@ public class MessengerController {
         return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
     }
 
-    @PostMapping("/chat/create/{userId}")
-    public ResponseEntity<?> createChat(@PathVariable Long userId, @RequestBody GlobalChatDTO globalChatDTO) {
-        chatService.createChat(userId, globalChatDTO);
+    @PostMapping("/chat/create/{myUserId}")
+    public ResponseEntity<?> createChat(@PathVariable Long myUserId,
+                                        @RequestParam(name = "with", required = true) Long anotherUserId) {
+        chatService.createChat(myUserId, anotherUserId);
         return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
     }
 

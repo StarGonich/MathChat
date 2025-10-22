@@ -26,11 +26,15 @@ public class MessageServiceImpl implements MessageService {
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
 
+    // Открытие чата
     @Override
     public List<Message> getMessagesByChatId(Long chatId) {
+        chatRepository.findById(chatId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не найден чат с chatId="+chatId));
         return messageRepository.getMessagesByChatId(chatId);
     }
 
+    //Отправка сообщения
     @Override
     public void sendMessage(Long chatId, MessageDTO messageDTO) {
         Chat chat = chatRepository.findById(chatId)
@@ -39,6 +43,9 @@ public class MessageServiceImpl implements MessageService {
         User userAuthor = userRepository.findById(messageDTO.userId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Не найден пользователь с userId="+messageDTO.userId()));
+        if (!(userAuthor == chat.getFirstUserId() || userAuthor == chat.getSecondUserId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "У вас нет чата с данным пользователем");
+        }
         message.setUserId(userAuthor);
         message.setChatId(chat);
         message.setMessageText(messageDTO.messageText());
@@ -48,6 +55,10 @@ public class MessageServiceImpl implements MessageService {
         chatRepository.save(chat);
     }
 
+    /*
+    *
+    * ДЛЯ АДМИНА
+    * */
     @Override
     public List<Message> findAll() {
         return messageRepository.findAll();

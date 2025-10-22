@@ -27,7 +27,7 @@ CREATE TABLE messages (
     user_id bigint NOT NULL,
     chat_id bigint NOT NULL,
     message_text text NOT NULL,
-    message_creation_date timestamp with time zone
+    message_creation_date timestamp with time zone NOT NULL
 );
 
 -- Внешние ключи

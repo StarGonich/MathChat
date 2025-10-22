@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 public record GlobalChatDTO(Long userId,
                             String username,
                             String firstname,
-                            String lastname
+                            String lastname,
+                            String imageUrl
 ) {
 }

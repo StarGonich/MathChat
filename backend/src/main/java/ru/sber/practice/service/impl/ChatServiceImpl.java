@@ -30,6 +30,9 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ContactChatDTO> getChats(Long userId) {
+        userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Не найден пользователь с id=" + userId));
         return chatRepository.findContactChatsByUserId(userId);
     }
 
@@ -48,20 +51,29 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void createChat(Long userId, GlobalChatDTO globalChatDTO) {
+    public void createChat(Long firstUserId, Long secondUserId) {
         Chat chat = new Chat();
-        User firstUser = userRepository.findById(userId)
+
+        User firstUser = userRepository.findById(firstUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Создание чата: не найден пользователь с id=" + userId));
+                        "Не найден пользователь с id=" + firstUserId));
         chat.setFirstUserId(firstUser);
-        User secondUser = userRepository.findById(globalChatDTO.userId())
+
+        User secondUser = userRepository.findById(secondUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Создание чата: не найден пользователь с id=" + globalChatDTO.userId()));
+                        "Не найден пользователь с id=" + secondUserId));
         chat.setSecondUserId(secondUser);
+
+        if (chatRepository.findChatBy2UserId(firstUserId, secondUserId).isPresent()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Чат между пользователями уже существует");
+        }
+
         chat = chatRepository.save(chat);
         log.info("Чат создан {}", chat);
     }
 
+    //no usages, поэтому и не добавляю обработку Exception
     @Override
     public Chat getChatById(Long chatId) {
         return chatRepository.findById(chatId).orElse(null);
@@ -76,8 +88,10 @@ public class ChatServiceImpl implements ChatService {
                 .toList();
     }
 
+    // Для WebSocket, для отправки по персональному каналу
     public Long getRecipientId(Long userId, Long ChatId) {
         return chatRepository.findRecipientIdByUserIdAndChatId(userId, ChatId)
-                .orElseThrow(() -> new RuntimeException("Не можем найти собеседника"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Не можем найти собеседника"));
     }
 }

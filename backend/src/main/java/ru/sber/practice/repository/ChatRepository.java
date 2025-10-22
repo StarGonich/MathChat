@@ -19,7 +19,8 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
         u.lastname as lastname,
         u.username as username,
         m.message_text as lastMessageText,
-        m.message_creation_date as messageDate
+        m.message_creation_date as messageDate,
+        u.image_url as imageUrl
     FROM chats c
     JOIN users u ON u.id = CASE\s
         WHEN c.first_user_id = :userId THEN c.second_user_id\s
@@ -33,4 +34,11 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
             "FROM chats WHERE id = :chatId AND (first_user_id = :userId OR second_user_id = :userId)",
             nativeQuery = true)
     Optional<Long> findRecipientIdByUserIdAndChatId(Long userId, Long chatId);
+
+    @Query(value = """
+    SELECT * FROM chats
+    WHERE (first_user_id = :firstUserId AND second_user_id = :secondUserId)
+    OR (second_user_id = :firstUserId AND first_user_id = :secondUserId)
+    """, nativeQuery = true)
+    Optional<Chat> findChatBy2UserId(Long firstUserId, Long secondUserId);
 }

@@ -10,6 +10,7 @@ public record ContactChatDTO(Long userId,
                              String firstname,
                              String lastname,
                              String lastMessageText,
-                             OffsetDateTime messageDate
+                             OffsetDateTime messageDate,
+                             String imageUrl
                       ) {
 }

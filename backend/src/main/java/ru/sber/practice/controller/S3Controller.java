@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.sber.practice.service.impl.S3ServiceImpl;
+import ru.sber.practice.service.S3Service;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequestMapping("/api/files")
 @RequiredArgsConstructor
 public class S3Controller {
-    private final S3ServiceImpl s3Service;
+    private final S3Service s3Service;
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
