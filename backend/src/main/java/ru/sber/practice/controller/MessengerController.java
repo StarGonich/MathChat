@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ru.sber.practice.config.MyUserDetails;
 import ru.sber.practice.dto.MessageDTO;
 import ru.sber.practice.dto.UserDTO;
@@ -52,6 +53,11 @@ public class MessengerController {
         return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
     }
 
+    @GetMapping("/exp")
+    public ResponseEntity<?> exp() {
+        return new ResponseEntity<>("Aboba", HttpStatus.BAD_REQUEST);
+    }
+
     @PostMapping("/chat")
     public ResponseEntity<?> createChat(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody UserDTO userDTO) {
         chatService.createChat(userDetails, userDTO);
@@ -60,8 +66,12 @@ public class MessengerController {
 
     @PostMapping("/chat/create/{userId}")
     public ResponseEntity<?> createChat(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
-        chatService.createChat(userId, userDTO);
-        return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
+        try {
+            chatService.createChat(userId, userDTO);
+            return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
+        }
     }
 
     @GetMapping("/search/global/{search}")
