@@ -5,9 +5,11 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -33,7 +35,8 @@ public class Message {
     private String messageText;
 
     @Column(name = "message_creation_date")
-    private ZonedDateTime messageDate;
+//    @ColumnDefault("CURRENT_TIMESTAMP")
+    private OffsetDateTime messageDate;
 
     @JsonIgnore
     @OneToOne(mappedBy = "lastMessageId")

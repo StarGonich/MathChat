@@ -29,8 +29,6 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
     @Mock
-    private UserMapper userMapper;
-    @Mock
     private PasswordEncoder passwordEncoder;
     @Mock
     private MailSenderService mailSenderService;
@@ -42,12 +40,11 @@ class UserServiceTest {
     void register_NewUser_Success() {
         // given
         SignUpDTO signUpDTO = new SignUpDTO("test", "John", "Doe", "john@test.com", "password");
-        User user = createUser(signUpDTO.username(), signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), signUpDTO.password());
+        User user = UserMapper.toUser(signUpDTO);
         User savedUser = createUser(user.getUsername(), user.getFirstname(), user.getLastname(), user.getEmail(), "encodedPassword");
         savedUser.setToken(UUID.randomUUID());
         savedUser.setTokenDate(ZonedDateTime.now());
 
-        when(userMapper.toUser(signUpDTO)).thenReturn(user);
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.empty());
         // Жалуется, если будет user.getPassword()
         when(passwordEncoder.encode("password")).thenReturn(savedUser.getPassword());
@@ -69,10 +66,9 @@ class UserServiceTest {
     void register_ExistingUserWithoutToken_ReturnsExistingUser() {
         // given
         SignUpDTO signUpDTO = new SignUpDTO("test", "John", "Doe", "john@test.com", "password");
-        User existingUser = createUser(signUpDTO.username(), signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), "oldPassword");
+        User existingUser = UserMapper.toUser(signUpDTO);
         existingUser.setEnabled(true);
 
-        when(userMapper.toUser(signUpDTO)).thenReturn(existingUser);
         when(userRepository.findByEmail(existingUser.getEmail())).thenReturn(Optional.of(existingUser));
 
         // when
@@ -88,7 +84,7 @@ class UserServiceTest {
     void register_ExistingUserWithToken_ReRegistration() {
         // given
         SignUpDTO signUpDTO = new SignUpDTO("test", "John", "NewDoe", "john@test.com", "newPassword");
-        User newUser = createUser(signUpDTO.username(), signUpDTO.firstname(), signUpDTO.lastname(), signUpDTO.email(), signUpDTO.password());
+        User newUser = UserMapper.toUser(signUpDTO);
         User existingUser = createUser("test", "OldJohn", "OldDoe", newUser.getEmail(), "oldPassword");
         existingUser.setToken(UUID.randomUUID());
 //        existingUser.setTokenDate(ZonedDateTime.now().minusMinutes(10));
@@ -97,7 +93,6 @@ class UserServiceTest {
         updatedUser.setToken(UUID.randomUUID());
 //        updatedUser.setTokenDate(ZonedDateTime.now());
 
-        when(userMapper.toUser(signUpDTO)).thenReturn(newUser);
         when(userRepository.findByEmail(newUser.getEmail())).thenReturn(Optional.of(existingUser));
         when(passwordEncoder.encode("newPassword")).thenReturn("encodedNewPassword");
         when(userRepository.save(any(User.class))).thenReturn(updatedUser);

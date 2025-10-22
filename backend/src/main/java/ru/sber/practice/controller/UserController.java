@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.sber.practice.dto.UpdatableUserDTO;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
@@ -34,10 +35,9 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<User> updateUser(@RequestBody UserDTO userDTO) {
-        log.info("Request /api/user/update: {}", userDTO);
-        User user = userService.updateUser(userDTO);
+    @PutMapping("/update/{userId}")
+    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody UpdatableUserDTO updateUserDTO) {
+        User user = userService.updateUser(userId, updateUserDTO);
         return ResponseEntity.ok(user);
     }
 

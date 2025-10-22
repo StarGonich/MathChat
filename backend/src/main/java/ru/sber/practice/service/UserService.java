@@ -17,10 +17,7 @@ public interface UserService {
     boolean activateUser(UUID token);
     boolean passwordForgotten(EmailDTO emailDTO);
     boolean changePassword(UUID token, PasswordDTO passwordDTO);
-
     User findById(Long id);
-
-    User updateUser(UserDTO userDTO);
-
+    User updateUser(Long userId, UpdatableUserDTO user);
     String changeAvatar(Long id, MultipartFile file) throws IOException;
 }

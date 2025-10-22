@@ -1,13 +1,13 @@
 package ru.sber.practice.dto.mapping;
 
-import org.springframework.stereotype.Service;
+import ru.sber.practice.dto.GlobalChatDTO;
 import ru.sber.practice.dto.SignUpDTO;
+import ru.sber.practice.dto.UpdatableUserDTO;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.User;
 
-@Service
-public class UserMapper {
-    public User toUser(SignUpDTO signUpDto) {
+public final class UserMapper {
+    public static User toUser(SignUpDTO signUpDto) {
         User user = new User();
         user.setUsername(signUpDto.username());
         user.setFirstname(signUpDto.firstname());
@@ -19,13 +19,31 @@ public class UserMapper {
         return user;
     }
 
-    public UserDTO toDTO(User user) {
+    public static UserDTO toDTO(User user) {
         return new UserDTO(
                 user.getId(),
                 user.getUsername(),
                 user.getFirstname(),
                 user.getLastname(),
                 user.getEmail()
+        );
+    }
+
+    public static GlobalChatDTO toGlobalChatDTO(User user) {
+        return new GlobalChatDTO(
+                user.getId(),
+                user.getUsername(),
+                user.getFirstname(),
+                user.getLastname(),
+                user.getImageUrl()
+        );
+    }
+
+    public static UpdatableUserDTO toUpdatableUserDTO(User user) {
+        return new UpdatableUserDTO(
+                user.getUsername(),
+                user.getFirstname(),
+                user.getLastname()
         );
     }
 }
