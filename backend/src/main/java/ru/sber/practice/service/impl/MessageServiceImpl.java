@@ -5,7 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-import ru.sber.practice.dto.MessageDTO;
+import ru.sber.practice.dto.GetMessagesDTO;
+import ru.sber.practice.dto.SendMessageDTO;
+import ru.sber.practice.dto.mapping.MessageMapper;
 import ru.sber.practice.model.Chat;
 import ru.sber.practice.model.Message;
 import ru.sber.practice.model.User;
@@ -14,9 +16,9 @@ import ru.sber.practice.repository.MessageRepository;
 import ru.sber.practice.repository.UserRepository;
 import ru.sber.practice.service.MessageService;
 
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -28,28 +30,29 @@ public class MessageServiceImpl implements MessageService {
 
     // Открытие чата
     @Override
-    public List<Message> getMessagesByChatId(Long chatId) {
+    public List<GetMessagesDTO> getMessagesByChatId(Long chatId) {
         chatRepository.findById(chatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не найден чат с chatId="+chatId));
-        return messageRepository.getMessagesByChatId(chatId);
+        return messageRepository.getMessagesByChatId(chatId)
+                .stream().map(MessageMapper::toDTO).toList();
     }
 
     //Отправка сообщения
     @Override
-    public void sendMessage(Long chatId, MessageDTO messageDTO) {
+    public void sendMessage(Long chatId, SendMessageDTO sendMessageDTO) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не найден чат с chatId="+chatId));
         Message message = new Message();
-        User userAuthor = userRepository.findById(messageDTO.userId())
+        User userAuthor = userRepository.findById(sendMessageDTO.userId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Не найден пользователь с userId="+messageDTO.userId()));
+                        "Не найден пользователь с userId="+ sendMessageDTO.userId()));
         if (!(userAuthor == chat.getFirstUserId() || userAuthor == chat.getSecondUserId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "У вас нет чата с данным пользователем");
         }
         message.setUserId(userAuthor);
         message.setChatId(chat);
-        message.setMessageText(messageDTO.messageText());
-        message.setMessageDate(ZonedDateTime.now());
+        message.setMessageText(sendMessageDTO.messageText());
+        message.setMessageDate(OffsetDateTime.now());
         message = messageRepository.save(message);
         chat.setLastMessageId(message);
         chatRepository.save(chat);

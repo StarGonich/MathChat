@@ -9,6 +9,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.sql.Timestamp;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
@@ -35,7 +36,7 @@ public class Message {
 
     @Column(name = "message_creation_date")
 //    @ColumnDefault("CURRENT_TIMESTAMP")
-    private ZonedDateTime messageDate;
+    private OffsetDateTime messageDate;
 
     @JsonIgnore
     @OneToOne(mappedBy = "lastMessageId")
