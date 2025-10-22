@@ -36,7 +36,7 @@ public class AuthController {
         User registeredUser = userService.register(signUpDTO);
         if (registeredUser.getToken() == null) {
             log.info("Неудачная регистрация");
-            return new ResponseEntity<>("Пользователь с данным email уже зарегистрирован!", HttpStatus.OK);
+            return new ResponseEntity<>("Пользователь с данным email уже зарегистрирован!", HttpStatus.BAD_REQUEST); // TODO!!!
         }
         UserDTO responseUser = userMapper.toDTO(registeredUser);
         log.info("Регистрация пользователя: {}", responseUser);
