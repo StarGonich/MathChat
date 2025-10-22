@@ -29,19 +29,22 @@ public class MessengerController {
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<List<Chat>> getChats(@PathVariable Long userId) {
+        log.info("Request /search/: {}", userId);
         List<Chat> chats = chatService.getChats(userId);
+        log.info("Response /search/: {}", chats);
         return ResponseEntity.ok(chats);
     }
 
     @GetMapping("/chat/{chatId}")
     public ResponseEntity<List<Message>> getMessagesByChatId(@PathVariable Long chatId) {
+        log.info("Request get /chat/: {}", chatId);
         List<Message> messages = messageService.getMessagesByChatId(chatId);
         return ResponseEntity.ok(messages);
     }
 
     @PostMapping("/chat/{chatId}")
     public ResponseEntity<?> sendMessage(@PathVariable Long chatId, @RequestBody MessageDTO messageDTO) {
-        log.info("Отправка сообщения {}", messageDTO);
+        log.info("Отправка сообщения {} {}", chatId, messageDTO);
         // Лучше всегда возращать то, что создаётся(заносится в БД)
         messageService.sendMessage(chatId, messageDTO);
         log.info("Сообщение сохранено в БД {}", messageDTO);
@@ -60,6 +63,7 @@ public class MessengerController {
 
     @PostMapping("/chat")
     public ResponseEntity<?> createChat(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody UserDTO userDTO) {
+        log.info("Request post /chat: {}", userDTO);
         chatService.createChat(userDetails, userDTO);
         return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
     }

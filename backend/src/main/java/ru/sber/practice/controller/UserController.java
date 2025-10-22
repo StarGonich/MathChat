@@ -30,11 +30,13 @@ public class UserController {
 
     @GetMapping("/find/{id}")
     public User findById(@PathVariable Long id) {
+        log.info("Request /api/user/find: {}", id);
         return userService.findById(id);
     }
 
     @PutMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody UserDTO userDTO) {
+        log.info("Request /api/user/update: {}", userDTO);
         User user = userService.updateUser(userDTO);
         return ResponseEntity.ok(user);
     }

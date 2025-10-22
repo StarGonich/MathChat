@@ -51,8 +51,11 @@
                 <div class="ui clearing divider"></div>
                 <button class = "ui button primary" @click.prevent="register" :disabled="!user.firstname || !user.lastname || !user.email || !user.password || !isCorrectPass">Зарегистрироваться</button>
                 <button class = "ui button" @click="auth">Есть аккаунт? Войти</button>
-                <div class="ui message" v-if="msg" @click="close">
-                    {{ msg }}
+                <div class="ui info message" v-if="msg">
+                    <i class="close icon" @click="close"></i>
+                    <div class="header">
+                        {{ msg }}
+                    </div>
                 </div>
             </form>
         </div>
