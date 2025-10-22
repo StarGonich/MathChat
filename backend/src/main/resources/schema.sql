@@ -13,15 +13,6 @@ CREATE TABLE users (
     image_url character varying(255)
 );
 
---CREATE TABLE images (
---    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
---    content_type character varying(255),
---    size bigint,
---    name character varying(255),
---    original_filename character varying(255),
---    bytes blob
---)
-
 CREATE TABLE chats (
     id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_user_id bigint NOT NULL,

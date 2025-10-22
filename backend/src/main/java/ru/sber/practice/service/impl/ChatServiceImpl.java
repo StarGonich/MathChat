@@ -2,7 +2,9 @@ package ru.sber.practice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.sber.practice.config.MyUserDetails;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.Chat;
@@ -42,6 +44,21 @@ public class ChatServiceImpl implements ChatService {
         } else {
             log.info("Пользователь не найден");
         }
+    }
+
+    @Override
+    public void createChat(Long userId, UserDTO userDTO) {
+        Chat chat = new Chat();
+        User firstUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Создание чата: не найден пользователь с id=" + userId));
+        chat.setFirstUserId(firstUser);
+        User secondUser = userRepository.findById(userDTO.id())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Создание чата: не найден пользователь с id=" + userDTO.id()));
+        chat.setSecondUserId(secondUser);
+        chat = chatRepository.save(chat);
+        log.info("Чат создан {}", chat);
     }
 
     @Override

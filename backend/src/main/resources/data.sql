@@ -4,13 +4,13 @@ INSERT INTO users(username, firstname, lastname, email, password) VALUES ('Ansv3
 INSERT INTO users(username, firstname, lastname, email, password) VALUES ('user_1000', 'Егор', 'Мальцев', 'egsor@gmail.com', 'aboba3');
 INSERT INTO users(username, firstname, lastname, email, password) VALUES ('user_1001', 'Егор', 'Мальцев', 'egor@dfd.com', 'aboba3');
 
---INSERT INTO chats(id, first_user_id, second_user_id) VALUES (1, 2);
---INSERT INTO chats(id, first_user_id, second_user_id) VALUES (1, 3);
---INSERT INTO chats(id, first_user_id, second_user_id) VALUES (2, 3);
+INSERT INTO chats(first_user_id, second_user_id) VALUES (1, 2);
+INSERT INTO chats(first_user_id, second_user_id) VALUES (1, 3);
+INSERT INTO chats(first_user_id, second_user_id) VALUES (2, 3);
 
---INSERT INTO messages VALUES (1, 1, 1, 'Привет, Матвей, я Алексей', '2025-07-03 18:41:12.798644+03');
---INSERT INTO messages VALUES (2, 1, 2, 'Привет, Егор, я Алексей', '2025-07-03 18:42:12.798644+03');
---INSERT INTO messages VALUES (3, 2, 3, 'Привет, Егор, я Матвей', '2025-07-03 18:43:12.798644+03');
+INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (1, 1, 'Привет, Матвей, я Алексей', '2025-07-03 18:41:12.798644+03');
+INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (1, 2, 'Привет, Егор, я Алексей', '2025-07-03 18:42:12.798644+03');
+INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (2, 3, 'Привет, Егор, я Матвей', '2025-07-03 18:43:12.798644+03');
 
 INSERT INTO users(firstname, lastname, email, password) VALUES ('Алиса', 'Артемьева', 'a@mail.ru', '11111');
 INSERT INTO users(firstname, lastname, email, password) VALUES ('Боб', 'Бутчер', 'b@mail.ru', '11111');
