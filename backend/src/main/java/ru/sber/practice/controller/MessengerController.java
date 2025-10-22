@@ -40,32 +40,33 @@ public class MessengerController {
 
     @PostMapping("/chat/{chatId}")
     public ResponseEntity<?> sendMessage(@PathVariable Long chatId, @RequestBody MessageDTO messageDTO) {
+        log.info("Отправка сообщения {}", messageDTO);
+        // Лучше всегда возращать то, что создаётся(заносится в БД)
         messageService.sendMessage(chatId, messageDTO);
-        return new ResponseEntity<>("Сообщение отправлено",HttpStatus.OK);
-    }
-
-    @PostMapping("/chat")
-    public ResponseEntity<?> createChat(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody UserDTO userDTO) {
-        chatService.createChat(userDetails, userDTO);
-        return new ResponseEntity<>("Чат создан",HttpStatus.OK);
-    }
-
-//    @GetMapping("/search/global/{search}")
-//    public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
-//        List<UserDTO> users = messengerService.getGlobalChats(search);
-//        return ResponseEntity.ok(users);
-//    }
-//
-//    @PostMapping("/send")
-//    public ResponseEntity<Message> sendMessage(@RequestBody Message message) {
-//        log.info("Отправка сообщения {}", message);
-//        Message sendedMessage = messengerService.sendMessage(message);
-//        log.info("Сообщение сохранено в БД {}", message);
+        log.info("Сообщение сохранено в БД {}", messageDTO);
 //        messagingTemplate.convertAndSendToUser(
 //                messengerService.getRecipientId(message.getUserId(), message.getChatId()).toString(),
 //                "/queue/messages",
 //                message
 //        );
-//        return new ResponseEntity<>(sendedMessage, HttpStatus.CREATED);
-//    }
+        return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/chat")
+    public ResponseEntity<?> createChat(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody UserDTO userDTO) {
+        chatService.createChat(userDetails, userDTO);
+        return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/chat/create/{userId}")
+    public ResponseEntity<?> createChat(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
+        chatService.createChat(userId, userDTO);
+        return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
+    }
+
+    @GetMapping("/search/global/{search}")
+    public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
+        List<UserDTO> users = chatService.getGlobalChats(search);
+        return ResponseEntity.ok(users);
+    }
 }
