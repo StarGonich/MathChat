@@ -25,7 +25,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final MailSenderService mailSenderService;
     private final S3ServiceImpl S3Service;
@@ -36,7 +35,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User register(SignUpDTO signUpDTO) {
         log.info("UserService: регистрация SignUpDTO {}", signUpDTO);
-        User user = userMapper.toUser(signUpDTO);
+        User user = UserMapper.toUser(signUpDTO);
 
         Optional<User> tmp = userRepository.findByEmail(user.getEmail());
 
@@ -98,7 +97,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> findAllUsers() {
         return userRepository.findAll()
                 .stream()
-                .map(userMapper::toDTO)
+                .map(UserMapper::toDTO)
                 .toList();
     }
 

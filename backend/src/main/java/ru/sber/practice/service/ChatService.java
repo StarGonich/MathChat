@@ -15,6 +15,6 @@ public interface ChatService {
     void createChat(MyUserDetails userDetails, UserDTO userDTO);
     void createChat(Long userId, GlobalChatDTO globalChatDTO);
     Chat getChatById(Long chatId);
-    List<UserDTO> getGlobalChats(String search);
+    List<GlobalChatDTO> getGlobalChats(String search);
     Long getRecipientId(Long userId, Long ChatId);
 }

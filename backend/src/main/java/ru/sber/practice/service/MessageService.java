@@ -8,4 +8,7 @@ import java.util.List;
 public interface MessageService {
     List<Message> getMessagesByChatId(Long chatId);
     void sendMessage(Long chadId, MessageDTO messageDTO);
+
+    //Админ запросы
+    List<Message> findAll();
 }

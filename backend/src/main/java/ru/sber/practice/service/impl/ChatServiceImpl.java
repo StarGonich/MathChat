@@ -25,7 +25,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
     private final MessageRepository messageRepository;
-    private final UserMapper userMapper;
     private final ChatRepository chatRepository;
     private final UserRepository userRepository;
 
@@ -69,11 +68,11 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<UserDTO> getGlobalChats(String search) {
+    public List<GlobalChatDTO> getGlobalChats(String search) {
         return userRepository
                 .findBySearchTerm(search)
                 .stream()
-                .map(userMapper::toDTO)
+                .map(UserMapper::toGlobalChatDTO)
                 .toList();
     }
 

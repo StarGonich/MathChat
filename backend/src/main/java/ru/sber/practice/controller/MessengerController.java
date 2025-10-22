@@ -73,8 +73,8 @@ public class MessengerController {
     }
 
     @GetMapping("/search/global/{search}")
-    public ResponseEntity<List<UserDTO>> getAllChats(@PathVariable String search) {
-        List<UserDTO> users = chatService.getGlobalChats(search);
+    public ResponseEntity<List<GlobalChatDTO>> getAllChats(@PathVariable String search) {
+        List<GlobalChatDTO> users = chatService.getGlobalChats(search);
         return ResponseEntity.ok(users);
     }
 }

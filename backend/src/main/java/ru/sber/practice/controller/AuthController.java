@@ -23,7 +23,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthController {
     private final UserService userService;
-    private final UserMapper userMapper;
 
     @GetMapping("/")
     public MyUserDetails test(@AuthenticationPrincipal MyUserDetails userDetails) {
@@ -38,7 +37,7 @@ public class AuthController {
             log.info("Неудачная регистрация");
             return new ResponseEntity<>("Пользователь с данным email уже зарегистрирован!", HttpStatus.BAD_REQUEST);
         }
-        UserDTO responseUser = userMapper.toDTO(registeredUser);
+        UserDTO responseUser = UserMapper.toDTO(registeredUser);
         log.info("Регистрация пользователя: {}", responseUser);
         return new ResponseEntity<>(responseUser, HttpStatus.CREATED);
     }

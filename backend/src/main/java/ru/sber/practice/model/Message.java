@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.sql.Timestamp;
@@ -33,6 +34,7 @@ public class Message {
     private String messageText;
 
     @Column(name = "message_creation_date")
+//    @ColumnDefault("CURRENT_TIMESTAMP")
     private ZonedDateTime messageDate;
 
     @JsonIgnore
