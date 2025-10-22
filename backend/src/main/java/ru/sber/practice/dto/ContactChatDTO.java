@@ -1,0 +1,14 @@
+package ru.sber.practice.dto;
+
+import java.time.ZonedDateTime;
+
+// Вся информация дял фронта
+public record ContactChatDTO(Long userId,
+                             Long chatId,
+                             String username,
+                             String firstname,
+                             String lastname,
+                             String lastMessageText,
+                             ZonedDateTime messageDate
+                      ) {
+}

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ru.sber.practice.config.MyUserDetails;
+import ru.sber.practice.dto.ContactChatDTO;
+import ru.sber.practice.dto.GlobalChatDTO;
 import ru.sber.practice.dto.MessageDTO;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.Chat;
@@ -28,8 +30,8 @@ public class MessengerController {
     private final MessageService messageService;
 
     @GetMapping("/search/{userId}")
-    public ResponseEntity<List<Chat>> getChats(@PathVariable Long userId) {
-        List<Chat> chats = chatService.getChats(userId);
+    public ResponseEntity<List<ContactChatDTO>> getChats(@PathVariable Long userId) {
+        List<ContactChatDTO> chats = chatService.getChats(userId);
         return ResponseEntity.ok(chats);
     }
 
@@ -65,13 +67,9 @@ public class MessengerController {
     }
 
     @PostMapping("/chat/create/{userId}")
-    public ResponseEntity<?> createChat(@PathVariable Long userId, @RequestBody UserDTO userDTO) {
-        try {
-            chatService.createChat(userId, userDTO);
-            return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
-        } catch (ResponseStatusException e) {
-            return new ResponseEntity<>(e.getReason(), e.getStatusCode());
-        }
+    public ResponseEntity<?> createChat(@PathVariable Long userId, @RequestBody GlobalChatDTO globalChatDTO) {
+        chatService.createChat(userId, globalChatDTO);
+        return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
     }
 
     @GetMapping("/search/global/{search}")

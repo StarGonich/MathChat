@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.sber.practice.config.MyUserDetails;
+import ru.sber.practice.dto.ContactChatDTO;
+import ru.sber.practice.dto.GlobalChatDTO;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.Chat;
 import ru.sber.practice.dto.mapping.UserMapper;
@@ -28,8 +30,8 @@ public class ChatServiceImpl implements ChatService {
     private final UserRepository userRepository;
 
     @Override
-    public List<Chat> getChats(Long userId) {
-        return chatRepository.findChatByUserId(userId);
+    public List<ContactChatDTO> getChats(Long userId) {
+        return chatRepository.findContactChatsByUserId(userId);
     }
 
     @Override
@@ -47,15 +49,15 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void createChat(Long userId, UserDTO userDTO) {
+    public void createChat(Long userId, GlobalChatDTO globalChatDTO) {
         Chat chat = new Chat();
         User firstUser = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Создание чата: не найден пользователь с id=" + userId));
         chat.setFirstUserId(firstUser);
-        User secondUser = userRepository.findById(userDTO.id())
+        User secondUser = userRepository.findById(globalChatDTO.userId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Создание чата: не найден пользователь с id=" + userDTO.id()));
+                        "Создание чата: не найден пользователь с id=" + globalChatDTO.userId()));
         chat.setSecondUserId(secondUser);
         chat = chatRepository.save(chat);
         log.info("Чат создан {}", chat);

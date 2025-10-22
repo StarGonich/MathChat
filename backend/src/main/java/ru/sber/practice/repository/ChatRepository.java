@@ -2,14 +2,32 @@ package ru.sber.practice.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import ru.sber.practice.dto.ContactChatDTO;
 import ru.sber.practice.model.Chat;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-    @Query(value = "select * from chats where first_user_id = :userId or second_user_id = :userId", nativeQuery = true)
-    List<Chat> findChatByUserId(Long userId);
+//    @Query(value = "SELECT * from chats where first_user_id = :userId or second_user_id = :userId", nativeQuery = true)
+//    List<Chat> findChatByUserId(Long userId);
+    @Query(value = """
+    SELECT\s
+        u.id as userId,
+        c.id as chatId,
+        u.firstname as firstname,
+        u.lastname as lastname,
+        u.username as username,
+        m.message_text as lastMessageText,
+        m.message_creation_date as messageDate
+    FROM chats c
+    JOIN users u ON u.id = CASE\s
+        WHEN c.first_user_id = :userId THEN c.second_user_id\s
+        ELSE c.first_user_id\s
+    END
+    LEFT JOIN messages m ON m.id = c.last_message_id
+    WHERE c.first_user_id = :userId OR c.second_user_id = :userId""", nativeQuery = true)
+    List<ContactChatDTO> findContactChatsByUserId(Long userId);
 
     @Query(value = "SELECT CASE WHEN first_user_id = :userId THEN second_user_id ELSE first_user_id END " +
             "FROM chats WHERE id = :chatId AND (first_user_id = :userId OR second_user_id = :userId)",
