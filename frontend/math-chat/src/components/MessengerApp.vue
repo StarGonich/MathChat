@@ -1,7 +1,7 @@
 <template>
     <div class="ui attached stackable menu">
         <div class="ui container">
-            <a class="item" @click="showProf(user, true)">
+            <a class="item" @click="showProf(user, 'own')">
                 <i class="user icon"></i> {{user.login}} {{user.email}}
             </a>
             <a class="right item"  @click="quit">
@@ -14,7 +14,7 @@
             <div class="six wide column">
                 <div class="ui segment">
                     <div class="ui search">
-                        <div class="ui icon input">
+                        <div class="ui icon input" @click="showFind">
                             <input class="prompt" type="text" placeholder="Найти юзера...">
                             <i class="search icon"></i>
                         </div>
@@ -38,9 +38,9 @@
             </div>
             <div class="ten wide column">
                 <div class="ui fluid segment" v-if="chatId.id != -1">
-                    <h2 class="ui center header">{{chatUser.login}}</h2>
+                    <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">{{chatUser.login}}</h2>
                     <div v-for="message in messages" :key="message.id">
-                        <div class="ui left aligned segment" v-if="message.userId != userId">
+                        <div class="ui left aligned segment" v-if="message.userId.id != userId">
                             <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
                                 <div v-if="line.isLatex">
                                     <vue-latex  :expression="line.content"/>
@@ -59,19 +59,21 @@
                     </div>
                     <div class="ui fluid action input">
                         <input type="text" v-model="textMessage" placeholder="Сообщение">
-                        <button class="ui button" @click="post">Отправить</button>
+                        <button class="ui button" @click.prevent="post">Отправить</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <ProfileApp :user="profUser" :updated="profUpd" v-if="openProfile" @quitEvent="updateUser" />
+    <ProfileApp :user="profUser" :type="profType" v-if="openProfile" @quitEvent="updateUser" />
+    <FindApp :users="allUsers" v-if="openFind" @quitEvent="openFind = false" @selectEvent="(id) => select(id)"/>
 </template>
 
 <script setup>
 import axios from 'axios'
 import { ref, onMounted } from 'vue'
 import ProfileApp from './ProfileApp.vue'
+import FindApp from './FindApp.vue'
 
 let allUsers = ref([])
 let allUsers1 = ref([])
@@ -101,7 +103,7 @@ const textMessage = ref('')
 
 let openProfile = ref(false)
 let profUser = ref({})
-let profUpd = ref(false)
+let profType = ref('none')
 
 const emit = defineEmits(['quitEvent'])
 
@@ -210,12 +212,14 @@ onMounted(async () => {
             }
         ]
     }
+    console.log(allUsers)
     for(let i = 0; i < allUsers.value.length; i++){
         allUsers1.value.push({
             id: allUsers.value[i].id,
             login: allUsers.value[i].firstname + " " + allUsers.value[i].lastname,
             email: allUsers.value[i].email
         })
+        console.log(allUsers1)
     }
     try {
         await axios.get('http://localhost:8080/api/user/find/' + props.userId)
@@ -225,7 +229,7 @@ onMounted(async () => {
         user.value = allUsers1.value[props.userId-1]
     }
     try {
-        await axios.get('http://localhost:8080/api/messenger/' + props.userId)
+        await axios.get('http://localhost:8080/search/' + props.userId)
             .then(response => chats.value = response.data)
     } catch (e) {
         console.log(e)
@@ -263,21 +267,25 @@ onMounted(async () => {
         ]
     }
     for(let i = 0; i < chats.value.length; i++){
-        chatUsers.value.push({
-            id: (chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId+1),
-            login: allUsers1.value[(chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId-1)].login,
-            email: allUsers1.value[(chats.value[i].userIdMin + chats.value[i].userIdMax - props.userId-1)].email,
-            chatId: chats.value[i].id,
-            lastMessage: ''
-        })
+        try{await axios.get('http://localhost:8080/api/user/find/' + (chats.value[i].firstUserId.id + chats.value[i].secondUserId.id - props.userId))
+            .then(response => chatUsers.value.push({
+                id: response.data.id,
+                login: response.data.firstname + " " + response.data.lastname,
+                email: response.data.email,
+                chatId: chats.value[i].id,
+                lastMessage: ''
+            }))
+        }catch(e){
+            console.log(e)
+        }
     }
 })
 
 async function updateChat(id1, id2) {
-    chatUser.value = allUsers1.value[id1-2]
+    chatUser.value = allUsers1.value[id1-1]
     chatId = id2
     try {
-        await axios.get('http://localhost:8080/api/messenger/chat/' + chatId)
+        await axios.get('http://localhost:8080/chat/' + chatId)
             .then(response => messages.value = response.data)
     } catch (e) {
         console.log(e)
@@ -501,26 +509,40 @@ function formatArr(str, n){
     return ss
 }
 
-function post(){
-    messages.value.push({
-        id: messages.value.length,
-        userId: props.userId,
-        chatId: chatId,
-        messageText: textMessage.value,
-    })
-    chatUsers.value[chatUser.value.id-2].lastMessage = textMessage.value
+async function post(){
+    try{
+        await axios.post('http://localhost:8080/chat/' + chatId, {
+            id: messages.value.length,
+            userId: props.userId,
+            chatId: chatId,
+            messageText: textMessage.value,
+            messageDate: new Date()
+        })
+        await axios.get('http://localhost:8080/chat/' + chatId)
+            .then(response => messages.value = response.data)
+    }catch(e){
+        console.log(e)
+    }
     textMessage.value = ''
 }
 
-function showProf(user, own){
+async function showProf(user, type){
+    if(type == 'chat'){
+        try{
+            await axios.get('http://localhost:8080/api/user/find/' + user.id)
+            .then(response => user = response.data)
+        }catch(e){
+            console.log(e)
+        }
+    }
     profUser.value = user
-    profUpd.value = own
+    profType.value = type
     openProfile.value = true
 }
 
 async function updateUser(){
     openProfile.value = false
-    if(profUpd.value){
+    if(profType.value == 'own'){
         try {
             await axios.get('http://localhost:8080/api/user/find/' + props.userId)
                 .then(response => user.value = response.data)
@@ -528,6 +550,24 @@ async function updateUser(){
             console.log(e)
         }
     }
+}
+
+const openFind = ref(false)
+
+function showFind(){
+    openFind.value = true
+}
+
+async function select(id){
+    openFind.value = false
+    let user = {}
+     try {
+        await axios.get('http://localhost:8080/api/user/find/' + id)
+            .then(response => user = response.data)
+    } catch (e) {
+        console.log(e)
+    }
+    showProf(user, 'stranger')
 }
 
 function quit() {
