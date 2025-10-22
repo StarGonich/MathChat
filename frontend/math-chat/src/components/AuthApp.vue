@@ -22,7 +22,7 @@
                     </div>
                 </div>
                 <div class="ui clearing divider"></div>
-                <button class = "ui button primary" @click="auth" :disabled="!user.email || !user.password">Войти</button>
+                <button class = "ui button primary" @click.prevent="auth" :disabled="!user.email || !user.password">Войти</button>
                 <button class = "ui button" @click="register">Нет аккаунта? Зарегистрироваться</button>
                 <button class = "ui button" @click.prevent="forgot" :disabled="!user.email">Забыли пароль?</button>
                 <div class="ui info message" v-if="msg">
@@ -60,8 +60,21 @@ watch(user.value, (newUser) =>{
 const emit = defineEmits(['quitEvent'])
 const msg=ref('')
 
-function auth() {
-    emit('quitEvent', 'mes')
+async function auth() {
+    try{
+        let req = "username=" + user.value.email + "&password=" + user.value.password
+        let resp = ""
+        await axios.post('http://localhost:8080/login', req)
+            .then(response => resp = response.data)
+        console.log(resp)
+        if(resp.includes("Invalid")){
+            msg.value = "Неудачная попытка входа"
+        }else{
+            emit('quitEvent', 'mes')
+        }
+    }catch(e){
+        msg.value = "Не удалось войти, попробуйте позже"
+    }
 }
 
 function register(){
