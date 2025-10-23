@@ -34,21 +34,4 @@ public class UserController {
         log.info("Request /api/user/find: {}", id);
         return userService.findById(id);
     }
-
-    @PutMapping("/update/{userId}")
-    public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody UpdatableUserDTO updateUserDTO) {
-        User user = userService.updateUser(userId, updateUserDTO);
-        return ResponseEntity.ok(user);
-    }
-
-    @PutMapping("/change/avatar/{id}")
-    public ResponseEntity<String> changeAvatar(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
-        try {
-            String key = userService.changeAvatar(id, file);
-            return ResponseEntity.ok("Аватарка обновлена: " + key);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Ошибка сохранения аватарки");
-        }
-    }
 }

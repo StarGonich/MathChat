@@ -1,36 +1,56 @@
-#### По итогу, что есть:
+## Auth
 
-Регистрация, принимает Body из всех полей user
 ```
 localhost:8080/register
 ```
+— принимает `SignUpDTO`
 
-## REST API
+## Мессенджер
 
-Просто список всех юзеров, эксперемент
+1) Получение "контактных" чатов (сразу же после перехода на страницу мессенджера):
 ```
-localhost:8080/api/user/findAll
+GET localhost:8080/search/{userId}
 ```
+— принимает число `userId` в виде **PathVariable**, возвращает `List<ContactChatDTO>`. Поиск происходит локально в виде JavaScript скрипта, до 3 символов
 
-Нахождение сообщений по chatId
+2) Глобальный поиск чатов(по факту пользователей) по search:
 ```
-localhost:8080/api/messenger/chat/{chatId}
+GET localhost:8080/search/global/{search}
 ```
+— принимает строку `search` в виде **PathVariable**, возвращает `List<GlobalChatDTO>`. Предполагается, что длиной $\geq 4$ символов. 
 
-Локальный поиск чатов по userId:
+3) Создание чата, в случае его отсутствия
 ```
-localhost:8080/api/messenger/search/local/{userId}
+POST localhost:8080/chat/create/{myUserId}?with={anotherUserId}
 ```
+— принимается `myUserId` (ваш) в виде **PathVariable**, и `anotherUserId` (предполагается, что из глобального поиска) в виде **RequestParam**
+4) Получение сообщений по чату
+```
+GET localhost:8080/chat/{chatId}
+```
+— принимает число `chatId` в виде **PathVariable**, возвращает `List<GetMessagesDTO>`
+5) Отправка сообщений:
+```
+localhost:8080//chat/{chatId}
+```
+— принимает число `chatId` в виде **PathVariable** и `SendMessageDTO` в виде **RequestBody**
 
-Глобальный поиск чатов(по факту пользователей) по search:
-```
-localhost:8080/api/messenger/search/global/{search}
-```
+## Профиль
 
-Отправка сообщений:
+1) Обновление данных о пользователе
 ```
-localhost:8080/api/messenger/send
+PUT localhost:8080/update/{userId}
 ```
+— принимает число `userId` в виде **PathVariable** и `UpdatableUserDTO` в виде **RequestBody**
+
+2) Смена аватарки
+```
+PUT localhost:8080/change/avatar/{userId}
+```
+— принимает число `userId` в виде **PathVariable** и `file` в виде **RequestParam**
+
+## Админ (пока не реализовываем)
+
 
 *Мда, с путями запросов небольшая трабла, но это уже косметическая часть*
 
