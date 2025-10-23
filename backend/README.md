@@ -24,11 +24,13 @@ GET localhost:8080/search/global/{search}
 POST localhost:8080/chat/create/{myUserId}?with={anotherUserId}
 ```
 — принимается `myUserId` (ваш) в виде **PathVariable**, и `anotherUserId` (предполагается, что из глобального поиска) в виде **RequestParam**
+
 4) Получение сообщений по чату
 ```
 GET localhost:8080/chat/{chatId}
 ```
 — принимает число `chatId` в виде **PathVariable**, возвращает `List<GetMessagesDTO>`
+
 5) Отправка сообщений:
 ```
 localhost:8080//chat/{chatId}
