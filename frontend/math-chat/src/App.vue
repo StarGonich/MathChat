@@ -3,7 +3,7 @@
     <DevApp @switchEvent="(msg) => str = msg" />
   </div>
   <div v-if="str === 'reg'">
-    <RegistrationApp @quitEvent="(msg, i) => upd(msg, i)" />
+    <RegistrationApp @quitEvent="(msg) => str = msg" />
   </div>
   <div v-if="str === 'email'">
     <SendEmailApp @quitEvent="(msg) => str = msg" />
@@ -25,12 +25,8 @@ import AuthApp from './components/AuthApp.vue'
 import { ref } from 'vue'
 const str = ref('auth')
 const dev = false
-let id = 4;
+let id = ref(4);
 
-function upd(msg, i){
-  str.value = msg
-  id = i
-}
 </script>
 
 <style>
