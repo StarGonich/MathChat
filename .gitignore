@@ -34,3 +34,4 @@ build/
 
 ### ENV ###
 .env
+frontend/math-chat/node_modules.rar

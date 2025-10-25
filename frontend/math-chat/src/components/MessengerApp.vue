@@ -267,12 +267,12 @@ onMounted(async () => {
         ]
     }
     for(let i = 0; i < chats.value.length; i++){
-        try{await axios.get('http://localhost:8080/api/user/find/' + (chats.value[i].firstUserId.id + chats.value[i].secondUserId.id - props.userId))
+        try{await axios.get('http://localhost:8080/api/user/find/' + (chats.value[i].userId))
             .then(response => chatUsers.value.push({
                 id: response.data.id,
                 login: response.data.firstname + " " + response.data.lastname,
                 email: response.data.email,
-                chatId: chats.value[i].id,
+                chatId: chats.value[i].chatId,
                 lastMessage: ''
             }))
         }catch(e){
