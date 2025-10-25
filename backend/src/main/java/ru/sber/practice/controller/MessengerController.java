@@ -58,10 +58,4 @@ public class MessengerController {
 //        );
         return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
     }
-
-    @PostMapping("/chat")
-    public ResponseEntity<?> createChat(@AuthenticationPrincipal MyUserDetails userDetails, @RequestBody UserDTO userDTO) {
-        chatService.createChat(userDetails, userDTO);
-        return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
-    }
 }
