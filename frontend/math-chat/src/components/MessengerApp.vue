@@ -39,8 +39,8 @@
             <div class="ten wide column">
                 <div class="ui fluid segment" v-if="chatId.id != -1">
                     <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">{{chatUser.login}}</h2>
-                    <div v-for="message in messages" :key="message.id">
-                        <div class="ui left aligned segment" v-if="message.userId.id != userId">
+                    <div v-for="message in messages" :key="message.none">
+                        <div class="ui left aligned segment" v-if="message.userId != userId">
                             <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
                                 <div v-if="line.isLatex">
                                     <vue-latex  :expression="line.content"/>
