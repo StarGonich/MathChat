@@ -67,10 +67,10 @@ async function auth() {
         await axios.post('http://localhost:8080/login', req)
             .then(response => resp = response.data)
         console.log(resp)
-        if(resp.includes("Invalid")){
+        if(!resp.email){
             msg.value = "Неудачная попытка входа"
         }else{
-            emit('quitEvent', 'mes')
+            emit('quitEvent', 'mes', resp.id)
         }
     }catch(e){
         msg.value = "Не удалось войти, попробуйте позже"
@@ -78,7 +78,7 @@ async function auth() {
 }
 
 function register(){
-    emit('quitEvent', 'reg')
+    emit('quitEvent', 'reg', "-1")
 }
 
 async function forgot(){
