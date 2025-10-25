@@ -67,10 +67,10 @@ async function auth() {
         await axios.post('http://localhost:8080/login', req)
             .then(response => resp = response.data)
         console.log(resp)
-        if(!resp.email){
+        if(!resp.name){
             msg.value = "Неудачная попытка входа"
         }else{
-            emit('quitEvent', 'mes', resp.id)
+            emit('quitEvent', 'mes', resp.name)
         }
     }catch(e){
         msg.value = "Не удалось войти, попробуйте позже"

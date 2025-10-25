@@ -24,7 +24,7 @@ import MessengerApp from './components/MessengerApp.vue'
 import AuthApp from './components/AuthApp.vue'
 import { ref } from 'vue'
 const str = ref('auth')
-const dev = false
+const dev = true
 let id = ref(4);
 
 function upd(msg, i){

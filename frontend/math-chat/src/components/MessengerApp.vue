@@ -65,7 +65,7 @@
             </div>
         </div>
     </div>
-    <ProfileApp :user="profUser" :type="profType" v-if="openProfile" @quitEvent="updateUser" />
+    <ProfileApp :user="profUser" :type="profType" :watchId="userId" v-if="openProfile" @quitEvent="updateUser" />
     <FindApp :users="allUsers" v-if="openFind" @quitEvent="openFind = false" @selectEvent="(id) => select(id)"/>
 </template>
 

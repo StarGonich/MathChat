@@ -69,6 +69,9 @@ const props = defineProps({
     },
     type: {
         required: true
+    },
+    watchId: {
+        required: true
     }
 })
 
@@ -114,7 +117,7 @@ function drawBackground(){
 
 async function createChat() {
     try{
-        await axios.post('http://localhost:8080/chat', user.value)
+        await axios.post('http://localhost:8080/chat/create/'+props.watchId, "with="+user.value.id)
         quit()
     }catch(e){
         console.log(e)
