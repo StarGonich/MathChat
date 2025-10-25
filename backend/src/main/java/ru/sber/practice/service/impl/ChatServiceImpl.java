@@ -42,7 +42,7 @@ public class ChatServiceImpl implements ChatService {
         if (User.isPresent()) {
             Chat chat = new Chat();
 
-            chat.setFirstUserId(userRepository.findByUsername(userDetails.getName()).get());
+            chat.setFirstUserId(userRepository.findByUsername(userDetails.getUsername()).get());
             chat.setSecondUserId(userRepository.findByUsername(userDTO.username()).get());
             chatRepository.save(chat);
         } else {

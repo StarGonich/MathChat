@@ -26,6 +26,7 @@ public class AuthController {
 
     @GetMapping("/")
     public MyUserDetails test(@AuthenticationPrincipal MyUserDetails userDetails) {
+        log.info("Тест произошёл на /, {}", userDetails);
         return userDetails;
     }
 
@@ -35,7 +36,7 @@ public class AuthController {
         User registeredUser = userService.register(signUpDTO);
         if (registeredUser.getToken() == null) {
             log.info("Неудачная регистрация");
-            return new ResponseEntity<>("Пользователь с данным email уже зарегистрирован!", HttpStatus.BAD_REQUEST); // TODO!!!
+            return new ResponseEntity<>("Пользователь с данным email уже зарегистрирован!", HttpStatus.CREATED); // TODO!!!
         }
         UserDTO responseUser = UserMapper.toDTO(registeredUser);
         log.info("Регистрация пользователя: {}", responseUser);
