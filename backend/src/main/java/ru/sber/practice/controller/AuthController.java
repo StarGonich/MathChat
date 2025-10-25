@@ -36,7 +36,7 @@ public class AuthController {
         User registeredUser = userService.register(signUpDTO);
         if (registeredUser.getToken() == null) {
             log.info("Неудачная регистрация");
-            return new ResponseEntity<>("Пользователь с данным email уже зарегистрирован!", HttpStatus.CREATED); // TODO!!!
+            return new ResponseEntity<>("Пользователь с данным email уже зарегистрирован!", HttpStatus.BAD_REQUEST); // TODO!!!
         }
         UserDTO responseUser = UserMapper.toDTO(registeredUser);
         log.info("Регистрация пользователя: {}", responseUser);
@@ -61,7 +61,7 @@ public class AuthController {
             return new ResponseEntity<>("Письмо для смены пароля отправлено", HttpStatus.OK);
         }
         log.info("Неудачный запрос: {}", emailDTO);
-        return new ResponseEntity<>("Почта не найдена или не активирована", HttpStatus.OK); // vue ругается когда встречает BAD_REQUEST
+        return new ResponseEntity<>("Почта не найдена или не активирована", HttpStatus.BAD_REQUEST); // vue ругается когда встречает BAD_REQUEST
     }
 
     @PostMapping("/changePassword/{token}")
