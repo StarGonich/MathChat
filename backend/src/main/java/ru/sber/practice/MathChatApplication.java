@@ -1,7 +1,13 @@
 package ru.sber.practice;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import ru.sber.practice.model.User;
+import ru.sber.practice.repository.UserRepository;
+import ru.sber.practice.service.UserService;
 
 @SpringBootApplication
 public class MathChatApplication {
@@ -10,37 +16,16 @@ public class MathChatApplication {
 		SpringApplication.run(MathChatApplication.class, args);
 	}
 
-//    @Bean
-//    public CommandLineRunner initData(UserService userService) {
-//        return (args) -> {
-//            SignUpDTO user1 = new SignUpDTO(
-//                    "Егор",
-//                    "Мальцев",
-//                    "0570757@list.ru",
-//                    "12321",
-//                    true
-//            );
-//            userService.register(user1);
-//
-//            SignUpDTO user2 = new SignUpDTO(
-//                    "Матвей",
-//                    "Ковалев",
-//                    "matveykov11@gmail.com",
-//                    "12321",
-//                    true
-//            );
-//            userService.register(user2);
-//
-//            SignUpDTO user3 = new SignUpDTO(
-//                    "Алексей",
-//                    "Величайший",
-//                    "stargonich@gmail.com",
-//                    "12321",
-//                    true
-//            );
-//            userService.register(user3);
-//        };
-//    }
+    @Bean
+    public CommandLineRunner initData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        User user = new User();
+        user.setEmail("test@mail.ru");
+        user.setPassword(passwordEncoder.encode("12321"));
+        user.setEnabled(true);
+        return (args) -> {
+            userRepository.save(user);
+        };
+    }
 
 //    @Bean
 //    public WebMvcConfigurer corsConfigurer() {
