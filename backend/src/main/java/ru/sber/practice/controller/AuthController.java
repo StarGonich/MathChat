@@ -26,6 +26,7 @@ public class AuthController {
 
     @GetMapping("/")
     public MyUserDetails test(@AuthenticationPrincipal MyUserDetails userDetails) {
+        log.info("Тест произошёл на /, {}", userDetails);
         return userDetails;
     }
 
@@ -60,7 +61,7 @@ public class AuthController {
             return new ResponseEntity<>("Письмо для смены пароля отправлено", HttpStatus.OK);
         }
         log.info("Неудачный запрос: {}", emailDTO);
-        return new ResponseEntity<>("Почта не найдена или не активирована", HttpStatus.OK); // vue ругается когда встречает BAD_REQUEST
+        return new ResponseEntity<>("Почта не найдена или не активирована", HttpStatus.BAD_REQUEST); // vue ругается когда встречает BAD_REQUEST
     }
 
     @PostMapping("/changePassword/{token}")

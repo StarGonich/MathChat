@@ -43,6 +43,6 @@ public class MyUserDetails implements UserDetails, OAuth2User {
   
     @Override
     public String getName() {
-        return user.getUsername();
+        return user.getId().toString();
     }
 }
