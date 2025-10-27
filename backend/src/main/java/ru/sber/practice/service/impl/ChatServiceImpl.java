@@ -37,6 +37,15 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
+    public List<GlobalChatDTO> getGlobalChats(String search) {
+        return userRepository
+                .findBySearchTerm(search)
+                .stream()
+                .map(UserMapper::toGlobalChatDTO)
+                .toList();
+    }
+
+    @Override
     public void createChat(MyUserDetails userDetails, UserDTO userDTO) {
         Optional<User> User = userRepository.findByUsername(userDTO.username());
         if (User.isPresent()) {
@@ -54,12 +63,12 @@ public class ChatServiceImpl implements ChatService {
     public void createChat(Long firstUserId, Long secondUserId) {
         Chat chat = new Chat();
 
-        User firstUser = userRepository.findById(firstUserId)
+        User firstUser = userRepository.findByIdAndIsEnabledTrue(firstUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Не найден пользователь с id=" + firstUserId));
         chat.setFirstUserId(firstUser);
 
-        User secondUser = userRepository.findById(secondUserId)
+        User secondUser = userRepository.findByIdAndIsEnabledTrue(secondUserId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Не найден пользователь с id=" + secondUserId));
         chat.setSecondUserId(secondUser);
@@ -77,15 +86,6 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public Chat getChatById(Long chatId) {
         return chatRepository.findById(chatId).orElse(null);
-    }
-
-    @Override
-    public List<GlobalChatDTO> getGlobalChats(String search) {
-        return userRepository
-                .findBySearchTerm(search)
-                .stream()
-                .map(UserMapper::toGlobalChatDTO)
-                .toList();
     }
 
     // Для WebSocket, для отправки по персональному каналу

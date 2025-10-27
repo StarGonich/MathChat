@@ -1,8 +1,8 @@
-INSERT INTO users(username, firstname, lastname, email, password) VALUES ('StarGonich', 'Алексей', 'Величайший', '12321alexey8837@gmail.com', 'aboba');
-INSERT INTO users(username, firstname, lastname, email, password) VALUES ('MatveyKov11', 'Матвей', 'Ковалёв', 'matveykov@gmail.com', 'aboba2');
-INSERT INTO users(username, firstname, lastname, email, password) VALUES ('Ansv33r', 'Егор', 'Мальцев', 'egor@gmail.com', 'aboba3');
-INSERT INTO users(username, firstname, lastname, email, password) VALUES ('user_1000', 'Егор', 'Мальцев', 'egsor@gmail.com', 'aboba3');
-INSERT INTO users(username, firstname, lastname, email, password) VALUES ('user_1001', 'Егор', 'Мальцев', 'egor@dfd.com', 'aboba3');
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('StarGonich', 'Алексей', 'Величайший', '12321alexey8837@gmail.com', 'aboba', true);
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('MatveyKov11', 'Матвей', 'Ковалёв', 'matveykov@gmail.com', 'aboba2', true);
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('Ansv33r', 'Егор', 'Мальцев', 'egor@gmail.com', 'aboba3', true);
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('user_1000', 'Егор', 'Мальцев', 'egsor@gmail.com', 'aboba3', true);
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('user_1001', 'Егор', 'Мальцев', 'egor@dfd.com', 'aboba3', true);
 
 INSERT INTO chats(first_user_id, second_user_id) VALUES (1, 2);
 INSERT INTO chats(first_user_id, second_user_id) VALUES (1, 3);
@@ -12,26 +12,26 @@ INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALU
 INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (1, 2, 'Привет, Егор, я Алексей', '2025-07-03 18:42:12.798644+03');
 INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (2, 3, 'Привет, Егор, я Матвей', '2025-07-03 18:43:12.798644+03');
 
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Алиса', 'Артемьева', 'a@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Боб', 'Бутчер', 'b@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Витя', 'Величайший', 'v@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Длинный', 'Очень длииииииииииииииииииииииинный ник', 'dddddddddddddddddddddddddddddddddddddddd@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Глеб', 'Горячий', 'g@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Егор', 'Елесин', 'e@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Ёжик', 'Ёлочный', 'yo@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Жора', 'Жирный', 'j@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Зина', 'Зиновьева', 'z@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Игорь', 'Иванов', 'i@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Йорик', 'Йог', 'y@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Кирилл', 'Капустин', 'k@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Лида', 'Лосева', 'l@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Матвей', 'Мальцев', 'm@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Никита', 'Носа', 'n@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Олег', 'Оботуров', 'o@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Петя', 'Первый', 'p@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Роман', 'Рогозин', 'r@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Семён', 'Смирнов', 's@mail.ru', '11111');
-INSERT INTO users(firstname, lastname, email, password) VALUES ('Толик', 'Третий', 't@mail.ru', '11111');
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Алиса', 'Артемьева', 'a@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Боб', 'Бутчер', 'b@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Витя', 'Величайший', 'v@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Длинный', 'Очень длииииииииииииииииииииииинный ник', 'dddddddddddddddddddddddddddddddddddddddd@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Глеб', 'Горячий', 'g@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Егор', 'Елесин', 'e@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Ёжик', 'Ёлочный', 'yo@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Жора', 'Жирный', 'j@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Зина', 'Зиновьева', 'z@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Игорь', 'Иванов', 'i@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Йорик', 'Йог', 'y@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Кирилл', 'Капустин', 'k@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Лида', 'Лосева', 'l@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Матвей', 'Мальцев', 'm@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Никита', 'Носа', 'n@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Олег', 'Оботуров', 'o@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Петя', 'Первый', 'p@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Роман', 'Рогозин', 'r@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Семён', 'Смирнов', 's@mail.ru', '11111', true);
+INSERT INTO users(firstname, lastname, email, password, is_enabled) VALUES ('Толик', 'Третий', 't@mail.ru', '11111', true);
 
 INSERT INTO chats(first_user_id, second_user_id) VALUES (4, 5);
 INSERT INTO chats(first_user_id, second_user_id) VALUES (4, 6);
@@ -67,3 +67,5 @@ INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALU
 INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (7, 6, 'Идеально! Я за колой и чипсами.', '2025-07-03 14:42:02.798644+03');
 INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (4, 6, 'Договорились! Только дождись меня, не усни за компом.', '2025-07-03 14:42:12.798644+03');
 INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (7, 6, 'Обещаю ничего не обещать. Пока!', '2025-07-03 14:42:22.798644+03');
+
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('NotActivated', 'Чёрт', 'Чертов', 'notactivate@gmail.com', 'aboba3', false);

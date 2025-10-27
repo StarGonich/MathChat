@@ -43,7 +43,7 @@ public class MessageServiceImpl implements MessageService {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не найден чат с chatId="+chatId));
         Message message = new Message();
-        User userAuthor = userRepository.findById(sendMessageDTO.userId())
+        User userAuthor = userRepository.findByIdAndIsEnabledTrue(sendMessageDTO.userId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Не найден пользователь с userId="+ sendMessageDTO.userId()));
         if (!(userAuthor == chat.getFirstUserId() || userAuthor == chat.getSecondUserId())) {
