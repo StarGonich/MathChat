@@ -22,6 +22,7 @@ public class MessengerController {
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<List<ContactChatDTO>> getChats(@PathVariable Long userId) {
+        //Логика с AuthenticationPrincipal
         List<ContactChatDTO> chats = chatService.getChats(userId);
         return ResponseEntity.ok(chats);
     }
@@ -34,8 +35,8 @@ public class MessengerController {
 
     @PostMapping("/chat/create/{myUserId}")
     public ResponseEntity<?> createChat(@PathVariable Long myUserId,
-                                        @RequestParam(name = "with", required = true) Long anotherUserId) {
-        chatService.createChat(myUserId, anotherUserId);
+                                        @RequestParam(name = "with", required = true) String anotherUserId) {
+        chatService.createChat(myUserId, Long.parseLong(anotherUserId));
         return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
     }
 

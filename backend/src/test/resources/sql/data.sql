@@ -1,16 +1,13 @@
-INSERT INTO users(username, firstname, lastname, email, password, is_enabled)
-VALUES ('StarGonich', 'Алексей', 'Величайший', '12321alexey8837@gmail.com', 'aboba', true);
-
-INSERT INTO users(username, firstname, lastname, email, password, token, is_enabled)
-VALUES ('NotActivated', 'Никита', 'Башков', 'notactivated@user.com', 'aboba', '12345678-1234-1234-1234-123456789012', false);
---INSERT INTO users(username, firstname, lastname, email, password) VALUES ('MatveyKov11', 'Матвей', 'Ковалёв', 'matveykov@gmail.com', 'aboba2');
---INSERT INTO users(username, firstname, lastname, email, password) VALUES ('Ansv33r', 'Егор', 'Мальцев', 'egor@gmail.com', 'aboba3');
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('StarGonich', 'Алексей', 'Величайший', '12321alexey8837@gmail.com', 'aboba', true);
+INSERT INTO users(username, firstname, lastname, email, password, token, is_enabled) VALUES ('NotActivated', 'Никита', 'Башков', 'notactivated@user.com', 'aboba', '12345678-1234-1234-1234-123456789012', false);
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('MatveyKov11', 'Матвей', 'Ковалёв', 'matveykov@gmail.com', 'aboba2', true);
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('Ansv33r', 'Егор', 'Мальцев', 'egor@gmail.com', 'aboba3', true);
 --
---INSERT INTO chats(id, first_user_id, second_user_id) VALUES (1, 1, 2);
+INSERT INTO chats(first_user_id, second_user_id) VALUES (2, 4);
 --INSERT INTO chats(id, first_user_id, second_user_id) VALUES (2, 1, 3);
 --INSERT INTO chats(id, first_user_id, second_user_id) VALUES (3, 2, 3);
 --
---INSERT INTO messages(id, user_id, chat_id, message_text, message_creation_date) VALUES (1, 1, 1, 'Привет, Матвей, я Алексей', '2025-07-03 18:41:12.798644+03');
+INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (2, 1, 'Привет, Матвей, я Алексей', '2025-07-03 18:41:12.798644+03');
 --INSERT INTO messages(id, user_id, chat_id, message_text, message_creation_date) VALUES (2, 1, 2, 'Привет, Егор, я Алексей', '2025-07-03 18:42:12.798644+03');
 --INSERT INTO messages(id, user_id, chat_id, message_text, message_creation_date) VALUES (3, 2, 3, 'Привет, Егор, я Матвей', '2025-07-03 18:43:12.798644+03');
 
