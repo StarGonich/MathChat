@@ -65,7 +65,7 @@
             </div>
         </div>
     </div>
-    <ProfileApp :user="profUser" :type="profType" :watchId="userId" v-if="openProfile" @quitEvent="updateUser" />
+    <ProfileApp :user="profUser" :type="profType" :watchId="userId" v-if="openProfile" @quitEvent="(ch) => updateProfApp(ch)" />
     <FindApp :users="allUsers" v-if="openFind" @quitEvent="openFind = false" @selectEvent="(id) => select(id)"/>
 </template>
 
@@ -540,14 +540,23 @@ async function showProf(user, type){
     openProfile.value = true
 }
 
-async function updateUser(){
+async function updateProfApp(ch){
     openProfile.value = false
-    if(profType.value == 'own'){
-        try {
-            await axios.get('http://localhost:8080/api/user/find/' + props.userId)
-                .then(response => user.value = response.data)
-        } catch (e) {
-            console.log(e)
+    if(ch){
+        if(profType.value == 'own'){
+            try {
+                await axios.get('http://localhost:8080/api/user/find/' + props.userId)
+                    .then(response => user.value = response.data)
+            } catch (e) {
+                console.log(e)
+            }
+        }else if(profType.value == 'stranger'){
+            try {
+                await axios.get('http://localhost:8080/search/' + props.userId)
+                    .then(response => chats.value = response.data)
+            } catch (e) {
+                console.log(e)
+            }
         }
     }
 }
@@ -560,14 +569,16 @@ function showFind(){
 
 async function select(id){
     openFind.value = false
-    let user = {}
-     try {
-        await axios.get('http://localhost:8080/api/user/find/' + id)
-            .then(response => user = response.data)
-    } catch (e) {
-        console.log(e)
+    if (id != -1){
+        let user = {}
+        try {
+            await axios.get('http://localhost:8080/api/user/find/' + id)
+                .then(response => user = response.data)
+        } catch (e) {
+            console.log(e)
+        }
+        showProf(user, 'stranger')
     }
-    showProf(user, 'stranger')
 }
 
 function quit() {

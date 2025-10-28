@@ -9,35 +9,41 @@
         <div class="ui raised left aligned container segment">
             <form class="ui large form">
                 <div class="field">
+                    <div class="ui left icon input">
+                        <i class="user icon"></i>
+                        <input type="text" name="username" v-model="user.username" placeholder="Никнейм">
+                    </div>
+                </div>
+                <div class="field">
                     <div :class="firstClass">
                         <i class="user icon"></i>
-                        <input type="text" name="firstname" v-model="user.firstname" placeholder="Имя">
+                        <input type="text" name="firstname" v-model="user.firstname" placeholder="Имя*">
                     </div>
                 </div>
                 <div class="field">
                     <div :class="lastClass">
                         <i class="user icon"></i>
-                        <input type="text" name="lastname" v-model="user.lastname" placeholder="Фамилия">
+                        <input type="text" name="lastname" v-model="user.lastname" placeholder="Фамилия*">
                     </div>
                 </div>
                 <div class="ui clearing divider"></div>
                 <div class="field">
                     <div :class="emailClass">
                         <i class="user icon"></i>
-                        <input type="text" name="email" v-model="user.email" placeholder="Почта">
+                        <input type="text" name="email" v-model="user.email" placeholder="Почта*">
                     </div>
                 </div>
                 <div class="ui clearing divider"></div>
                 <div class="field">
                     <div :class="passClass">
                         <i class="lock icon"></i>
-                        <input type="password" name="password" v-model="user.password" placeholder="Пароль" @input="onInputPass">
+                        <input type="password" name="password" v-model="user.password" placeholder="Пароль*" @input="onInputPass">
                     </div>
                 </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="lock icon"></i>
-                        <input type="password" name="password" v-model="password" placeholder="Подтвердите пароль" @input="onInputPass">
+                        <input type="password" name="password" v-model="password" placeholder="Подтвердите пароль*" @input="onInputPass">
                     </div>
                 </div>
                 <div class="ui left red message" v-if="!isCorrectPass">
@@ -66,6 +72,7 @@
 import axios from 'axios'
 import { ref, watch } from 'vue'
 const user = ref({
+    username: '',
     firstname: '',
     lastname: '',
     email: '',

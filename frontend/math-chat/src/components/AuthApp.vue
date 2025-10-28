@@ -38,6 +38,10 @@
 
 <script setup>
 import axios from 'axios'
+const ax = axios.create({
+    baseURL: 'http://localhost:8080',
+    withCredentials: true
+})
 import { ref, watch } from 'vue'
 const user = ref({
     email: '',
@@ -63,9 +67,9 @@ const msg=ref('')
 async function auth() {
     try{
         let req = "username=" + user.value.email + "&password=" + user.value.password
+        req = req.replace("@", "%40")
         let resp = ""
-        await axios.post('http://localhost:8080/login', req)
-            .then(response => resp = response.data)
+        await ax.post('http://localhost:8080/login', req).then(response => resp = response.data)
         console.log(resp)
         if(!resp.name){
             msg.value = "Неудачная попытка входа"
@@ -73,6 +77,7 @@ async function auth() {
             emit('quitEvent', 'mes', resp.name)
         }
     }catch(e){
+        console.log(e)
         msg.value = "Не удалось войти, попробуйте позже"
     }
 }
