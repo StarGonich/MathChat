@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public interface ChatService {
     List<ContactChatDTO> getChats(Long userId);
-    void createChat(MyUserDetails userDetails, UserDTO userDTO);
     void createChat(Long firstUserId, Long secondUserId);
     Chat getChatById(Long chatId);
     List<GlobalChatDTO> getGlobalChats(String search);

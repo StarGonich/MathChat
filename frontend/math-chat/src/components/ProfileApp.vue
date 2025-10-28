@@ -69,12 +69,16 @@ const props = defineProps({
     },
     type: {
         required: true
+    },
+    watchId: {
+        required: true
     }
 })
 
 const username = ref(props.user.username)
 const user = ref(props.user)
 const msg = ref('')
+const changes = ref(false)
 //const ava = ref([])
 
 async function update(){
@@ -82,6 +86,7 @@ async function update(){
         await axios.put('http://localhost:8080/api/user/update', user.value)
             .then(response => user.value = response.data)
         username.value = user.value.username
+        changes.value = true
     }catch(e){
         console.log(e)
         msg.value = 'Изменения не сохранены, попробуйте позже'
@@ -114,7 +119,8 @@ function drawBackground(){
 
 async function createChat() {
     try{
-        await axios.post('http://localhost:8080/chat', user.value)
+        await axios.post('http://localhost:8080/chat/create/'+props.watchId, "with="+user.value.id)
+        changes.value = true
         quit()
     }catch(e){
         console.log(e)
@@ -129,7 +135,7 @@ function close(){
 const emit = defineEmits(['quitEvent'])
 
 function quit(){
-    emit('quitEvent')
+    emit('quitEvent', changes.value)
 }
 </script>
 

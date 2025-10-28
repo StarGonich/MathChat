@@ -28,7 +28,7 @@ const props = defineProps({
 const emit = defineEmits(['quitEvent', 'selectEvent'])
 
 function quit(){
-    emit('quitEvent')
+    emit('quitEvent', -1)
 }
 
 function select(id){

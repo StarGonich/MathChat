@@ -9,7 +9,7 @@
     <SendEmailApp @quitEvent="(msg) => str = msg" />
   </div>
   <div v-if="str === 'auth'">
-    <AuthApp @quitEvent="(msg) => str = msg"/>
+    <AuthApp @quitEvent="(msg, i) => upd(msg, i)"/>
   </div>
   <div v-if="str === 'mes'">
     <MessengerApp :userId="id" @quitEvent="(msg) => str = msg"/>
@@ -26,6 +26,15 @@ import { ref } from 'vue'
 const str = ref('auth')
 const dev = false
 let id = ref(4);
+
+function upd(msg, i){
+  str.value = msg
+  if(i=="-1"){
+    id.value = 4
+  }else{
+    id.value = parseInt(i)
+  }
+}
 
 </script>
 
