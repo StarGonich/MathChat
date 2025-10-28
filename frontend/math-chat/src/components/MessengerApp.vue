@@ -59,7 +59,7 @@
                     </div>
                     <div class="ui fluid action input">
                         <input type="text" v-model="textMessage" placeholder="Сообщение">
-                        <button class="ui button" @click.prevent="post">Отправить</button>
+                        <button class="ui button" @click.prevent="post" :disabled="!textMessage || chatId.id == -1">Отправить</button>
                     </div>
                 </div>
             </div>
