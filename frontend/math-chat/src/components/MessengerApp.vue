@@ -543,17 +543,25 @@ async function showProf(user, type){
 async function updateProfApp(ch){
     openProfile.value = false
     if(ch){
-        if(profType.value == 'own'){
+        if(profType.value == "own"){
             try {
                 await axios.get('http://localhost:8080/api/user/find/' + props.userId)
                     .then(response => user.value = response.data)
             } catch (e) {
                 console.log(e)
             }
-        }else if(profType.value == 'stranger'){
+        }else if(profType.value == "stranger"){
             try {
                 await axios.get('http://localhost:8080/search/' + props.userId)
                     .then(response => chats.value = response.data)
+                await axios.get('http://localhost:8080/api/user/find/' + (chats.value[chats.value.length-1].userId))
+                    .then(response => chatUsers.value.push({
+                        id: response.data.id,
+                        login: response.data.firstname + " " + response.data.lastname,
+                        email: response.data.email,
+                        chatId: chats.value.length-1,
+                        lastMessage: ''
+                    }), )
             } catch (e) {
                 console.log(e)
             }
