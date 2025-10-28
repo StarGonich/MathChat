@@ -46,20 +46,6 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void createChat(MyUserDetails userDetails, UserDTO userDTO) {
-        Optional<User> User = userRepository.findByUsername(userDTO.username());
-        if (User.isPresent()) {
-            Chat chat = new Chat();
-
-            chat.setFirstUserId(userRepository.findByUsername(userDetails.getUsername()).get());
-            chat.setSecondUserId(userRepository.findByUsername(userDTO.username()).get());
-            chatRepository.save(chat);
-        } else {
-            log.info("Пользователь не найден");
-        }
-    }
-
-    @Override
     public void createChat(Long firstUserId, Long secondUserId) {
         Chat chat = new Chat();
 
