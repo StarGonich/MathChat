@@ -14,25 +14,29 @@
     <div class="grid">
         <div class="left_chats">
             <div class="ui segment">
-                <div class="ui search">
-                    <div class="ui icon input" @click="showFind">
-                        <input class="prompt" type="text" placeholder="Найти юзера...">
-                        <i class="search icon"></i>
+                <div class="ui basic segment">
+                    <div class="ui search">
+                        <div class="ui icon input" @click="showFind">
+                            <input class="prompt" type="text" placeholder="Найти юзера...">
+                            <i class="search icon"></i>
+                        </div>
+                        <div class="results"></div>
                     </div>
-                    <div class="results"></div>
                 </div>
-                <div v-for="user in chatUsers" :key="user.id">
-                    <div class="ui segment">
-                        <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
-                            <div class="six wide column">
-                                <img src="./static/images/user.png" class="image" height="60px">
-                            </div>
-                            <div class="ten wide column">
-                                <p>
-                                    {{formatLdots(user.login, 25)}}<br/>
-                                    {{formatLdots(user.email, 25)}}<br/>
-                                    {{formatLdots(user.lastMessage, 25)}}
-                                </p>
+                <div class="left_list">
+                    <div v-for="user in chatUsers" :key="user.id">
+                        <div class="ui segment">
+                            <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
+                                <div class="six wide column">
+                                    <img src="./static/images/user.png" class="image" height="60px">
+                                </div>
+                                <div class="ten wide column">
+                                    <p>
+                                        {{formatLdots(user.login, 25)}}<br/>
+                                        {{formatLdots(user.email, 25)}}<br/>
+                                        {{formatLdots(user.lastMessage, 25)}}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -611,8 +615,15 @@ function quit() {
 }
 
 .left_chats{
-    height: 1020px;
+    height: 720px;
     width: 40%;
+}
+
+.left_list{
+    height: 455px;
+    overflow: auto;
+    scrollbar-width: thin;
+    width: 100%;
 }
 
 .right_chat{
