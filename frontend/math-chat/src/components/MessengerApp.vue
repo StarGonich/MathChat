@@ -22,17 +22,19 @@
                         </div>
                         <div class="results"></div>
                     </div>
-                    <div class="ui segment" v-for="user in chatUsers" :key="user.id">
-                        <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
-                            <div class="six wide column">
-                                <img src="./static/images/user.png" class="image" height="60px">
-                            </div>
-                            <div class="ten wide column">
-                                <p>
-                                    {{formatLdots(user.login, 25)}}<br/>
-                                    {{formatLdots(user.email, 25)}}<br/>
-                                    {{formatLdots(user.lastMessage, 25)}}
-                                </p>
+                    <div v-for="user in chatUsers" :key="user.id">
+                        <div class="ui segment">
+                            <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
+                                <div class="six wide column">
+                                    <img src="./static/images/user.png" class="image" height="60px">
+                                </div>
+                                <div class="ten wide column">
+                                    <p>
+                                        {{formatLdots(user.login, 25)}}<br/>
+                                        {{formatLdots(user.email, 25)}}<br/>
+                                        {{formatLdots(user.lastMessage, 25)}}
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -41,16 +43,8 @@
             <div class="ten wide column">
                 <div class="ui fluid segment" v-if="chatId.id != -1">
                     <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">{{chatUser.login}}</h2>
-                    <div v-for="message in messages" :key="message.none">
-                        <div class="ui left aligned segment" v-if="message.userId != userId">
-                            <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
-                                <div v-if="line.isLatex">
-                                    <vue-latex  :expression="line.content"/>
-                                </div>
-                                <div v-else>{{ line.content }}</div>
-                            </div>
-                        </div>
-                        <div class="ui right aligned segment" v-else>
+                    <div class="ui segment" v-for="message in messages" :key="message.none">
+                        <div :class="position(message.userId)">
                             <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
                                 <div v-if="line.isLatex">
                                     <vue-latex  :expression="line.content"/>
@@ -511,6 +505,14 @@ function formatArr(str, n){
     return ss
 }
 
+function position(id){
+    if(id == props.userId){
+        return "right_align"
+    }else{
+        return "left_align"
+    }
+}
+
 async function post(){
     try{
         await axios.post('http://localhost:8080/chat/' + chatId, {
@@ -601,5 +603,14 @@ function quit() {
   position: fixed;
   top: 0px;
   width: 100%;
+  height: 82px;
+}
+
+.left_align{
+    text-align: left;
+}
+
+.right_align{
+    text-align: right;
 }
 </style>
