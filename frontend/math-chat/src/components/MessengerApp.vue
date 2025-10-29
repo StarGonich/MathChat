@@ -26,16 +26,18 @@
                 <div class="left_list">
                     <div v-for="user in chatUsers" :key="user.id">
                         <div class="ui segment">
-                            <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
-                                <div class="six wide column">
-                                    <img src="./static/images/user.png" class="image" height="60px">
-                                </div>
-                                <div class="ten wide column">
-                                    <p>
-                                        {{formatLdots(user.login, 25)}}<br/>
-                                        {{formatLdots(user.email, 25)}}<br/>
-                                        {{formatLdots(user.lastMessage, 25)}}
-                                    </p>
+                            <div class="clickable">
+                                <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
+                                    <div class="four wide column">
+                                        <img src="./static/images/user.png" class="image" height="60px">
+                                    </div>
+                                    <div class="twelve wide column">
+                                        <p>
+                                            {{formatLdots(user.login, 25)}}<br/>
+                                            {{formatLdots(user.email, 25)}}<br/>
+                                            {{formatLdots(user.lastMessage, 25)}}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -46,7 +48,11 @@
         <div class="right_part">
             <div class="ui fluid segment">
                 <div class="right_chat_title">
-                    <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">{{chatUser.login}}</h2>
+                    <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">
+                        <div class="clickable">
+                            {{chatUser.login}}
+                        </div>
+                    </h2>
                     <div class="right_chat">
                         <div v-for="message in messages" :key="message.none" class="message">
                             <div :class="position(message.userId)">
@@ -275,7 +281,7 @@ onMounted(async () => {
                 login: response.data.firstname + " " + response.data.lastname,
                 email: response.data.email,
                 chatId: chats.value[i].chatId,
-                lastMessage: ''
+                lastMessage: chats.value[i].lastMessageText
             }))
         }catch(e){
             console.log(e)
@@ -445,7 +451,7 @@ async function updateChat(id1, id2) {
 }
 
 function formatLdots(str, n){
-    if(str.length > n){
+    if(str && str.length > n){
         return str.slice(0, n-3) + '...'
     }else{
         return str
@@ -654,5 +660,9 @@ function quit() {
 .message{
     margin-top: 5px;
     margin-bottom: 5px;
+}
+
+.clickable{
+    cursor: pointer;
 }
 </style>

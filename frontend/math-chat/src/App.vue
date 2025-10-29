@@ -22,6 +22,7 @@ import RegistrationApp from './components/RegistrationApp.vue'
 import SendEmailApp from './components/SendEmailApp.vue'
 import MessengerApp from './components/MessengerApp.vue'
 import AuthApp from './components/AuthApp.vue'
+//import CanvasTest from './components/CanvasTest.vue'
 import { ref } from 'vue'
 const str = ref('auth')
 const dev = false
