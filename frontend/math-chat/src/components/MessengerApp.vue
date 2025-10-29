@@ -1,12 +1,14 @@
 <template>
-    <div class="ui attached stackable menu">
-        <div class="ui container">
-            <a class="item" @click="showProf(user, 'own')">
-                <i class="user icon"></i> {{user.login}} {{user.email}}
-            </a>
-            <a class="right item"  @click="quit">
-                <i class="sign-out icon"></i> Выход
-            </a>
+    <div class="top_menu">
+        <div class="ui attached stackable menu">
+            <div class="ui container">
+                <a class="item" @click="showProf(user, 'own')">
+                    <i class="user icon"></i> {{user.login}} {{user.email}}
+                </a>
+                <a class="right item"  @click="quit">
+                    <i class="sign-out icon"></i> Выход
+                </a>
+            </div>
         </div>
     </div>
     <div class="ui container">
@@ -593,3 +595,11 @@ function quit() {
     emit('quitEvent', 'auth')
 }
 </script>
+
+<style scoped>
+.top_menu {
+  position: fixed;
+  top: 0px;
+  width: 100%;
+}
+</style>
