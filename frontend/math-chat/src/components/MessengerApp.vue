@@ -12,7 +12,7 @@
         </div>
     </div>
     <div class="grid">
-        <div class="left_chats">
+        <div class="left_part">
             <div class="ui segment">
                 <div class="ui basic segment">
                     <div class="ui search">
@@ -43,26 +43,30 @@
                 </div>
             </div>
         </div>
-        <div class="right_chat">
-            <div class="ui fluid segment" v-if="chatId.id != -1">
-                <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">{{chatUser.login}}</h2>
-                <div class="ui segment" v-for="message in messages" :key="message.none">
-                    <div :class="position(message.userId)">
-                        <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
-                            <div v-if="line.isLatex">
-                                <vue-latex  :expression="line.content"/>
+        <div class="right_part">
+            <div class="ui fluid segment">
+                <div class="right_chat_title">
+                    <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">{{chatUser.login}}</h2>
+                    <div class="right_chat">
+                        <div v-for="message in messages" :key="message.none" class="message">
+                            <div :class="position(message.userId)">
+                                <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
+                                    <div v-if="line.isLatex">
+                                        <vue-latex  :expression="line.content"/>
+                                    </div>
+                                    <div v-else>{{ line.content }}</div>
+                                </div>
                             </div>
-                            <div v-else>{{ line.content }}</div>
                         </div>
                     </div>
                 </div>
                 <div class="ui fluid action input">
                     <input type="text" v-model="textMessage" placeholder="Сообщение">
-                    <button class="ui button" @click.prevent="post" :disabled="!textMessage || chatId.id == -1">Отправить</button>
+                    <button class="ui button" @click.prevent="post" :disabled="!textMessage || chatId == -1">Отправить</button>
                 </div>
             </div>
         </div>
-        </div>
+    </div>
     <ProfileApp :user="profUser" :type="profType" :watchId="userId" v-if="openProfile" @quitEvent="(ch) => updateProfApp(ch)" />
     <FindApp :users="allUsers" v-if="openFind" @quitEvent="openFind = false" @selectEvent="(id) => select(id)"/>
 </template>
@@ -88,7 +92,7 @@ let chatUser = ref({
     login: '',
     password: ''
 })
-let chatId = -1
+let chatId = ref(-1)
 
 let messages = ref([])
 const props = defineProps({
@@ -281,13 +285,13 @@ onMounted(async () => {
 
 async function updateChat(id1, id2) {
     chatUser.value = allUsers1.value[id1-1]
-    chatId = id2
+    chatId.value = id2
     try {
-        await axios.get('http://localhost:8080/chat/' + chatId)
+        await axios.get('http://localhost:8080/chat/' + chatId.value)
             .then(response => messages.value = response.data)
     } catch (e) {
         console.log(e)
-        if(chatId == 0){
+        if(chatId.value == 0){
             messages.value = [
                 {
                     id: 0,
@@ -338,7 +342,7 @@ async function updateChat(id1, id2) {
                     messageText: 'Ага! Увидимся'
                 }
             ]
-        }else if (chatId == 1){
+        }else if (chatId.value == 1){
             messages.value = [
                 {
                     id: 0,
@@ -383,7 +387,7 @@ async function updateChat(id1, id2) {
                     messageText: 'Отлично. Спасибо.'
                 }
             ]
-        }else if (chatId == 2){
+        }else if (chatId.value == 2){
             messages.value = [
                 {
                     id: 0,
@@ -509,22 +513,22 @@ function formatArr(str, n){
 
 function position(id){
     if(id == props.userId){
-        return "right_align"
+        return "ui right floated compact blue inverted segment"
     }else{
-        return "left_align"
+        return "ui left floated compact segment"
     }
 }
 
 async function post(){
     try{
-        await axios.post('http://localhost:8080/chat/' + chatId, {
+        await axios.post('http://localhost:8080/chat/' + chatId.value, {
             id: messages.value.length,
             userId: props.userId,
-            chatId: chatId,
+            chatId: chatId.value,
             messageText: textMessage.value,
             messageDate: new Date()
         })
-        await axios.get('http://localhost:8080/chat/' + chatId)
+        await axios.get('http://localhost:8080/chat/' + chatId.value)
             .then(response => messages.value = response.data)
     }catch(e){
         console.log(e)
@@ -614,7 +618,7 @@ function quit() {
     flex-direction: row;
 }
 
-.left_chats{
+.left_part{
     height: 720px;
     width: 40%;
 }
@@ -626,16 +630,29 @@ function quit() {
     width: 100%;
 }
 
-.right_chat{
-    height: 1020px;
+.right_part{
+    height: 720px;
     width: 60%;
 }
 
-.left_align{
-    text-align: left;
+.right_chat_title{
+    width: 100%;
+    height: 501px;
 }
 
-.right_align{
-    text-align: right;
+.right_chat{
+    background-color: rgb(243, 243, 243);
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+    height: 434px;
+    overflow: auto;
+    scrollbar-width: thin;
+}
+
+.message{
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 </style>
