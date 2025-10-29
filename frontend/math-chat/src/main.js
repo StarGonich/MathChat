@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import SuiVue from 'semantic-ui-vue'
 import VueLatex from 'vatex'
+import VueKonva from 'vue-konva';
 import App from './App.vue'
 import 'semantic-ui-css/semantic.min.css';
 
@@ -11,4 +12,5 @@ require('semantic-ui-css/semantic.js')
 const app = createApp(App)
 app.use(SuiVue)
 app.use(VueLatex)
+app.use(VueKonva)
 app.mount('#app')
