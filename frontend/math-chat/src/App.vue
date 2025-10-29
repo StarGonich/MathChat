@@ -28,7 +28,7 @@ import AuthApp from './components/AuthApp.vue'
 import CanvasTest from './components/CanvasTest.vue'
 import { ref } from 'vue'
 const str = ref('auth')
-const dev = true
+const dev = false
 let id = ref(4);
 
 function upd(msg, i){
