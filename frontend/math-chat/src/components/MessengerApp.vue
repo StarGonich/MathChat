@@ -582,7 +582,7 @@ async function updateProfApp(ch){
                         id: response.data.id,
                         login: response.data.firstname + " " + response.data.lastname,
                         email: response.data.email,
-                        chatId: chats.value.length-1,
+                        chatId: chats.value[chats.value.length-1].chatId,
                         lastMessage: ''
                     }), )
             } catch (e) {
