@@ -11,56 +11,54 @@
             </div>
         </div>
     </div>
-    <div class="ui container">
-        <div class="ui two column grid">
-            <div class="six wide column">
-                <div class="ui segment">
-                    <div class="ui search">
-                        <div class="ui icon input" @click="showFind">
-                            <input class="prompt" type="text" placeholder="Найти юзера...">
-                            <i class="search icon"></i>
-                        </div>
-                        <div class="results"></div>
+    <div class="grid">
+        <div class="left_chats">
+            <div class="ui segment">
+                <div class="ui search">
+                    <div class="ui icon input" @click="showFind">
+                        <input class="prompt" type="text" placeholder="Найти юзера...">
+                        <i class="search icon"></i>
                     </div>
-                    <div v-for="user in chatUsers" :key="user.id">
-                        <div class="ui segment">
-                            <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
-                                <div class="six wide column">
-                                    <img src="./static/images/user.png" class="image" height="60px">
-                                </div>
-                                <div class="ten wide column">
-                                    <p>
-                                        {{formatLdots(user.login, 25)}}<br/>
-                                        {{formatLdots(user.email, 25)}}<br/>
-                                        {{formatLdots(user.lastMessage, 25)}}
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="results"></div>
                 </div>
-            </div>
-            <div class="ten wide column">
-                <div class="ui fluid segment" v-if="chatId.id != -1">
-                    <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">{{chatUser.login}}</h2>
-                    <div class="ui segment" v-for="message in messages" :key="message.none">
-                        <div :class="position(message.userId)">
-                            <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
-                                <div v-if="line.isLatex">
-                                    <vue-latex  :expression="line.content"/>
-                                </div>
-                                <div v-else>{{ line.content }}</div>
+                <div v-for="user in chatUsers" :key="user.id">
+                    <div class="ui segment">
+                        <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
+                            <div class="six wide column">
+                                <img src="./static/images/user.png" class="image" height="60px">
+                            </div>
+                            <div class="ten wide column">
+                                <p>
+                                    {{formatLdots(user.login, 25)}}<br/>
+                                    {{formatLdots(user.email, 25)}}<br/>
+                                    {{formatLdots(user.lastMessage, 25)}}
+                                </p>
                             </div>
                         </div>
-                    </div>
-                    <div class="ui fluid action input">
-                        <input type="text" v-model="textMessage" placeholder="Сообщение">
-                        <button class="ui button" @click.prevent="post" :disabled="!textMessage || chatId.id == -1">Отправить</button>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+        <div class="right_chat">
+            <div class="ui fluid segment" v-if="chatId.id != -1">
+                <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">{{chatUser.login}}</h2>
+                <div class="ui segment" v-for="message in messages" :key="message.none">
+                    <div :class="position(message.userId)">
+                        <div v-for="line in formatArr(message.messageText, 45)" :key="line.id">
+                            <div v-if="line.isLatex">
+                                <vue-latex  :expression="line.content"/>
+                            </div>
+                            <div v-else>{{ line.content }}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui fluid action input">
+                    <input type="text" v-model="textMessage" placeholder="Сообщение">
+                    <button class="ui button" @click.prevent="post" :disabled="!textMessage || chatId.id == -1">Отправить</button>
+                </div>
+            </div>
+        </div>
+        </div>
     <ProfileApp :user="profUser" :type="profType" :watchId="userId" v-if="openProfile" @quitEvent="(ch) => updateProfApp(ch)" />
     <FindApp :users="allUsers" v-if="openFind" @quitEvent="openFind = false" @selectEvent="(id) => select(id)"/>
 </template>
@@ -604,6 +602,22 @@ function quit() {
   top: 0px;
   width: 100%;
   height: 82px;
+}
+
+.grid{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+}
+
+.left_chats{
+    height: 1020px;
+    width: 40%;
+}
+
+.right_chat{
+    height: 1020px;
+    width: 60%;
 }
 
 .left_align{
