@@ -27,7 +27,7 @@
                     <div v-for="user in chatUsers" :key="user.id">
                         <div class="ui segment">
                             <div class="clickable">
-                                <div class="ui two column grid" @click="updateChat(user.id, user.chatId)">
+                                <div class="ui two column grid" @click="updateChat(user.chatId)">
                                     <div class="four wide column">
                                         <img src="./static/images/user.png" class="image" height="60px">
                                     </div>
@@ -289,10 +289,17 @@ onMounted(async () => {
     }
 })
 
-async function updateChat(id1, id2) {
-    chatUser.value = allUsers1.value[id1-1]
-    chatId.value = id2
+async function updateChat(idCh) {
+    chatId.value = idCh
     try {
+        await axios.get('http://localhost:8080/api/user/find/' + (chats.value[idCh].userId))
+            .then(response => chatUser.value = {
+                id: response.data.id,
+                login: response.data.firstname + " " + response.data.lastname,
+                email: response.data.email,
+                chatId: idCh,
+                lastMessage: ''
+            })
         await axios.get('http://localhost:8080/chat/' + chatId.value)
             .then(response => messages.value = response.data)
     } catch (e) {
