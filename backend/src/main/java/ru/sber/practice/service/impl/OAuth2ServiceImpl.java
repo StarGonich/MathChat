@@ -27,17 +27,20 @@ public class OAuth2ServiceImpl extends DefaultOAuth2UserService {
     private EntityManager entityManager;
 
     public String generateUsername() {
-        String prefix = "user_";
+        String prefix = "id";
+        int lengthOfZeros = 7;
 
         // Получаем следующее значение sequence
-        String username = prefix + entityManager
+        Long num = (Long) entityManager
                 .createNativeQuery("SELECT nextval('username_seq')")
-                .getSingleResult().toString();
+                .getSingleResult();
+        String username = prefix + String.format("%0" + lengthOfZeros + "d", num);
 
         while (userRepository.findByUsername(username).isPresent()) {
-            username = prefix + entityManager
+            num = (Long) entityManager
                     .createNativeQuery("SELECT nextval('username_seq')")
-                    .getSingleResult().toString();
+                    .getSingleResult();
+            username = prefix + String.format("%0" + lengthOfZeros + "d", num);
         }
 
         return username;

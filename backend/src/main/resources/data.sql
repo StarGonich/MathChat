@@ -1,8 +1,18 @@
 INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('StarGonich', 'Алексей', 'Величайший', '12321alexey8837@gmail.com', 'aboba', true);
 INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('MatveyKov11', 'Матвей', 'Ковалёв', 'matveykov@gmail.com', 'aboba2', true);
 INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('Ansv33r', 'Егор', 'Мальцев', 'egor@gmail.com', 'aboba3', true);
-INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('user_1000', 'Егор', 'Мальцев', 'egsor@gmail.com', 'aboba3', true);
-INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('user_1001', 'Егор', 'Мальцев', 'egor@dfd.com', 'aboba3', true);
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000000', 'Егор', 'Мальцев', 'egsor@gmail.com', 'aboba3', true);
+INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000001', 'Егор', 'Мальцев', 'egour@dfd.com', 'aboba3', true);
+--INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000002', 'Егор', 'Мальцев', 'egotyr@dfd.com', 'aboba3', true);
+--INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000003', 'Егор', 'Мальцев', 'egorr@dfd.com', 'aboba3', true);
+--INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000004', 'Егор', 'Мальцев', 'egoer@dfd.com', 'aboba3', true);
+--INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000005', 'Егор', 'Мальцев', 'egowr@dfd.com', 'aboba3', true);
+--INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000006', 'Егор', 'Мальцев', 'egoqr@dfd.com', 'aboba3', true);
+--INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000007', 'Егор', 'Мальцев', 'egodr@dfd.com', 'aboba3', true);
+--INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000008', 'Егор', 'Мальцев', 'egosr@dfd.com', 'aboba3', true);
+--INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000009', 'Егор', 'Мальцев', 'egogr@dfd.com', 'aboba3', true);
+
+
 
 INSERT INTO chats(first_user_id, second_user_id) VALUES (1, 2);
 INSERT INTO chats(first_user_id, second_user_id) VALUES (1, 3);

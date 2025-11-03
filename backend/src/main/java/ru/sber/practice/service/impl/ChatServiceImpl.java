@@ -37,15 +37,6 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<GlobalChatDTO> getGlobalChats(String search) {
-        return userRepository
-                .findBySearchTerm(search)
-                .stream()
-                .map(UserMapper::toGlobalChatDTO)
-                .toList();
-    }
-
-    @Override
     public void createChat(Long firstUserId, Long secondUserId) {
         Chat chat = new Chat();
 
@@ -68,10 +59,13 @@ public class ChatServiceImpl implements ChatService {
         log.info("Чат создан {}", chat);
     }
 
-    //no usages, поэтому и не добавляю обработку Exception
     @Override
-    public Chat getChatById(Long chatId) {
-        return chatRepository.findById(chatId).orElse(null);
+    public List<GlobalChatDTO> getGlobalChats(String search) {
+        return userRepository
+                .findBySearchTerm(search)
+                .stream()
+                .map(UserMapper::toGlobalChatDTO)
+                .toList();
     }
 
     // Для WebSocket, для отправки по персональному каналу

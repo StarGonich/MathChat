@@ -30,9 +30,6 @@ public class UserServiceImpl implements UserService {
     private final MailSenderService mailSenderService;
     private final S3Service s3Service;
 
-    //
-    // Регистрация пользователя
-    //
     @Override
     public User register(SignUpDTO signUpDTO) {
         log.info("UserService: регистрация SignUpDTO {}", signUpDTO);
@@ -40,10 +37,6 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> tmp = userRepository.findByEmail(user.getEmail());
 
-        //
-        // Проверка, существует ли пользователь,
-        // иначе идёт стандартный алгоритм регистрация
-        //
         if (tmp.isPresent()) {
             User userExisted = tmp.get();
 
@@ -91,9 +84,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //
-    // Вывод списка всех пользователей в бд
-    //
     @Override
     public List<UserDTO> findAllUsers() {
         return userRepository.findAll()
@@ -102,9 +92,6 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-    //
-    // Активация пользователя
-    //
     @Override
     public boolean activateUser(UUID token) {
         Optional<User> userToken = userRepository.findByToken(token);
@@ -135,9 +122,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //
-    // Метод для отправки письма, если пользователь забыл пароль
-    //
     @Override
     public boolean passwordForgotten(EmailDTO emailDTO) {
         Optional<User> tmp = userRepository.findByEmail(emailDTO.email());
@@ -166,9 +150,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    //
-    // Метод для смены пароля по токену
-    //
     @Override
     public boolean changePassword(UUID token, PasswordDTO passwordDTO) {
         Optional<User> userToken = userRepository.findByToken(token);
@@ -206,6 +187,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findById(Long id) {
+        Optional<User> tmp = userRepository.findById(id);
+        return tmp.orElse(null);
+    }
+
+
+    @Override
     public User updateUser(Long userId, UpdatableUserDTO updatableUserDTO) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
@@ -215,30 +203,6 @@ public class UserServiceImpl implements UserService {
         user.setLastname(updatableUserDTO.lastname());
         userRepository.save(user);
         return user;
-    }
-
-    @Override
-    public User findById(Long id) {
-        Optional<User> tmp = userRepository.findById(id);
-        return tmp.orElse(null);
-    }
-
-    @Override
-    public User findByEmail(String email) {
-        Optional<User> tmp = userRepository.findByEmail(email);
-        return tmp.orElse(null);
-    }
-
-    @Override
-    public User findByToken(UUID token) {
-        Optional<User> tmp = userRepository.findByToken(token);
-        return tmp.orElse(null);
-    }
-
-    @Override
-    public User findByProviderId(String providerId) {
-        Optional<User> tmp = userRepository.findByProviderId(providerId);
-        return tmp.orElse(null);
     }
 
     public String changeAvatar(Long id, MultipartFile file) throws IOException {
