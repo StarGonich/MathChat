@@ -61,16 +61,21 @@ public class MessengerController {
     }
 
     @PostMapping("/chat/{chatId}")
-    public ResponseEntity<?> sendMessage(@PathVariable Long chatId, @RequestBody SendMessageDTO sendMessageDTO) {
-        log.info("Отправка сообщения {}", sendMessageDTO);
-        // Лучше всегда возращать то, что создаётся(заносится в БД)
-        messageService.sendMessage(chatId, sendMessageDTO);
-        log.info("Сообщение сохранено в БД {}", sendMessageDTO);
-//        messagingTemplate.convertAndSendToUser(
-//                messengerService.getRecipientId(message.getUserId(), message.getChatId()).toString(),
-//                "/queue/messages",
-//                message
-//        );
-        return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
+    public ResponseEntity<?> sendMessage(@PathVariable Long chatId, @RequestBody SendMessageDTO sendMessageDTO,
+                                         @AuthenticationPrincipal MyUserDetails userDetails) {
+        if (userDetails.getName().equals(sendMessageDTO.userId().toString())) {
+            log.info("Отправка сообщения {}", sendMessageDTO);
+            // Лучше всегда возращать то, что создаётся(заносится в БД)
+            messageService.sendMessage(chatId, sendMessageDTO);
+            log.info("Сообщение сохранено в БД {}", sendMessageDTO);
+            //        messagingTemplate.convertAndSendToUser(
+            //                messengerService.getRecipientId(message.getUserId(), message.getChatId()).toString(),
+            //                "/queue/messages",
+            //                message
+            //        );
+            return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 }
