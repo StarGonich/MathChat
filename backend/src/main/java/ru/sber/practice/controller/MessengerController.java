@@ -42,11 +42,12 @@ public class MessengerController {
         }
     }
 
-    @PostMapping("/chat/create/{userId}")
-    public ResponseEntity<?> createChat(@PathVariable Long userId, @AuthenticationPrincipal MyUserDetails userDetails,
-                                        @RequestParam(name = "with", required = true) String myUserId) {
-        if (userDetails.getName().equals(myUserId)) {
-            chatService.createChat(userId, Long.parseLong(myUserId));
+    @PostMapping("/chat/create/{myUserId}")
+    public ResponseEntity<?> createChat(@PathVariable Long myUserId, @AuthenticationPrincipal MyUserDetails userDetails,
+                                        @RequestParam(name = "with", required = true) String anotherUserId) {
+        log.info("id в строке - {}, id в with - {}", myUserId, anotherUserId);
+        if (userDetails.getName().equals(myUserId.toString())) {
+            chatService.createChat(myUserId, Long.parseLong(anotherUserId));
             return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
