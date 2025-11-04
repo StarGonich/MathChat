@@ -28,7 +28,7 @@ public class MessengerController {
             return ResponseEntity.ok(chats);
         }
         else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -38,7 +38,7 @@ public class MessengerController {
             List<GlobalChatDTO> users = chatService.getGlobalChats(search);
             return ResponseEntity.ok(users);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
@@ -50,14 +50,20 @@ public class MessengerController {
             chatService.createChat(myUserId, Long.parseLong(anotherUserId));
             return new ResponseEntity<>("Чат создан", HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 
     @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<GetMessagesDTO>> getMessagesByChatId(@PathVariable Long chatId) {
-        List<GetMessagesDTO> messages = messageService.getMessagesByChatId(chatId);
-        return ResponseEntity.ok(messages);
+    public ResponseEntity<List<GetMessagesDTO>> getMessagesByChatId(@PathVariable Long chatId,
+                                                                    @AuthenticationPrincipal MyUserDetails userDetails,
+                                                                    @RequestParam(name = "id", required = true) String userId) {
+        if (userDetails.getName().equals(userId)) {
+            List<GetMessagesDTO> messages = messageService.getMessagesByChatId(chatId);
+            return ResponseEntity.ok(messages);
+        } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 
     @PostMapping("/chat/{chatId}")
@@ -75,7 +81,7 @@ public class MessengerController {
             //        );
             return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 }
