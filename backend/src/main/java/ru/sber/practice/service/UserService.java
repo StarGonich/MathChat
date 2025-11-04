@@ -1,10 +1,13 @@
 package ru.sber.practice.service;
 
+import io.minio.errors.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sber.practice.dto.*;
 import ru.sber.practice.model.User;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.UUID;
 
@@ -78,5 +81,5 @@ public interface UserService {
      * @param file фотография, которую нужно поставить.
      * @return ???
      */
-    String changeAvatar(Long userId, MultipartFile file) throws IOException;
+    String changeAvatar(Long userId, MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
 }
