@@ -1,3 +1,11 @@
+## Minio S3
+
+До запуска backend сервера нужно сначала запустить сервер S3
+
+```docker
+docker run --name mathchat-s3 -p 9001:9001 -p 9002:9002 minio/minio server /data --address :9001 --console-address :9002
+```
+
 ## Auth
 
 ```
