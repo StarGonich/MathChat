@@ -36,7 +36,7 @@ public class SecurityConfig{
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:9000"));
+        configuration.setAllowedOrigins(List.of("http://localhost:9000", "http://localhost:8080"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
@@ -57,6 +57,7 @@ public class SecurityConfig{
                 .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
+                        .defaultSuccessUrl("http://localhost:9000/", true)
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(oAuth2ServiceImpl)))
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
