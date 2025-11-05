@@ -79,7 +79,7 @@ public interface UserService {
      *
      * @param userId id пользователя.
      * @param file фотография, которую нужно поставить.
-     * @return ???
+     * @return название файла, сохранённого в S3 хранилище
      */
     String changeAvatar(Long userId, MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
 }
