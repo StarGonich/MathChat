@@ -1,5 +1,6 @@
 package ru.sber.practice.controller;
 
+import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,7 +10,8 @@ import ru.sber.practice.dto.UpdatableUserDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
 
-import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,11 +25,11 @@ public class ProfileController {
     }
 
     @PutMapping("/change/avatar/{userId}")
-    public ResponseEntity<String> changeAvatar(@RequestParam("file") MultipartFile file, @PathVariable Long userId) {
+    public ResponseEntity<String> changeAvatar(@RequestParam("file") MultipartFile file, @PathVariable Long userId) throws ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         try {
             String key = userService.changeAvatar(userId, file);
             return ResponseEntity.ok("Аватарка обновлена: " + key);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Ошибка сохранения аватарки");
         }

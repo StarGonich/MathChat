@@ -1,5 +1,6 @@
 package ru.sber.practice.service.impl;
 
+import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import ru.sber.practice.service.S3Service;
 import ru.sber.practice.service.UserService;
 
 import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -205,7 +208,7 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    public String changeAvatar(Long id, MultipartFile file) throws IOException {
+    public String changeAvatar(Long id, MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                         "Смена аватарки: не найден пользователь с id=" + id));

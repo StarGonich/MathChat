@@ -22,9 +22,9 @@ public class S3Controller {
         try {
             String key = s3Service.uploadFile(file);
             return ResponseEntity.ok("File uploaded successfully: " + key);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to upload file");
+                    .body("Failed to upload file: " + e.getMessage());
         }
     }
 
