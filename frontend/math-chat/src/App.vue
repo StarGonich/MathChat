@@ -14,6 +14,9 @@
   <div v-if="str === 'mes'">
     <MessengerApp :userId="id" @quitEvent="(msg) => str = msg"/>
   </div>
+  <div v-if="str === 'dark'">
+    <DarkMess :userId="id" @quitEvent="(msg) => str = msg"/>
+  </div>
   <div v-if="str === 'test'">
     <CanvasTest />
   </div>
@@ -24,6 +27,7 @@ import DevApp from './components/DevApp.vue'
 import RegistrationApp from './components/RegistrationApp.vue'
 import SendEmailApp from './components/SendEmailApp.vue'
 import MessengerApp from './components/MessengerApp.vue'
+import DarkMess from './components/DarkMess.vue'
 import AuthApp from './components/AuthApp.vue'
 import CanvasTest from './components/CanvasTest.vue'
 import { ref } from 'vue'

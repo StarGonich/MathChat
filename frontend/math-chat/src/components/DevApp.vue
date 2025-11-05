@@ -5,6 +5,7 @@
     <option value="email">Страница подтверждения почты</option>
     <option value="auth">Страница входа</option>
     <option value="mes">Страница мессенджера</option>
+    <option value="dark">Тёмная тема</option>
     <option value="test">Тест</option>
   </select>
 </template>

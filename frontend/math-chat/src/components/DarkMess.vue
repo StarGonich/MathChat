@@ -1,16 +1,11 @@
 <template>
     <div class="top_menu">
-        <div :class="menuClass">
+        <div class="ui attached stackable inverted menu">
             <div class="ui container">
                 <a class="item" @click="showProf(user, 'own')">
                     <i class="user icon"></i> {{user.login}} {{user.email}}
                 </a>
-                <a class="right item"  @click="switchDark">
-                    <i class="moon icon"></i>
-                    <span v-if="dark"> Светлая тема </span>
-                    <span v-else> Тёмная тема </span>
-                </a>
-                <a class="item"  @click="quit">
+                <a class="right item"  @click="quit">
                     <i class="sign-out icon"></i> Выход
                 </a>
             </div>
@@ -18,10 +13,10 @@
     </div>
     <div class="grid">
         <div class="left_part">
-            <div :class="segmClassSec">
-                <div :class="segmClassBasic">
+            <div class="ui inverted segment">
+                <div class="ui basic inverted segment">
                     <div class="ui search">
-                        <div :class="inputClass" @click="showFind">
+                        <div class="ui icon input" @click="showFind">
                             <input class="prompt" type="text" placeholder="Найти юзера...">
                             <i class="search icon"></i>
                         </div>
@@ -30,7 +25,7 @@
                 </div>
                 <div class="left_list">
                     <div v-for="user in chatUsers" :key="user.id">
-                        <div :class="segmClassTert">
+                        <div class="ui grey inverted segment">
                             <div class="clickable">
                                 <div class="ui two column grid" @click="updateChat(user.chatId)">
                                     <div class="four wide column">
@@ -51,7 +46,7 @@
             </div>
         </div>
         <div class="right_part">
-            <div :class="segmClassSec">
+            <div class="ui fluid inverted segment">
                 <div class="right_chat_title">
                     <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">
                         <div class="clickable">
@@ -83,9 +78,8 @@
 </template>
 
 <script setup>
-document.height = window.innerHeight;
 import axios from 'axios'
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import ProfileApp from './ProfileApp.vue'
 import FindApp from './FindApp.vue'
 
@@ -621,26 +615,6 @@ async function select(id){
 function quit() {
     emit('quitEvent', 'auth')
 }
-
-const dark = ref(false)
-const menuClass = computed(() =>{
-    return dark.value ? "ui attached stackable inverted menu" : "ui attached stackable menu"
-})
-const segmClassSec = computed(() =>{
-    return dark.value ? "ui inverted secondary segment" : "ui segment"
-})
-const segmClassTert = computed(() =>{
-    return dark.value ? "ui inverted tertiary segment" : "ui segment"
-})
-const segmClassBasic = computed(() =>{
-    return dark.value ? "ui inverted secondary basic segment" : "ui basic segment"
-})
-const inputClass = computed(() =>{
-    return dark.value ? "ui icon inverted input" : "ui icon input"
-})
-function switchDark(){
-    dark.value = !dark.value
-}
 </script>
 
 <style scoped>
@@ -648,35 +622,35 @@ function switchDark(){
   position: fixed;
   top: 0px;
   width: 100%;
+  height: 82px;
 }
 
 .grid{
-    position: auto;
-    width: 100%;
-    margin-top: 41px;
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
 }
 
 .left_part{
+    height: 720px;
     width: 40%;
 }
 
 .left_list{
-    height: 475px;
+    height: 455px;
     overflow: auto;
     scrollbar-width: thin;
     width: 100%;
 }
 
 .right_part{
+    height: 720px;
     width: 60%;
 }
 
 .right_chat_title{
     width: 100%;
-    height: 507px;
+    height: 501px;
 }
 
 .right_chat{
