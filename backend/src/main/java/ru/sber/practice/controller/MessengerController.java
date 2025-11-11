@@ -58,12 +58,12 @@ public class MessengerController {
     public ResponseEntity<List<GetMessagesDTO>> getMessagesByChatId(@PathVariable Long chatId,
                                                                     @AuthenticationPrincipal MyUserDetails userDetails,
                                                                     @RequestParam(name = "id", required = true) String userId) {
-        if (userDetails.getName().equals(userId)) {
+        // if (userDetails.getName().equals(userId)) {
             List<GetMessagesDTO> messages = messageService.getMessagesByChatId(chatId);
             return ResponseEntity.ok(messages);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        // } else {
+        //    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        //}
     }
 
     @PostMapping("/chat/{chatId}")
