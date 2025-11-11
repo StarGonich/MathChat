@@ -217,4 +217,21 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return key;
     }
+
+    @Override
+    public void updatePassword(Long userId, ChangePasswordDTO passwords) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Нет пользователя с данным Id"));
+        log.info("Password in DB: " + user.getPassword());
+        log.info("Encoded oldPassword: " + passwordEncoder.encode(passwords.oldPassword()));
+        // Правильное сравнение - используем matches()
+        if (passwordEncoder.matches(passwords.oldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(passwords.newPassword()));
+            userRepository.save(user);
+            log.info("Пароль успешно обновлен");
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильный старый пароль");
+        }
+    }
 }
