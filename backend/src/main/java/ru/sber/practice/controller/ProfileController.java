@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.sber.practice.dto.ChangePasswordDTO;
 import ru.sber.practice.dto.UpdatableUserDTO;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.UserService;
@@ -22,6 +23,12 @@ public class ProfileController {
     public ResponseEntity<User> updateUser(@PathVariable Long userId, @RequestBody UpdatableUserDTO updateUserDTO) {
         User user = userService.updateUser(userId, updateUserDTO);
         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/update/password/{userId}")
+    public ResponseEntity<String> updatePassword(@PathVariable Long userId, @RequestBody ChangePasswordDTO changePasswordDTO) {
+        userService.updatePassword(userId, changePasswordDTO);
+        return ResponseEntity.ok("Пароль изменён");
     }
 
     @PutMapping("/change/avatar/{userId}")

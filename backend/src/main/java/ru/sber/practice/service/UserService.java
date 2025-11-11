@@ -82,4 +82,5 @@ public interface UserService {
      * @return название файла, сохранённого в S3 хранилище
      */
     String changeAvatar(Long userId, MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
+    void updatePassword(Long userId, ChangePasswordDTO passwords);
 }
