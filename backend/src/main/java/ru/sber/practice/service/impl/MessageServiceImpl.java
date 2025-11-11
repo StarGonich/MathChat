@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import ru.sber.practice.dto.GetMessagesDTO;
 import ru.sber.practice.dto.SendMessageDTO;
+import ru.sber.practice.dto.WebSocketMessageDTO;
 import ru.sber.practice.dto.mapping.MessageMapper;
 import ru.sber.practice.model.Chat;
 import ru.sber.practice.model.Message;
@@ -39,7 +40,7 @@ public class MessageServiceImpl implements MessageService {
 
     //Отправка сообщения
     @Override
-    public void sendMessage(Long chatId, SendMessageDTO sendMessageDTO) {
+    public WebSocketMessageDTO sendMessage(Long chatId, SendMessageDTO sendMessageDTO) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не найден чат с chatId="+chatId));
         Message message = new Message();
@@ -56,6 +57,7 @@ public class MessageServiceImpl implements MessageService {
         message = messageRepository.save(message);
         chat.setLastMessageId(message);
         chatRepository.save(chat);
+        return MessageMapper.toWebSocketDTO(message);
     }
 
     /*
