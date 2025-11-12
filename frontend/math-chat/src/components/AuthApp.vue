@@ -25,6 +25,7 @@
                 <button class = "ui button primary" @click.prevent="auth" :disabled="!user.email || !user.password">Войти</button>
                 <button class = "ui button" @click="register">Нет аккаунта? Зарегистрироваться</button>
                 <button class = "ui button" @click.prevent="forgot" :disabled="!user.email">Забыли пароль?</button>
+                <button class = "ui button" @click.prevent="github">Войти через GitHub</button>
                 <div class="ui info message" v-if="msg">
                     <i class="close icon" @click="close"></i>
                     <div class="header">
@@ -37,16 +38,19 @@
 </template>
 
 <script setup>
+import router from '@/router'
+import { ref, watch } from 'vue'
 import axios from 'axios'
 const ax = axios.create({
     baseURL: 'http://localhost:8080',
     withCredentials: true
 })
-import { ref, watch } from 'vue'
+
 const user = ref({
     email: '',
     password: ''
 })
+
 const emailClass = ref('ui left icon input')
 const passClass = ref('ui left icon input')
 watch(user.value, (newUser) =>{
@@ -61,7 +65,7 @@ watch(user.value, (newUser) =>{
         passClass.value = 'ui left icon error input'
     }
 })
-const emit = defineEmits(['quitEvent'])
+
 const msg=ref('')
 
 async function auth() {
@@ -74,7 +78,7 @@ async function auth() {
         if(!resp.name){
             msg.value = "Неудачная попытка входа"
         }else{
-            emit('quitEvent', 'mes', resp.name)
+            router.push({name: 'Messenger', params: {userId: resp.name}})
         }
     }catch(e){
         console.log(e)
@@ -83,7 +87,7 @@ async function auth() {
 }
 
 function register(){
-    emit('quitEvent', 'reg', "-1")
+    router.push({name: 'Register'})
 }
 
 async function forgot(){
@@ -95,7 +99,18 @@ async function forgot(){
     }
 }
 
+async function github(){
+    try{
+        await axios.post('https://github.com/login/device/code&client_id=')
+            .then(resp => console.log(resp))
+    }catch(e){
+        console.log(e)
+    }
+}
+
 function close(){
     msg.value = ''
 }
+
+document.body.style.overflow = 'hidden'
 </script>

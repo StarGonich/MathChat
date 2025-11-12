@@ -69,8 +69,10 @@
 </template>
 
 <script setup>
+import router from '@/router'
 import axios from 'axios'
 import { ref, watch } from 'vue'
+
 const user = ref({
     username: '',
     firstname: '',
@@ -78,6 +80,7 @@ const user = ref({
     email: '',
     password: ''
 })
+
 const firstClass = ref('ui left icon input')
 const lastClass = ref('ui left icon input')
 const emailClass = ref('ui left icon input')
@@ -109,8 +112,6 @@ const isCorrectPass = ref(false)
 
 const msg = ref('')
 
-const emit = defineEmits(['quitEvent'])
-
 function onInputPass(){
     isCorrectPass.value = user.value.password === password.value
 }
@@ -123,7 +124,7 @@ async function register() {
         if (!resp.firstname){
             msg.value = resp
         }else{
-            emit('quitEvent', 'email')
+            router.push({name: 'SendEmail'})
         }
         console.log(resp)
     } catch (e) {
@@ -132,10 +133,12 @@ async function register() {
 }
 
 function auth(){
-    emit('quitEvent', 'auth')
+    router.push({name: 'Home'})
 }
 
 function close(){
     msg.value = ''
 }
+
+document.body.style.overflow = 'auto'
 </script>

@@ -125,7 +125,7 @@ function drawBackground(){
 
 async function createChat() {
     try{
-        await ax.post('http://localhost:8080/chat/create/'+props.watchId, "with="+user.value.id)
+        await ax.post('http://localhost:8080/chat/create/'+props.watchId + "?with=" + user.value.id)
         changes.value = true
         quit()
     }catch(e){
