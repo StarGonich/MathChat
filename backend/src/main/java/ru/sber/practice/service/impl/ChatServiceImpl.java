@@ -30,9 +30,10 @@ public class ChatServiceImpl implements ChatService {
 
     @Override
     public List<ContactChatDTO> getChats(Long userId) {
-        userRepository.findById(userId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Не найден пользователь с id=" + userId));
+        // Не нужна, так как
+//        userRepository.findById(userId)
+//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+//                        "Не найден пользователь с id=" + userId));
         return chatRepository.findContactChatsByUserId(userId);
     }
 

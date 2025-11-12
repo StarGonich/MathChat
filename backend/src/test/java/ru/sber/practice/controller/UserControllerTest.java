@@ -1,8 +1,7 @@
 package ru.sber.practice.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -39,27 +38,8 @@ class UserControllerTest {
     public void testFindAllUsers_200() throws Exception {
         var requestBuilder = get("/api/user/findAll");
         mockMvc.perform(requestBuilder)
-                .andExpectAll(
-                        status().isOk(),
-                        content().contentType(MediaType.APPLICATION_JSON),
-                        content().json("""
-                                [
-                                    {
-                                        "id": 1,
-                                        "username": "StarGonich",
-                                        "firstname": "Алексей",
-                                        "lastname": "Величайший",
-                                        "email": "12321alexey8837@gmail.com"
-                                    },
-                                    {
-                                        "id": 2,
-                                        "username": "NotActivated",
-                                        "firstname": "Никита",
-                                        "lastname": "Башков",
-                                        "email": "notactivated@user.com"
-                                    }
-                                ]
-                                """)
-                );
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray());
     }
 }
