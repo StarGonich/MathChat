@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import ru.sber.practice.config.MyUserDetails;
@@ -19,6 +20,7 @@ import java.util.List;
 public class MessengerController {
     private final ChatService chatService;
     private final MessageService messageService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<List<ContactChatDTO>> getChats(@PathVariable Long userId, @AuthenticationPrincipal MyUserDetails userDetails) {
@@ -72,13 +74,13 @@ public class MessengerController {
         if (userDetails.getName().equals(sendMessageDTO.userId().toString())) {
             log.info("Отправка сообщения {}", sendMessageDTO);
             // Лучше всегда возращать то, что создаётся(заносится в БД)
-            messageService.sendMessage(chatId, sendMessageDTO);
+            WebSocketMessageDTO message = messageService.sendMessage(chatId, sendMessageDTO);
             log.info("Сообщение сохранено в БД {}", sendMessageDTO);
-            //        messagingTemplate.convertAndSendToUser(
-            //                messengerService.getRecipientId(message.getUserId(), message.getChatId()).toString(),
-            //                "/queue/messages",
-            //                message
-            //        );
+            messagingTemplate.convertAndSendToUser(
+                    chatService.getRecipientId(sendMessageDTO.userId(), chatId).toString(),
+                    "/queue/messages",
+                    message
+            );
             return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
