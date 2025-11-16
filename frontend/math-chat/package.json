@@ -29,7 +29,9 @@
     "vatex": "^0.1.0",
     "vue": "^3.2.13",
     "vue-konva": "^3.2.6",
-    "vuex": "^4.0.0-alpha.1"
+    "vue-router": "^4.6.3",
+    "vuex": "^4.0.0-alpha.1",
+    "ws": "^8.18.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

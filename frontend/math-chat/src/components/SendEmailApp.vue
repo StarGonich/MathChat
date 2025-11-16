@@ -19,6 +19,7 @@
 </template>
 
 <script setup>
+import router from '@/router'
 import { ref, onMounted } from 'vue'
 
 let time = ref(150)
@@ -49,9 +50,9 @@ function post(){
     tick()
 }
 
-const emit = defineEmits(['quitEvent'])
-
 function quit(){
-    emit('quitEvent', 'auth')
+    router.push({name: 'Home'})
 }
+
+document.body.style.overflow = 'hidden'
 </script>

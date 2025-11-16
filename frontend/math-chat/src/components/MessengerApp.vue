@@ -1,4 +1,5 @@
 <template>
+    <div class="box">
     <div class="top_menu">
         <div :class="menuClass">
             <div class="ui container">
@@ -32,14 +33,27 @@
                     <div v-for="user in chatUsers" :key="user.id">
                         <div :class="segmClassTert">
                             <div class="clickable">
-                                <div class="ui two column grid" @click="updateChat(user.chatId)">
-                                    <div class="four wide column">
-                                        <img src="./static/images/user.png" class="image" height="60px">
+                                <div class="ui two column grid" @click="updateChat(user.chatId, user)">
+                                    <div class="three wide column">
+                                        <v-stage :config="stageSize">
+                                            <v-layer>
+                                                <v-image
+                                                    :config="{
+                                                    x: 3,
+                                                    y: 3,
+                                                    image: defImage,
+                                                    width: 60,
+                                                    height: 60,
+                                                    cornerRadius: 30
+                                                    }"
+                                                />
+                                            </v-layer>
+                                        </v-stage>
                                     </div>
-                                    <div class="twelve wide column">
-                                        <p>
-                                            {{formatLdots(user.login, 25)}}<br/>
-                                            {{formatLdots(user.email, 25)}}<br/>
+                                    <div class="thirteen wide column">
+                                        <p align="left">
+                                            <b>{{formatLdots(user.login, 25)}}</b><br/>
+                                            <b>{{formatLdots(user.email, 25)}}</b><br/>
                                             {{formatLdots(user.lastMessage, 25)}}
                                         </p>
                                     </div>
@@ -53,11 +67,13 @@
         <div class="right_part">
             <div :class="segmClassSec">
                 <div class="right_chat_title">
+                    <div class='title'>
                     <h2 class="ui center header" @click.prevent="showProf(chatUser, 'chat')">
                         <div class="clickable">
                             {{chatUser.login}}
                         </div>
                     </h2>
+                    </div>
                     <div class="right_chat">
                         <div v-for="message in messages" :key="message.none" class="message">
                             <div :class="position(message.userId)">
@@ -80,18 +96,20 @@
     </div>
     <ProfileApp :user="profUser" :type="profType" :watchId="userId" v-if="openProfile" @quitEvent="(ch) => updateProfApp(ch)" />
     <FindApp :users="allUsers" v-if="openFind" @quitEvent="openFind = false" @selectEvent="(id) => select(id)"/>
+    </div>
 </template>
 
 <script setup>
-document.height = window.innerHeight;
+import router from '@/router'
+import { ref, onMounted, computed } from 'vue'
+import { useImage } from 'vue-konva';
+import ProfileApp from './ProfileApp.vue'
+import FindApp from './FindApp.vue'
 import axios from 'axios'
 const ax = axios.create({
     baseURL: 'http://localhost:8080',
     withCredentials: true
 })
-import { ref, onMounted, computed } from 'vue'
-import ProfileApp from './ProfileApp.vue'
-import FindApp from './FindApp.vue'
 
 let allUsers = ref([])
 let allUsers1 = ref([])
@@ -118,118 +136,37 @@ const props = defineProps({
   }
 })
 const textMessage = ref('')
+const [defImage] = useImage('https://wallpapers.com/images/hd/user-profile-silhouette-icon-8klsuuvmvdroxn2t.jpg');
 
 let openProfile = ref(false)
 let profUser = ref({})
 let profType = ref('none')
 
-const emit = defineEmits(['quitEvent'])
+let socket = {}
 
 onMounted(async () => {
+    socket = new WebSocket('ws://localhost:8080/ws')
+
+    socket.onmessage = async () => {
+        try{
+            await ax.get('http://localhost:8080/search/' + props.userId)
+                .then(response => chats.value = response.data)
+            if(chatId.value != -1){
+                await ax.get('http://localhost:8080/chat/' + chatId.value + '?id=' + props.userId)
+                    .then(response => messages.value = response.data)
+            }
+        }catch(e){
+            console.log(e)
+        }
+    }
+
     try {
         await ax.get('http://localhost:8080/api/user/findAll')
             .then(response => allUsers.value = response.data)
     } catch (e) {
         console.log(e)
-        allUsers.value = [
-            {
-                id: 1,
-                firstname: 'Алиса',
-                lastname: 'Артемьева',
-                email: 'a@mail.ru'
-            },
-            {
-                id: 2,
-                firstname: 'Боб',
-                lastname: 'Бутчер',
-                email: 'b@mail.ru'
-            },
-            {
-                id: 3,
-                firstname: 'Витя',
-                lastname: 'Величайший',
-                email: 'v@mail.ru'
-            },
-            {
-                id: 4,
-                firstname: 'Длинный',
-                lastname:  'Очень длииииииииииииииииииииииинный ник',
-                email:  'dddddddddddddddddddddddddddddddddddddddd@mail.ru'
-            },
-            {
-                id: 5,
-                firstname: 'Глеб',
-                lastname: 'Горячий',
-                email: 'g@mail.ru'
-            },
-            {
-                id: 6,
-                firstname: 'Егор',
-                lastname: 'Елесин',
-                email: 'e@mail.ru'
-            },
-            {
-                id: 7,
-                firstname: 'Ёжик',
-                lastname: 'Ёлочный',
-                email: 'yo@mail.ru'
-            },
-            {
-                id: 8,
-                firstname: 'Жора',
-                lastname: 'Жирный',
-                email: 'j@mail.ru'
-            },
-            {
-                id: 9,
-                firstname: 'Зина',
-                lastname: 'Зиновьева',
-                email: 'z@mail.ru'
-            },
-            {
-                id: 10,
-                firstname: 'Игорь',
-                lastname: 'Иванов',
-                email: 'i@mail.ru'
-            },
-            {
-                id: 11,
-                firstname: 'Йорик',
-                lastname: 'Йог',
-                email: 'y@mail.ru'
-            },
-            {
-                id: 12,
-                firstname:'Кирилл',
-                lastname: 'Капустин',
-                email: 'k@mail.ru'
-            },
-            {
-                id: 13,
-                firstname: 'Лида',
-                lastname: 'Лосева',
-                email: 'l@mail.ru'
-            },
-            {
-                id: 14,
-                firstname: 'Матвей',
-                lastname: 'Мальцев',
-                email:  'm@mail.ru'
-            },
-            {
-                id: 15,
-                firstname: 'Никита',
-                lastname: 'Носа',
-                email: 'n@mail.ru'
-            },
-            {
-                id: 16,
-                firstname: 'Олег',
-                lastname: 'Оботуров',
-                email: 'o@mail.ru'
-            }
-        ]
     }
+
     console.log(allUsers)
     for(let i = 0; i < allUsers.value.length; i++){
         allUsers1.value.push({
@@ -239,50 +176,19 @@ onMounted(async () => {
         })
         console.log(allUsers1)
     }
+
     try {
         await ax.get('http://localhost:8080/api/user/find/' + props.userId)
             .then(response => user.value = response.data)
     } catch (e) {
         console.log(e)
-        user.value = allUsers1.value[props.userId-1]
     }
+    
     try {
         await ax.get('http://localhost:8080/search/' + props.userId)
             .then(response => chats.value = response.data)
     } catch (e) {
         console.log(e)
-        chats.value = [
-            {
-                id: 1,
-                userIdMin: 1,
-                userIdMax: 2
-            },
-            {
-                id: 2,
-                userIdMin: 1,
-                userIdMax: 3
-            },
-            {
-                id: 3,
-                userIdMin: 1,
-                userIdMax: 4
-            },
-            {
-                id: 4,
-                userIdMin: 1,
-                userIdMax: 5
-            },
-            {
-                id: 5,
-                userIdMin: 1,
-                userIdMax: 6
-            },
-            {
-                id: 6,
-                userIdMin: 1,
-                userIdMax: 7
-            }
-        ]
     }
     for(let i = 0; i < chats.value.length; i++){
         try{await ax.get('http://localhost:8080/api/user/find/' + (chats.value[i].userId))
@@ -299,171 +205,14 @@ onMounted(async () => {
     }
 })
 
-async function updateChat(idCh) {
+async function updateChat(idCh, us) {
     chatId.value = idCh
+    chatUser = us
     try {
-        await ax.get('http://localhost:8080/api/user/find/' + (chats.value[idCh].userId))
-            .then(response => chatUser.value = {
-                id: response.data.id,
-                login: response.data.firstname + " " + response.data.lastname,
-                email: response.data.email,
-                chatId: idCh,
-                lastMessage: ''
-            })
-        await ax.get('http://localhost:8080/chat/' + chatId.value)
+        await ax.get('http://localhost:8080/chat/' + chatId.value + '?id=' + props.userId)
             .then(response => messages.value = response.data)
     } catch (e) {
         console.log(e)
-        if(chatId.value == 0){
-            messages.value = [
-                {
-                    id: 0,
-                    chatId: 0,
-                    userId: 0,
-                    messageText: 'Привет! Как планы на вечер?'
-                },
-                {
-                    id: 1,
-                    chatId: 0,
-                    userId: 1,
-                    messageText: 'Привет! Пока свободен. А что?'
-                },
-                {
-                    id: 2,
-                    chatId: 0,
-                    userId: 0,
-                    messageText: 'Да думаю сходить в тот новый бар на Пестеля. Соскучилась по хорошему бургеру)'
-                },
-                {
-                    id: 3,
-                    chatId: 0,
-                    userId: 1,
-                    messageText: 'О, я как раз про него читал! Иду?'
-                },
-                {
-                    id: 4,
-                    chatId: 0,
-                    userId: 0,
-                    messageText: 'Конечно! Встречаемся в семь у входа?'
-                },
-                {
-                    id: 5,
-                    chatId: 0,
-                    userId: 1,
-                    messageText: 'Договорились. Только я с работы могу немного задержаться.'
-                },
-                {
-                    id: 6,
-                    chatId: 0,
-                    userId: 0,
-                    messageText: 'Ничего страшного. Я как раз успею заскочить домой. Тогда в семь!'
-                },
-                {
-                    id: 7,
-                    chatId: 0,
-                    userId: 1,
-                    messageText: 'Ага! Увидимся'
-                }
-            ]
-        }else if (chatId.value == 1){
-            messages.value = [
-                {
-                    id: 0,
-                    chatId: 1,
-                    userId: 0,
-                    messageText: 'Мария, добрый день. Выслали презентацию клиенту?'
-                },
-                {
-                    id: 1,
-                    chatId: 1,
-                    userId: 2,
-                    messageText: 'Добрый день, Сергей Петрович! Только что отправила. Жду ответа.'
-                },
-                {
-                    id: 2,
-                    chatId: 1,
-                    userId: 0,
-                    messageText: 'Хорошо. По итогам вчерaшнего созвона нужно внести правки в смету. Посмотрите, пожалуйста, пункты 3.1 и 4.5.'
-                },
-                {
-                    id: 3,
-                    chatId: 1,
-                    userId: 2,
-                    messageText: 'Хорошо, я уже открыла файл. По пункту 4.5 у меня вопрос: мы учитываем доставку?'
-                },
-                {
-                    id: 4,
-                    chatId: 1,
-                    userId: 0,
-                    messageText: 'Да, учитываем. Добавьте отдельной строкой.'
-                },
-                {
-                    id: 5,
-                    chatId: 1,
-                    userId: 2,
-                    messageText: 'Поняла. Исправлю и вышлю итоговую версию до 17:00.'
-                },
-                {
-                    id: 6,
-                    chatId: 1,
-                    userId: 0,
-                    messageText: 'Отлично. Спасибо.'
-                }
-            ]
-        }else if (chatId.value == 2){
-            messages.value = [
-                {
-                    id: 0,
-                    chatId: 2,
-                    userId: 0,
-                    messageText: 'Ты жив вообще?'
-                },
-                {
-                    id: 1,
-                    chatId: 2,
-                    userId: 3,
-                    messageText: 'Еле-еле. На работе аврал. Я уже три дня во сне вижу Excel-таблицы.'
-                },
-                {
-                    id: 2,
-                    chatId: 2,
-                    userId: 0,
-                    messageText: 'Кошмар! Спасать тебя в субботу? Приезжаю с пиццей и сериалами.'
-                },
-                {
-                    id: 3,
-                    chatId: 2,
-                    userId: 3,
-                    messageText: 'Ты ангел! Только без сериалов про врачей, а то усну.'
-                },
-                {
-                    id: 4,
-                    chatId: 2,
-                    userId: 0,
-                    messageText: 'Драконы и железный трон ок?'
-                },
-                {
-                    id: 5,
-                    chatId: 2,
-                    userId: 3,
-                    messageText: 'Идеально! Я за колой и чипсами.'
-                },
-                {
-                    id: 6,
-                    chatId: 2,
-                    userId: 0,
-                    messageText: 'Договорились! Только дождись меня, не усни за компом.'
-                },
-                {
-                    id: 7,
-                    chatId: 2,
-                    userId: 3,
-                    messageText: 'Обещаю ничего не обещать. Пока!'
-                }
-            ]
-        }else{
-            messages.value = []
-	}
     }
 }
 
@@ -551,12 +300,13 @@ async function post(){
             messageText: textMessage.value,
             messageDate: new Date()
         })
-        await ax.get('http://localhost:8080/chat/' + chatId.value)
+        await ax.get('http://localhost:8080/chat/' + chatId.value + '?id=' + props.userId)
             .then(response => messages.value = response.data)
     }catch(e){
         console.log(e)
     }
     textMessage.value = ''
+    socket.send(JSON.stringify('msg'))
 }
 
 async function showProf(user, type){
@@ -623,8 +373,13 @@ async function select(id){
 }
 
 function quit() {
-    emit('quitEvent', 'auth')
+    router.push({name: 'Home'})
 }
+
+const stageSize = {
+  width: 66,
+  height: 66
+};
 
 const dark = ref(false)
 const menuClass = computed(() =>{
@@ -645,9 +400,19 @@ const inputClass = computed(() =>{
 function switchDark(){
     dark.value = !dark.value
 }
+
+document.body.style.overflow = 'hidden'
 </script>
 
 <style scoped>
+.box {
+  position: fixed;
+  top:0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
 .top_menu {
   position: fixed;
   top: 0px;
@@ -680,7 +445,17 @@ function switchDark(){
 
 .right_chat_title{
     width: 100%;
-    height: 507px;
+    height: 496px;
+}
+
+.title{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    height: 20px;
 }
 
 .right_chat{
