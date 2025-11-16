@@ -19,17 +19,6 @@ jobs:
         java-version: '24'
         distribution: 'temurin'
         cache: maven
-    - name: Create .env file
-      run: |
-        cd backend
-        echo "MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}" >> .env
-        echo "MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}" >> .env
-        echo "GITHUB_CLIENT_ID=${{ secrets._GITHUB_CLIENT_ID }}" > .env
-        echo "GITHUB_CLIENT_SECRET=${{ secrets._GITHUB_CLIENT_SECRET }}" >> .env
-        echo "ADMIN_USERNAME=${{ secrets.ADMIN_USERNAME }}" >> .env
-        echo "ADMIN_PASSWORD=${{ secrets.ADMIN_PASSWORD }}" >> .env
-        echo "S3_ACCESS_KEY=${{ secrets.S3_ACCESS_KEY}}" >> .env
-        echo "S3_SECRET_KEY=${{ secrets.S3_SECRET_KEY}}" >> .env
     - name: Build with Maven
       run: mvn test -f backend/pom.xml 
       env:
