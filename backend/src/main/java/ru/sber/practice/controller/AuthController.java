@@ -24,6 +24,7 @@ import java.util.UUID;
 public class AuthController {
     private final UserService userService;
 
+    // при аутентификации через admin ничего не выдаст, но какого-то чёрта у него всё равно будет роль ADMIN
     @GetMapping("/")
     public MyUserDetails test(@AuthenticationPrincipal MyUserDetails userDetails) {
         log.info("Тест произошёл на /, {}", userDetails);
