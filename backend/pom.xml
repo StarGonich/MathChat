@@ -27,6 +27,7 @@
 		<url/>
 	</scm>
 	<properties>
+		<sonar.organization>stargonich</sonar.organization>
 		<java.version>24</java.version>
 	</properties>
 	<dependencies>
