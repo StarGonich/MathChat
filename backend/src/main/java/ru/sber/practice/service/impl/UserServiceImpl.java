@@ -234,4 +234,18 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильный старый пароль");
         }
     }
+
+    @Override
+    public User blockUser(Long Id) {
+        return userRepository.findByIdAndIsEnabledFalse(Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Не найден пользователь с id=" + Id));
+    }
+
+    @Override
+    public User unblockUser(Long Id) {
+        return userRepository.findByIdAndIsEnabledTrue(Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Не найден пользователь с id=" + Id));
+    }
 }
