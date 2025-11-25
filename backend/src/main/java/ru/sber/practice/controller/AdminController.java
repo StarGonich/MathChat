@@ -22,4 +22,7 @@ public class AdminController {
     public ResponseEntity<List<Message>> findAllMessages() {
         return ResponseEntity.ok(messageService.findAll());
     }
+
+    // Заблокировать/разблокировать
+    
 }
