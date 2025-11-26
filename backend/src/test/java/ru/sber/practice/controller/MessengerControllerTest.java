@@ -49,7 +49,7 @@ public class MessengerControllerTest {
     @Test
     @WithUserDetails(value = "12321alexey8837@gmail.com", userDetailsServiceBeanName = "myUserDetailsServiceImpl")
     void getChats_ShouldReturnForbidden_WhenUserNotAuthorized() throws Exception {
-        // Given - пользователь с email "user2@example.com" (ID=2) пытается получить чаты пользователя с ID=5
+        // Given
         Long otherUserId = 5L;
 
         // When & Then

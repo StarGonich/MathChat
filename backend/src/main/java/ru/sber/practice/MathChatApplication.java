@@ -26,15 +26,4 @@ public class MathChatApplication {
             userRepository.save(user);
         };
     }
-
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry corsRegistry) {
-//                corsRegistry.addMapping("/**").allowedOrigins("http://localhost:9000");
-//            }
-//        };
-//    }
-
 }

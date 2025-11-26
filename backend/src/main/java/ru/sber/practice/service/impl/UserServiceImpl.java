@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
             user = userRepository.save(user);
 
             String message = String.format(
-                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
+                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: http://localhost:8080/activate/%s",
                     user.getFirstname(),
                     user.getToken()
             );
