@@ -3,10 +3,7 @@ package ru.sber.practice.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sber.practice.model.Message;
 import ru.sber.practice.model.User;
 import ru.sber.practice.service.MessageService;
@@ -28,14 +25,14 @@ public class AdminController {
 //    }
 
     // Заблокировать/разблокировать
-    @GetMapping("/block/{userId}")
+    @PatchMapping("/block/{userId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<User> blockUser(@PathVariable Long userId) {
         User user = userService.blockUser(userId);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/unblock/{userId}")
+    @PatchMapping("/unblock/{userId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<User> unblockUser(@PathVariable Long userId) {
         User user = userService.unblockUser(userId);
