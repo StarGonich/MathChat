@@ -18,11 +18,11 @@ public class AdminController {
     private final MessageService messageService;
     private final UserService userService;
 
-//    @GetMapping("/messages")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-//    public ResponseEntity<List<Message>> findAllMessages() {
-//        return ResponseEntity.ok(messageService.findAll());
-//    }
+    @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    public ResponseEntity<List<User>> findAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
+    }
 
     // Заблокировать/разблокировать
     @PatchMapping("/block/{userId}")

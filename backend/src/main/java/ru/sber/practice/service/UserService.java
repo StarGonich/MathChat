@@ -30,12 +30,9 @@ public interface UserService {
      * @return возвращаем пользователя или null, если пользователь уже зарегистрирован.
      */
     User register(SignUpDTO signUpDTO);
-    /**
-     * Метод для нахождения всех пользователей.
-     *
-     * @return список всех пользователей.
-     */
-    List<UserDTO> findAllUsers();
+
+    List<UserDTO> findAllUsersDTO();
+    List<User> findAllUsers();
     /**
      * Метод для активации зарегистрированного пользователя.
      *
