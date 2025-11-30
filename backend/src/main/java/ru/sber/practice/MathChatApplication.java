@@ -22,8 +22,13 @@ public class MathChatApplication {
         user.setEmail("test@mail.ru");
         user.setPassword(passwordEncoder.encode("12321"));
         user.setEnabled(true);
+        User user2 = new User();
+        user2.setEmail("test2@mail.ru");
+        user2.setPassword(passwordEncoder.encode("12321"));
+        user2.setEnabled(true);
         return (args) -> {
             userRepository.save(user);
+            userRepository.save(user2);
         };
     }
 
