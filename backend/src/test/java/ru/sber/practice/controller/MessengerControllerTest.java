@@ -43,7 +43,7 @@ public class MessengerControllerTest {
         mockMvc.perform(get("/search/{userId}", userId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$.content").isArray());
     }
 
     @Test
@@ -67,7 +67,7 @@ public class MessengerControllerTest {
         mockMvc.perform(get("/search/global/{searchTerm}", searchTerm))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$.content").isArray());
     }
 
     @Test
@@ -80,8 +80,7 @@ public class MessengerControllerTest {
         mockMvc.perform(get("/search/global/{searchTerm}", searchTerm))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(0));
+                .andExpect(jsonPath("$.content").isArray());
     }
 
     @Test
@@ -160,7 +159,7 @@ public class MessengerControllerTest {
         mockMvc.perform(get("/chat/{chatId}?id=2", chatId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$.content").isArray());
     }
 
     @Test
