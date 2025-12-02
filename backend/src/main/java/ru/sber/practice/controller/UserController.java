@@ -2,6 +2,9 @@ package ru.sber.practice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +25,9 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/findAll")
-    public List<UserDTO> findAllUsers() {
+    public Page<UserDTO> findAllUsers(@PageableDefault Pageable pageable) {
         log.info("Request /api/user/findAll.");
-        List<UserDTO> allUsers = userService.findAllUsers();
+        Page<UserDTO> allUsers = userService.findAllUsers(pageable);
         log.info("Response /api/user/findAll: {}", allUsers);
         return allUsers;
     }
