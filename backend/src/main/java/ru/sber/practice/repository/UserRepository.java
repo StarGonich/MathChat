@@ -1,5 +1,7 @@
 package ru.sber.practice.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -23,5 +25,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
             "u.isEnabled = true")
-    List<User> findBySearchTerm(String search);
+    Page<User> findBySearchTerm(String search, Pageable pageable);
 }

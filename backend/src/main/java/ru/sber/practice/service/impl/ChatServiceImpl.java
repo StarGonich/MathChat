@@ -2,6 +2,8 @@ package ru.sber.practice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,12 +31,8 @@ public class ChatServiceImpl implements ChatService {
     private final UserRepository userRepository;
 
     @Override
-    public List<ContactChatDTO> getChats(Long userId) {
-        // Не нужна, так как
-//        userRepository.findById(userId)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-//                        "Не найден пользователь с id=" + userId));
-        return chatRepository.findContactChatsByUserId(userId);
+    public Page<ContactChatDTO> getChats(Long userId, Pageable pageable) {
+        return chatRepository.findContactChatsByUserId(userId, pageable);
     }
 
     @Override
@@ -61,12 +59,9 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public List<GlobalChatDTO> getGlobalChats(String search) {
-        return userRepository
-                .findBySearchTerm(search)
-                .stream()
-                .map(UserMapper::toGlobalChatDTO)
-                .toList();
+    public Page<GlobalChatDTO> getGlobalChats(String search, Pageable pageable) {
+        return userRepository.findBySearchTerm(search, pageable)
+                .map(UserMapper::toGlobalChatDTO);
     }
 
     // Для WebSocket, для отправки по персональному каналу

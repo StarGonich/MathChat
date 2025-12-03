@@ -2,6 +2,9 @@ package ru.sber.practice.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -23,10 +26,12 @@ public class MessengerController {
 //    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/search/{userId}")
-    public ResponseEntity<List<ContactChatDTO>> getChats(@PathVariable Long userId, @AuthenticationPrincipal MyUserDetails userDetails) {
+    public ResponseEntity<Page<ContactChatDTO>> getChats(@PathVariable Long userId,
+                                                         @AuthenticationPrincipal MyUserDetails userDetails,
+                                                         @PageableDefault Pageable pageable) {
         //Логика с AuthenticationPrincipal
         if (userDetails.getName().equals(userId.toString())) {
-            List<ContactChatDTO> chats = chatService.getChats(userId);
+            Page<ContactChatDTO> chats = chatService.getChats(userId, pageable);
             return ResponseEntity.ok(chats);
         }
         else {
@@ -35,9 +40,11 @@ public class MessengerController {
     }
 
     @GetMapping("/search/global/{search}")
-    public ResponseEntity<List<GlobalChatDTO>> getAllChats(@PathVariable String search, @AuthenticationPrincipal MyUserDetails userDetails) {
+    public ResponseEntity<Page<GlobalChatDTO>> getAllChats(@PathVariable String search,
+                                                           @AuthenticationPrincipal MyUserDetails userDetails,
+                                                           @PageableDefault Pageable pageable) {
         if (userDetails.getName() != null) {
-            List<GlobalChatDTO> users = chatService.getGlobalChats(search);
+            Page<GlobalChatDTO> users = chatService.getGlobalChats(search, pageable);
             return ResponseEntity.ok(users);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
@@ -57,11 +64,12 @@ public class MessengerController {
     }
 
     @GetMapping("/chat/{chatId}")
-    public ResponseEntity<List<GetMessagesDTO>> getMessagesByChatId(@PathVariable Long chatId,
+    public ResponseEntity<Page<GetMessagesDTO>> getMessagesByChatId(@PathVariable Long chatId,
                                                                     @AuthenticationPrincipal MyUserDetails userDetails,
-                                                                    @RequestParam(name = "id", required = true) String userId) {
+                                                                    @RequestParam(name = "id", required = true) String userId,
+                                                                    @PageableDefault Pageable pageable) {
         if (userDetails.getName().equals(userId)) {
-            List<GetMessagesDTO> messages = messageService.getMessagesByChatId(chatId);
+            Page<GetMessagesDTO> messages = messageService.getMessagesByChatId(chatId, pageable);
             return ResponseEntity.ok(messages);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

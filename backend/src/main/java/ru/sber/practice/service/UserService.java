@@ -1,6 +1,8 @@
 package ru.sber.practice.service;
 
 import io.minio.errors.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sber.practice.dto.*;
 import ru.sber.practice.model.User;
@@ -32,7 +34,7 @@ public interface UserService {
     User register(SignUpDTO signUpDTO);
 
     List<UserDTO> findAllUsersDTO();
-    List<User> findAllUsers();
+    Page<UserDTO> findAllUsers(Pageable pageable);
     /**
      * Метод для активации зарегистрированного пользователя.
      *

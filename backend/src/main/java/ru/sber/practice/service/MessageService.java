@@ -1,5 +1,7 @@
 package ru.sber.practice.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.sber.practice.dto.GetMessagesDTO;
 import ru.sber.practice.dto.SendMessageDTO;
 import ru.sber.practice.dto.WebSocketMessageDTO;
@@ -18,7 +20,7 @@ public interface MessageService {
      * @param chatId id чата, у которого ищем сообщения.
      * @return список соообщений или BAD_REQUEST.
      */
-    List<GetMessagesDTO> getMessagesByChatId(Long chatId);
+    Page<GetMessagesDTO> getMessagesByChatId(Long chatId, Pageable pageable);
     /**
      * Метод для отправки сообщений.
      *

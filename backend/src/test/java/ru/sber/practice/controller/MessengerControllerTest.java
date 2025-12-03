@@ -67,7 +67,7 @@ public class MessengerControllerTest {
         mockMvc.perform(get("/search/global/{searchTerm}", searchTerm))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.content").isArray());
+                .andExpect(jsonPath("$").isArray());
     }
 
     @Test
