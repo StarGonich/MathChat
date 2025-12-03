@@ -96,11 +96,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
-
-    @Override
     public boolean activateUser(UUID token) {
         Optional<User> userToken = userRepository.findByToken(token);
         if (userToken.isPresent()) {

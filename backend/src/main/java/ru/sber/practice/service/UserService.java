@@ -33,7 +33,6 @@ public interface UserService {
      */
     User register(SignUpDTO signUpDTO);
 
-    List<UserDTO> findAllUsersDTO();
     Page<UserDTO> findAllUsers(Pageable pageable);
     /**
      * Метод для активации зарегистрированного пользователя.
