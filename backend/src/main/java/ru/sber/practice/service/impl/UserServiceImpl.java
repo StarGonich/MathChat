@@ -3,8 +3,6 @@ package ru.sber.practice.service.impl;
 import io.minio.errors.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -78,7 +76,7 @@ public class UserServiceImpl implements UserService {
             user = userRepository.save(user);
 
             String message = String.format(
-                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
+                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: http://localhost:8080/activate/%s",
                     user.getFirstname(),
                     user.getToken()
             );
@@ -90,9 +88,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDTO> findAllUsers(Pageable pageable) {
-        return userRepository.findAll(pageable)
-                .map(UserMapper::toDTO);
+    public List<UserDTO> findAllUsersDTO() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
     }
 
     @Override
@@ -233,5 +238,19 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильный старый пароль");
         }
+    }
+
+    @Override
+    public User blockUser(Long Id) {
+        return userRepository.findByIdAndIsEnabledFalse(Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Не найден пользователь с id=" + Id));
+    }
+
+    @Override
+    public User unblockUser(Long Id) {
+        return userRepository.findByIdAndIsEnabledTrue(Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Не найден пользователь с id=" + Id));
     }
 }

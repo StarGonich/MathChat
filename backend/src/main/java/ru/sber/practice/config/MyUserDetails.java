@@ -40,7 +40,7 @@ public class MyUserDetails implements UserDetails, OAuth2User {
     public boolean isEnabled() {
         return user.isEnabled();
     }
-  
+
     @Override
     public String getName() {
         return user.getId().toString();

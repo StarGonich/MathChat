@@ -2,8 +2,6 @@ package ru.sber.practice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,11 +31,11 @@ public class MessageServiceImpl implements MessageService {
 
     // Открытие чата
     @Override
-    public Page<GetMessagesDTO> getMessagesByChatId(Long chatId, Pageable pageable) {
+    public List<GetMessagesDTO> getMessagesByChatId(Long chatId) {
         chatRepository.findById(chatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Не найден чат с chatId="+chatId));
-        return messageRepository.getMessagesByChatId(chatId, pageable)
-                .map(MessageMapper::toDTO);
+        return messageRepository.getMessagesByChatId(chatId)
+                .stream().map(MessageMapper::toDTO).toList();
     }
 
     //Отправка сообщения
@@ -63,9 +61,9 @@ public class MessageServiceImpl implements MessageService {
     }
 
     /*
-    *
-    * ДЛЯ АДМИНА
-    * */
+     *
+     * ДЛЯ АДМИНА
+     * */
     @Override
     public List<Message> findAll() {
         return messageRepository.findAll();

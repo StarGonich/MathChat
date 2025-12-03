@@ -1,8 +1,6 @@
 package ru.sber.practice.service;
 
 import io.minio.errors.*;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 import ru.sber.practice.dto.*;
 import ru.sber.practice.model.User;
@@ -18,6 +16,9 @@ import java.util.UUID;
  * Обеспечивает основные операции для сущности User.
  */
 public interface UserService {
+    User blockUser(Long Id);
+    User unblockUser(Long Id);
+
     /**
      * Метод для регистрации нового пользователя.
      * Во время регистрации также идёт отправка письма на почту пользователя для его активации.
@@ -29,12 +30,9 @@ public interface UserService {
      * @return возвращаем пользователя или null, если пользователь уже зарегистрирован.
      */
     User register(SignUpDTO signUpDTO);
-    /**
-     * Метод для нахождения всех пользователей.
-     *
-     * @return список всех пользователей.
-     */
-    Page<UserDTO> findAllUsers(Pageable pageable);
+
+    List<UserDTO> findAllUsersDTO();
+    List<User> findAllUsers();
     /**
      * Метод для активации зарегистрированного пользователя.
      *
