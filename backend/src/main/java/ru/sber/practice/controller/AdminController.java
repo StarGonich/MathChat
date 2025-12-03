@@ -1,6 +1,10 @@
 package ru.sber.practice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +24,8 @@ public class AdminController {
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<List<User>> findAllUsers() {
-        return ResponseEntity.ok(userService.findAllUsers());
+    public ResponseEntity<Page<User>> findAllUsers(@PageableDefault Pageable pageable) {
+        return ResponseEntity.ok(userService.findAllUsers(pageable));
     }
 
     // Заблокировать/разблокировать
