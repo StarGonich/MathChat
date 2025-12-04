@@ -14,7 +14,7 @@ public class MailSenderServiceImpl implements MailSenderService {
 
     @Value("${spring.mail.username}")
     private String username;
-    
+
     @Override
     public void send(String emailTo, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();

@@ -27,7 +27,7 @@ public class UserController {
     @GetMapping("/findAll")
     public Page<UserDTO> findAllUsers(@PageableDefault Pageable pageable) {
         log.info("Request /api/user/findAll.");
-        Page<UserDTO> allUsers = userService.findAllUsers(pageable);
+        Page<UserDTO> allUsers = userService.findAllUsersDTO(pageable);
         log.info("Response /api/user/findAll: {}", allUsers);
         return allUsers;
     }

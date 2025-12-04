@@ -56,8 +56,6 @@ public class ChatServiceImpl implements ChatService {
 
         chat = chatRepository.save(chat);
         log.info("Чат создан {}", chat);
-        log.info("Первый пользователь {}, {}, {}", firstUser.getUsername(), firstUser.getFirstname(), firstUser.getLastname());
-        log.info("Второй пользователь {}, {}, {}", secondUser.getUsername(), secondUser.getFirstname(), secondUser.getLastname());
     }
 
     @Override

@@ -23,7 +23,7 @@ import java.util.List;
 public class MessengerController {
     private final ChatService chatService;
     private final MessageService messageService;
-    //private final SimpMessagingTemplate messagingTemplate;
+//    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<Page<ContactChatDTO>> getChats(@PathVariable Long userId,
@@ -68,10 +68,10 @@ public class MessengerController {
                                                                     @AuthenticationPrincipal MyUserDetails userDetails,
                                                                     @RequestParam(name = "id", required = true) String userId,
                                                                     @PageableDefault Pageable pageable) {
-         if (userDetails.getName().equals(userId)) {
+        if (userDetails.getName().equals(userId)) {
             Page<GetMessagesDTO> messages = messageService.getMessagesByChatId(chatId, pageable);
             return ResponseEntity.ok(messages);
-         } else {
+        } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
@@ -84,11 +84,11 @@ public class MessengerController {
             // Лучше всегда возращать то, что создаётся(заносится в БД)
             WebSocketMessageDTO message = messageService.sendMessage(chatId, sendMessageDTO);
             log.info("Сообщение сохранено в БД {}", sendMessageDTO);
-            /*messagingTemplate.convertAndSendToUser(
-                    chatService.getRecipientId(sendMessageDTO.userId(), chatId).toString(),
-                    "/queue/messages",
-                    message
-            );*/
+//            messagingTemplate.convertAndSendToUser(
+//                    chatService.getRecipientId(sendMessageDTO.userId(), chatId).toString(),
+//                    "/queue/messages",
+//                    message
+//            );
             return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
         } else {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);

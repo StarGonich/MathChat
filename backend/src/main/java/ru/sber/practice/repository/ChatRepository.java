@@ -11,15 +11,15 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-//    @Query(value = "SELECT * from chats where first_user_id = :userId or second_user_id = :userId", nativeQuery = true)
+    //    @Query(value = "SELECT * from chats where first_user_id = :userId or second_user_id = :userId", nativeQuery = true)
 //    List<Chat> findChatByUserId(Long userId);
     @Query(value = """
     SELECT\s
         u.id as userId,
         c.id as chatId,
-        u.username as username,
         u.firstname as firstname,
         u.lastname as lastname,
+        u.username as username,
         m.message_text as lastMessageText,
         m.message_creation_date as messageDate,
         u.image_url as imageUrl

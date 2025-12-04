@@ -18,6 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByToken(UUID token);
     Optional<User> findByProviderId(String id);
     Optional<User> findByIdAndIsEnabledTrue(Long id);
+    Optional<User> findByIdAndIsEnabledFalse(Long id);
 
     @Query("SELECT u FROM User u WHERE " +
             "(LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
@@ -26,4 +27,3 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "u.isEnabled = true")
     Page<User> findBySearchTerm(String search, Pageable pageable);
 }
-

@@ -18,6 +18,9 @@ import java.util.UUID;
  * Обеспечивает основные операции для сущности User.
  */
 public interface UserService {
+    User blockUser(Long Id);
+    User unblockUser(Long Id);
+
     /**
      * Метод для регистрации нового пользователя.
      * Во время регистрации также идёт отправка письма на почту пользователя для его активации.
@@ -29,12 +32,9 @@ public interface UserService {
      * @return возвращаем пользователя или null, если пользователь уже зарегистрирован.
      */
     User register(SignUpDTO signUpDTO);
-    /**
-     * Метод для нахождения всех пользователей.
-     *
-     * @return список всех пользователей.
-     */
-    Page<UserDTO> findAllUsers(Pageable pageable);
+
+    Page<UserDTO> findAllUsersDTO(Pageable pageable);
+    Page<User> findAllUsers(Pageable pageable);
     /**
      * Метод для активации зарегистрированного пользователя.
      *

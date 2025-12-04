@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
             user = userRepository.save(user);
 
             String message = String.format(
-                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
+                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: http://localhost:8080/activate/%s",
                     user.getFirstname(),
                     user.getToken()
             );
@@ -90,9 +90,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Page<UserDTO> findAllUsers(Pageable pageable) {
+    public Page<UserDTO> findAllUsersDTO(Pageable pageable) {
         return userRepository.findAll(pageable)
                 .map(UserMapper::toDTO);
+    }
+
+    @Override
+    public Page<User> findAllUsers(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override
@@ -233,5 +238,19 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Неправильный старый пароль");
         }
+    }
+
+    @Override
+    public User blockUser(Long Id) {
+        return userRepository.findByIdAndIsEnabledFalse(Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Не найден пользователь с id=" + Id));
+    }
+
+    @Override
+    public User unblockUser(Long Id) {
+        return userRepository.findByIdAndIsEnabledTrue(Id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Не найден пользователь с id=" + Id));
     }
 }

@@ -63,9 +63,9 @@ public class MessageServiceImpl implements MessageService {
     }
 
     /*
-    *
-    * ДЛЯ АДМИНА
-    * */
+     *
+     * ДЛЯ АДМИНА
+     * */
     @Override
     public List<Message> findAll() {
         return messageRepository.findAll();

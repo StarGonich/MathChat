@@ -12,9 +12,9 @@ import ru.sber.practice.service.UserService;
 @SpringBootApplication
 public class MathChatApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(MathChatApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(MathChatApplication.class, args);
+    }
 
     @Bean
     public CommandLineRunner initData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
@@ -26,15 +26,4 @@ public class MathChatApplication {
             userRepository.save(user);
         };
     }
-
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry corsRegistry) {
-//                corsRegistry.addMapping("/**").allowedOrigins("http://localhost:9000");
-//            }
-//        };
-//    }
-
 }
