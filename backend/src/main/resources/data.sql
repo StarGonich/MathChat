@@ -12,8 +12,6 @@ INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VA
 --INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000008', 'Егор', 'Мальцев', 'egosr@dfd.com', 'aboba3', true);
 --INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('id0000009', 'Егор', 'Мальцев', 'egogr@dfd.com', 'aboba3', true);
 
-
-
 INSERT INTO chats(first_user_id, second_user_id) VALUES (1, 2);
 INSERT INTO chats(first_user_id, second_user_id) VALUES (1, 3);
 INSERT INTO chats(first_user_id, second_user_id) VALUES (2, 3);
@@ -79,3 +77,6 @@ INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALU
 INSERT INTO messages(user_id, chat_id, message_text, message_creation_date) VALUES (7, 6, 'Обещаю ничего не обещать. Пока!', '2025-07-03 14:42:22.798644+03');
 
 INSERT INTO users(username, firstname, lastname, email, password, is_enabled) VALUES ('NotActivated', 'Чёрт', 'Чертов', 'notactivate@gmail.com', 'aboba3', false);
+
+--BEGIN;
+--END;
