@@ -70,25 +70,25 @@ public class MessengerController {
         }
     }
 
-    @GetMapping("/chatTest")
-    public ResponseEntity<List<GetMessagesDTO>> getMessagesByChatIdTest(HttpServletRequest request) {
-        Random random = new Random();
-        Long tmp = random.nextLong(6) + 1;
-        List<GetMessagesDTO> messages = messageService.getMessagesByChatId(tmp);
-        log.info("Порт теста - {}", request.getLocalPort());
-        return ResponseEntity.ok(messages);
-    }
+//    @GetMapping("/chatTest")
+//    public ResponseEntity<List<GetMessagesDTO>> getMessagesByChatIdTest(HttpServletRequest request) {
+//        Random random = new Random();
+//        Long tmp = random.nextLong(6) + 1;
+//        List<GetMessagesDTO> messages = messageService.getMessagesByChatId(tmp);
+//        log.info("Порт теста - {}", request.getLocalPort());
+//        return ResponseEntity.ok(messages);
+//    }
 
-    @GetMapping("/chatTest2")
-    public ResponseEntity<List<GetMessagesDTO>> testAhah() {
-        Random random = new Random();
-        for (int i = 0; i < 100; i++) {
-            Long tmp = random.nextLong(100000000);
-        }
-        List<GetMessagesDTO> messages = messageService.getMessagesByChatId((long)6);
-        log.info("чето типо жизнь проходит мимо");
-        return ResponseEntity.ok(messages);
-    }
+//    @GetMapping("/chatTest2")
+//    public ResponseEntity<List<GetMessagesDTO>> testAhah() {
+//        Random random = new Random();
+//        for (int i = 0; i < 100; i++) {
+//            Long tmp = random.nextLong(100000000);
+//        }
+//        List<GetMessagesDTO> messages = messageService.getMessagesByChatId((long)6);
+//        log.info("чето типо жизнь проходит мимо");
+//        return ResponseEntity.ok(messages);
+//    }
 
     @PostMapping("/chat/{chatId}")
     public ResponseEntity<?> sendMessage(@PathVariable Long chatId, @RequestBody SendMessageDTO sendMessageDTO,
