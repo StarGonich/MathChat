@@ -109,6 +109,44 @@ const createContact = async (id) => {
 }
 
 onMounted(async () => {
+  socket = new WebSocket('ws://localhost:8080/ws')
+
+  socket.onmessage = async (event) => {
+    let msg = JSON.parse(event.data)
+    console.log(msg)
+    if (msg.to == props.thisUserId){
+      if (msg.action == 'MESSAGE'){
+        try{
+          findContacts()
+          if(contacts.value[selectedContactId.value].userId == msg.sender){
+            findMessages(selectedContactId.value)
+          }else{
+            contacts.value[selectedContactId.value].unreadCount += 1
+          }
+        }catch(e){
+          console.log(e)
+        }
+      }else if (msg.action == 'CONTACT'){
+        try{
+          findContacts()
+        }catch(e){
+          console.log(e)
+        }
+      }
+    }else if (msg.to == 'CONTACTS'){
+      let senderId = findContact(msg.sender)
+      if(senderId != -1){
+        if(msg.action == 'ONLINE'){
+          contacts.value[senderId].online = true
+        }else if(msg.action == 'OFFLINE'){
+          contacts.value[senderId].online = false
+        }else if(msg.action == 'PROFILE'){
+          findContacts()
+        }
+      }
+    }
+  }
+
   findThisUser()
   findContacts()
 })
