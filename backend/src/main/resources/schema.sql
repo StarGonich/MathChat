@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS users (
-    id bigint NOT NULL PRIMARY KEY,
+    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
     username varchar UNIQUE,
     firstname character varying(50),
     lastname character varying(50),
@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS chats (
-    id bigint NOT NULL PRIMARY KEY,
+    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_user_id bigint NOT NULL,
     second_user_id bigint NOT NULL,
     last_message_id bigint, -- Здесь нет NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS chats (
 );
 
 CREATE TABLE IF NOT EXISTS messages (
-    id bigint NOT NULL PRIMARY KEY,
+    id bigint NOT NULL AUTO_INCREMENT PRIMARY KEY,
     user_id bigint NOT NULL,
     chat_id bigint NOT NULL,
     message_text text NOT NULL,
