@@ -60,62 +60,7 @@ async function findThisUser() {
   }
 }
 
-const contacts = ref([
-  {
-    id: 0,
-    name: 'Alice Johnson',
-    avatar: 'AJ',
-    online: true,
-    lastMessage: 'Hey! How are you?',
-    unreadCount: 2,
-    lastMessageTime: '2m ago'
-  },
-  {
-    id: 1,
-    name: 'Alice Johnson',
-    avatar: 'AJ',
-    online: true,
-    lastMessage: 'Hey! How are you?',
-    unreadCount: 2,
-    lastMessageTime: '2m ago'
-  },
-  {
-    id: 2,
-    name: 'Bob Smith',
-    avatar: 'BS',
-    online: true,
-    lastMessage: 'Can you check the equation?',
-    unreadCount: 0,
-    lastMessageTime: '1h ago'
-  },
-  {
-    id: 3,
-    name: 'Charlie Brown',
-    avatar: 'CB',
-    online: false,
-    lastMessage: 'Thanks for the help!',
-    unreadCount: 0,
-    lastMessageTime: '3h ago'
-  },
-  {
-    id: 4,
-    name: 'Diana Prince',
-    avatar: 'DP',
-    online: true,
-    lastMessage: 'See you tomorrow',
-    unreadCount: 5,
-    lastMessageTime: '5h ago'
-  },
-  {
-    id: 5,
-    name: 'Eve Anderson',
-    avatar: 'EA',
-    online: false,
-    lastMessage: 'Got it!',
-    unreadCount: 0,
-    lastMessageTime: '1d ago'
-  }
-]);
+const contacts = ref([]);
 
 const selectedContactId = ref(-1);
 
@@ -163,112 +108,6 @@ const createContact = async (id) => {
   }
 }
 
-/*const allMessages = ref({
-  0: [
-    {
-      id: 1,
-      sender: 'Alice Johnson',
-      text: 'Hey! How are you?',
-      time: '10:30 AM',
-      isOwn: false
-    }
-  ],
-  1: [
-    {
-      id: 1,
-      sender: 'Alice Johnson',
-      text: 'Hey! How are you?',
-      time: '10:30 AM',
-      isOwn: false
-    },
-    {
-      id: 2,
-      sender: 'You',
-      text: 'I\'m good! Working on some math problems.',
-      time: '10:32 AM',
-      isOwn: true
-    },
-    {
-      id: 3,
-      sender: 'Alice Johnson',
-      text: 'Need any help with them?',
-      time: '10:33 AM',
-      isOwn: false
-    }
-  ],
-  2: [
-    {
-      id: 1,
-      sender: 'Bob Smith',
-      text: 'Can you check this equation?',
-      time: '9:15 AM',
-      isOwn: false
-    },
-    {
-      id: 2,
-      sender: 'Bob Smith',
-      latex: 'E = mc^2',
-      time: '9:15 AM',
-      isOwn: false
-    },
-    {
-      id: 3,
-      sender: 'You',
-      text: 'Looks perfect!',
-      time: '9:20 AM',
-      isOwn: true
-    }
-  ],
-  3: [
-    {
-      id: 1,
-      sender: 'You',
-      text: 'Let me know if you need anything else',
-      time: '8:00 AM',
-      isOwn: true
-    },
-    {
-      id: 2,
-      sender: 'Charlie Brown',
-      text: 'Thanks for the help!',
-      time: '8:05 AM',
-      isOwn: false
-    }
-  ],
-  4: [
-    {
-      id: 1,
-      sender: 'Diana Prince',
-      text: 'See you tomorrow',
-      time: '6:30 AM',
-      isOwn: false
-    },
-    {
-      id: 2,
-      sender: 'Diana Prince',
-      latex: '\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}',
-      time: '6:31 AM',
-      isOwn: false
-    }
-  ],
-  5: [
-    {
-      id: 1,
-      sender: 'You',
-      text: 'Don\'t forget about the meeting',
-      time: 'Yesterday',
-      isOwn: true
-    },
-    {
-      id: 2,
-      sender: 'Eve Anderson',
-      text: 'Got it!',
-      time: 'Yesterday',
-      isOwn: false
-    }
-  ]
-})*/
-
 onMounted(async () => {
   findThisUser()
   findContacts()
@@ -277,10 +116,6 @@ onMounted(async () => {
 const selectedContact = computed(() => {
   return contacts.value[selectedContactId.value];
 })
-
-/*const messages = computed(() => {
-  return allMessages.value[selectedContactId.value] || [];
-})*/
 
 const selectContact = async (contactId) => {
   selectedContactId.value = contactId;
