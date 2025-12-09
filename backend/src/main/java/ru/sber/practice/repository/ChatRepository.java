@@ -1,5 +1,7 @@
 package ru.sber.practice.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.sber.practice.dto.ContactChatDTO;
@@ -9,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-//    @Query(value = "SELECT * from chats where first_user_id = :userId or second_user_id = :userId", nativeQuery = true)
+    //    @Query(value = "SELECT * from chats where first_user_id = :userId or second_user_id = :userId", nativeQuery = true)
 //    List<Chat> findChatByUserId(Long userId);
     @Query(value = """
     SELECT\s
@@ -28,7 +30,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     END
     LEFT JOIN messages m ON m.id = c.last_message_id
     WHERE c.first_user_id = :userId OR c.second_user_id = :userId""", nativeQuery = true)
-    List<ContactChatDTO> findContactChatsByUserId(Long userId);
+    Page<ContactChatDTO> findContactChatsByUserId(Long userId, Pageable pageable);
 
     @Query(value = "SELECT CASE WHEN first_user_id = :userId THEN second_user_id ELSE first_user_id END " +
             "FROM chats WHERE id = :chatId AND (first_user_id = :userId OR second_user_id = :userId)",

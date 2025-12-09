@@ -7,5 +7,3 @@ public record UserDTO(Long id,
                       String lastname,
                       String email) {
 }
-
-

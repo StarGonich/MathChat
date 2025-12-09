@@ -1,5 +1,7 @@
 package ru.sber.practice.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import ru.sber.practice.config.MyUserDetails;
 import ru.sber.practice.dto.ContactChatDTO;
 import ru.sber.practice.dto.GlobalChatDTO;
@@ -21,7 +23,7 @@ public interface ChatService {
      * @param userId id пользователя, у которого ищем чаты.
      * @return список чатов или BAD_REQUEST.
      */
-    List<ContactChatDTO> getChats(Long userId);
+    Page<ContactChatDTO> getChats(Long userId, Pageable pageable);
     /**
      * Метод для создания чата между пользователями.
      *
@@ -36,7 +38,7 @@ public interface ChatService {
      * @param search некоторая строка из символов, по которой находим все совпадения.
      * @return список всех DTO, которые частично или полностью совпали со строкой search.
      */
-    List<GlobalChatDTO> getGlobalChats(String search);
+    Page<GlobalChatDTO> getGlobalChats(String search, Pageable pageable);
     /**
      * Метод для нахождения у пользователя id его собеседника по id чата.
      *

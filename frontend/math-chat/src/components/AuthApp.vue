@@ -78,7 +78,7 @@ async function auth() {
         if(!resp.name){
             msg.value = "Неудачная попытка входа"
         }else{
-            router.push({name: 'Messenger', params: {userId: resp.name}})
+            router.push({name: 'Messenger', params: {thisUserId: resp.name}})
         }
     }catch(e){
         console.log(e)

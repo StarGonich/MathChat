@@ -1,9 +1,11 @@
 package ru.sber.practice.config;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -31,6 +33,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig{
     private final OAuth2ServiceImpl oAuth2ServiceImpl;
+    private final Environment environment;
+
+    private String getAdminUsername() {
+        return environment.getProperty("ADMIN_USERNAME", "admin");
+    }
+
+    private String getAdminPassword() {
+        return environment.getProperty("ADMIN_PASSWORD", "admin");
+    }
 
     @Bean
     public UserDetailsService userDetailsService() {
@@ -76,7 +87,7 @@ public class SecurityConfig{
     public AuthenticationProvider adminAuthenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(username ->
-                new User("admin", passwordEncoder().encode("admin"),
+                new User(getAdminUsername(), passwordEncoder().encode(getAdminPassword()),
                         Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN"))));
         provider.setPasswordEncoder(passwordEncoder());
         return provider;
