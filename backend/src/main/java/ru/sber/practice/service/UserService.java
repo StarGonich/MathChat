@@ -20,6 +20,7 @@ import java.util.UUID;
 public interface UserService {
     User blockUser(Long Id);
     User unblockUser(Long Id);
+    Page<User> searchUsers(String search, Pageable pageable);
 
     /**
      * Метод для регистрации нового пользователя.

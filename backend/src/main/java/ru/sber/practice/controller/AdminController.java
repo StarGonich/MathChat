@@ -24,19 +24,26 @@ public class AdminController {
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<Page<User>> findAllUsers(@PageableDefault Pageable pageable) {
-        return ResponseEntity.ok(userService.findAllUsers(pageable));
+    public ResponseEntity<Page<User>> findAllUsers(
+            @RequestParam(required = false) String search,
+            @PageableDefault(size = 20) Pageable pageable) {
+
+        if (search != null && !search.trim().isEmpty()) {
+            return ResponseEntity.ok(userService.searchUsers(search.trim(), pageable));
+        } else {
+            return ResponseEntity.ok(userService.findAllUsers(pageable));
+        }
     }
 
     // Заблокировать/разблокировать
-    @PatchMapping("/block/{userId}")
+    @PostMapping("/block/{userId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<User> blockUser(@PathVariable Long userId) {
         User user = userService.blockUser(userId);
         return ResponseEntity.ok(user);
     }
 
-    @PatchMapping("/unblock/{userId}")
+    @PostMapping("/unblock/{userId}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<User> unblockUser(@PathVariable Long userId) {
         User user = userService.unblockUser(userId);
