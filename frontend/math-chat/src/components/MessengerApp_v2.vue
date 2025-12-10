@@ -37,6 +37,8 @@ const props = defineProps({
   }
 });
 
+let socket = {}
+
 const thisUser = ref({})
 
 async function findThisUser() {
@@ -99,6 +101,15 @@ async function findContacts() {
   }
 }
 
+function findContact(id){
+  for(let i = 0; i < contacts.value.length; i++){
+    if(contacts.value[i].userId == id){
+      return i
+    }
+  }
+  return -1
+}
+
 const createContact = async (id) => {
   try{
     await ax.post('http://localhost:8080/chat/create/'+ props.thisUserId + "?with=" + id)
@@ -109,11 +120,11 @@ const createContact = async (id) => {
 }
 
 onMounted(async () => {
-  socket = new WebSocket('ws://localhost:8080/ws')
+  socket = await new WebSocket('ws://localhost:8080/ws')
 
   socket.onmessage = async (event) => {
     let msg = JSON.parse(event.data)
-    console.log(msg)
+    console.log('Принято:\n' + JSON.stringify(msg))
     if (msg.to == props.thisUserId){
       if (msg.action == 'MESSAGE'){
         try{
@@ -145,6 +156,15 @@ onMounted(async () => {
         }
       }
     }
+  }
+  socket.onopen = () => {
+    let msg = {
+      sender: props.thisUserId,
+      to: 'CONTACTS',
+      action: 'ONLINE'
+    }
+    socket.send(JSON.stringify(msg))
+    console.log('Отослано:\n' + JSON.stringify(msg))
   }
 
   findThisUser()
@@ -237,6 +257,14 @@ const sendMessage = async (message) => {
 }
 
 function quit() {
+  let msg = {
+    sender: props.thisUserId,
+    to: 'CONTACTS',
+    action: 'OFFLINE'
+  }
+  socket.send(JSON.stringify(msg))
+  console.log('Отослано:\n' + JSON.stringify(msg))
+
   router.push({name: 'Home'})
 }
 </script>
