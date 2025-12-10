@@ -9,7 +9,7 @@
             <div v-else class="status-indicator-small offline"></div>
           </div>
           <div class="header-text">
-            <h4 class="ui header contact-name-header">{{ contact.name }} {{ contact.username }}</h4>
+            <span class="contact-name-header" align="left">{{ contact.name }} {{ contact.username }}</span>
             <span class="status-text" align="left">{{ contact.online ? "Онлайн" : "Не в сети" }}</span>
           </div>
         </div>
@@ -118,8 +118,8 @@ const handleSendMessage = (message) => {
 }
 
 .avatar-circle-small {
-  width: 40px;
-  height: 40px;
+  width: 45px;
+  height: 45px;
   border-radius: 50%;
   background: linear-gradient(135deg, #2185d0, #1678c2);
   color: white;
@@ -133,8 +133,8 @@ const handleSendMessage = (message) => {
   position: absolute;
   bottom: 2px;
   right: 0;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   border: 2px solid white;
 }
@@ -153,12 +153,14 @@ const handleSendMessage = (message) => {
 }
 
 .contact-name-header {
-  margin: 0 0 2px 0;
+  font-weight: bold;
   color: #1b1c1d;
+  margin-left: 2px;
+  margin-bottom: 2px;
 }
 
 .status-text {
-  font-size: 0.85em;
+  font-size: 1em;
   color: #767676;
   margin-left: 2px;
 }

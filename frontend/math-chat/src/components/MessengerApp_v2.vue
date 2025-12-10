@@ -83,7 +83,8 @@ async function findContacts() {
         lastMessage: rawChats[i].lastMessageText,
         lastMessageTime: "",
         avatar: "",
-        online: rawChats[i].online
+        online: rawChats[i].online,
+        unreadCount: 5
       })
       if(rawChats[i].firstname && rawChats[i].lastname){
         contacts.value[i].avatar = rawChats[i].firstname.slice(0, 1) + rawChats[i].lastname.slice(0, 1)
@@ -118,6 +119,8 @@ const createContact = async (id) => {
   }catch(e){
     console.log(e)
   }
+
+  
 }
 
 onMounted(async () => {
@@ -187,7 +190,10 @@ const selectContact = async (contactId) => {
   selectedContactId.value = contactId;
   
   let contact = contacts.value[contactId];
-  contact.unreadCount = 0;
+  if(contact.unreadCount != 0){
+    contact.unreadCount = 0;
+    //Запрос на бэк
+  }
 
   findMessages(contactId)
 }

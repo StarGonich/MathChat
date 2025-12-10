@@ -18,7 +18,7 @@
       <div class="contact-footer">
         <span class="last-message" align="left">{{ contact.lastMessage }}</span>
         <span v-if="contact.unreadCount > 0" class="ui mini circular blue label">
-          {{ contact.unreadCount }}
+          <b>{{ contact.unreadCount }}</b>
         </span>
       </div>
     </div>
