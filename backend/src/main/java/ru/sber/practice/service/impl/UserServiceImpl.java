@@ -251,6 +251,7 @@ public class UserServiceImpl implements UserService {
                     "Пользователь уже заблокирован");
         }
 
+        log.info("Блокировка пользователя: {}", id);
         user.setEnabled(false);
         return userRepository.save(user);
     }
@@ -266,6 +267,7 @@ public class UserServiceImpl implements UserService {
                     "Пользователь уже активен");
         }
 
+        log.info("Разблокировка пользователя: {}", id);
         user.setEnabled(true);
         return userRepository.save(user);
     }
