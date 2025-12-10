@@ -241,16 +241,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User blockUser(Long Id) {
-        return userRepository.findByIdAndIsEnabledFalse(Id)
+    public User blockUser(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Не найден пользователь с id=" + Id));
+                        "Не найден пользователь с id=" + id));
+
+        if (!user.isEnabled()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Пользователь уже заблокирован");
+        }
+
+        user.setEnabled(false);
+        return userRepository.save(user);
     }
 
     @Override
-    public User unblockUser(Long Id) {
-        return userRepository.findByIdAndIsEnabledTrue(Id)
+    public User unblockUser(Long id) {
+        User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                        "Не найден пользователь с id=" + Id));
+                        "Не найден пользователь с id=" + id));
+
+        if (user.isEnabled()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Пользователь уже активен");
+        }
+
+        user.setEnabled(true);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public Page<User> searchUsers(String search, Pageable pageable) {
+        return userRepository.searchUsers(search, pageable);
     }
 }
