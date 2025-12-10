@@ -3,7 +3,7 @@ package ru.sber.practice.dto;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
-// Вся информация дял фронта
+// Вся информация для фронта
 public record ContactChatDTO(Long userId,
                              Long chatId,
                              String username,
@@ -11,6 +11,7 @@ public record ContactChatDTO(Long userId,
                              String lastname,
                              String lastMessageText,
                              OffsetDateTime messageDate,
-                             String imageUrl
+                             String imageUrl,
+                             boolean online
 ) {
 }

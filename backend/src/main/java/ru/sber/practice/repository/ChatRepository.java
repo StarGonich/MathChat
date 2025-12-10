@@ -22,7 +22,8 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
         u.username as username,
         m.message_text as lastMessageText,
         m.message_creation_date as messageDate,
-        u.image_url as imageUrl
+        u.image_url as imageUrl,
+        u.is_online as isOnline
     FROM chats c
     JOIN users u ON u.id = CASE\s
         WHEN c.first_user_id = :userId THEN c.second_user_id\s

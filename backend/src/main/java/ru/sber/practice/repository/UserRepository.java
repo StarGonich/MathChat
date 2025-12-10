@@ -26,4 +26,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
             "u.isEnabled = true")
     Page<User> findBySearchTerm(String search, Pageable pageable);
+
+    @Query("UPDATE User SET online = :online " +
+            "WHERE id = :id")
+    void updateUserStatus(Long id, Boolean online);
 }

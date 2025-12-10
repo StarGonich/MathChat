@@ -10,7 +10,8 @@ CREATE TABLE users (
     token_creation_date timestamp with time zone,
     provider character varying(36) DEFAULT 'LOCAL',  -- LOCAL, GITHUB, GOOGLE
     provider_id varchar,
-    image_url character varying(255)
+    image_url character varying(255),
+    is_online boolean NOT NULL DEFAULT false
 );
 
 CREATE TABLE chats (

@@ -44,7 +44,7 @@ const thisUser = ref({})
 async function findThisUser() {
   try {
     let rawUser = {}
-    await ax.get('http://localhost:8080/api/user/find/' + props.thisUserId)
+    await ax.get('/api/user/find/' + props.thisUserId)
       .then(response => rawUser = response.data)
     thisUser.value = {
       id: rawUser.id,
@@ -69,8 +69,8 @@ const selectedContactId = ref(-1);
 async function findContacts() {
   try {
     let rawChats = []
-    await ax.get('http://localhost:8080/search/' + props.thisUserId)
-      .then(response => rawChats = response.data)
+    await ax.get('/search/' + props.thisUserId)
+      .then(response => rawChats = response.data.content)
     contacts.value = []
     console.log(rawChats)
     for(let i = 0; i < rawChats.length; i++){
@@ -112,7 +112,7 @@ function findContact(id){
 
 const createContact = async (id) => {
   try{
-    await ax.post('http://localhost:8080/chat/create/'+ props.thisUserId + "?with=" + id)
+    await ax.post('/chat/create/'+ props.thisUserId + "?with=" + id)
     findContacts()
   }catch(e){
     console.log(e)
@@ -157,7 +157,7 @@ onMounted(async () => {
       }
     }
   }
-  socket.onopen = () => {
+  socket.onopen = async () => {
     let msg = {
       sender: props.thisUserId,
       to: 'CONTACTS',
@@ -165,6 +165,13 @@ onMounted(async () => {
     }
     socket.send(JSON.stringify(msg))
     console.log('Отослано:\n' + JSON.stringify(msg))
+    try{
+      await ax.get('/api/user/online/' + props.thisUserId).then(
+        resp => console.log(resp.data)
+      )
+    }catch(e){
+      console.log(e)
+    }
   }
 
   findThisUser()
@@ -198,7 +205,7 @@ async function findMessages(contactId){
     let curD = new Date().getDate()
     try{
       let rawMessages = []
-      await ax.get('http://localhost:8080/chat/'+ chatId + "?id=" +  props.thisUserId)
+      await ax.get('/chat/'+ chatId + "?id=" +  props.thisUserId)
         .then(response => rawMessages = response.data)
       for(let i = 0; i < rawMessages.length; i++){
         messages.value.push({
@@ -253,10 +260,10 @@ const sendMessage = async (message) => {
     messageText: message.text
   }
 
-  await ax.post('http://localhost:8080/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
+  await ax.post('/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
 }
 
-function quit() {
+async function quit() {
   let msg = {
     sender: props.thisUserId,
     to: 'CONTACTS',
@@ -264,6 +271,14 @@ function quit() {
   }
   socket.send(JSON.stringify(msg))
   console.log('Отослано:\n' + JSON.stringify(msg))
+
+  try{
+    await ax.get('/api/user/offline/' + props.thisUserId).then(
+      resp => console.log(resp.data)
+    )
+  }catch(e){
+    console.log(e)
+  }
 
   router.push({name: 'Home'})
 }

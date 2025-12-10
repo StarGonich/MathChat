@@ -19,6 +19,7 @@ public class MathChatApplication {
     @Bean
     public CommandLineRunner initData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         User user = new User();
+        user.setFirstname("find");
         user.setEmail("test@mail.ru");
         user.setPassword(passwordEncoder.encode("12321"));
         user.setEnabled(true);
