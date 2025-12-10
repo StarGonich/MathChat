@@ -82,7 +82,8 @@ async function findContacts() {
         name: rawChats[i].firstname + " " + rawChats[i].lastname,
         lastMessage: rawChats[i].lastMessageText,
         lastMessageTime: "",
-        avatar: ""
+        avatar: "",
+        online: rawChats[i].online
       })
       if(rawChats[i].firstname && rawChats[i].lastname){
         contacts.value[i].avatar = rawChats[i].firstname.slice(0, 1) + rawChats[i].lastname.slice(0, 1)

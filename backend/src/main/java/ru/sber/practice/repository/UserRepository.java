@@ -1,8 +1,10 @@
 package ru.sber.practice.repository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import ru.sber.practice.model.User;
@@ -27,6 +29,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "u.isEnabled = true")
     Page<User> findBySearchTerm(String search, Pageable pageable);
 
+    @Modifying
+    @Transactional
     @Query("UPDATE User SET online = :online " +
             "WHERE id = :id")
     void updateUserStatus(Long id, Boolean online);

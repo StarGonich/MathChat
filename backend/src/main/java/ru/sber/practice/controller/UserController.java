@@ -45,6 +45,7 @@ public class UserController {
     public ResponseEntity<?> setOnline(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails userDetails){
         log.info("Request /api/user/online/: {}", id);
         if (userDetails.getName().equals(id.toString())) {
+            userService.updateStatus(id, true);
             log.info("Response /api/user/online/: OK");
             return new ResponseEntity<>("Статус обновлен", HttpStatus.OK);
         } else {
@@ -57,6 +58,7 @@ public class UserController {
     public ResponseEntity<?> setOffline(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails userDetails){
         log.info("Request /api/user/offline/: {}", id);
         if (userDetails.getName().equals(id.toString())) {
+            userService.updateStatus(id, false);
             log.info("Response /api/user/offline/: OK");
             return new ResponseEntity<>("Статус обновлен", HttpStatus.OK);
         } else {

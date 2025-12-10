@@ -253,4 +253,9 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Не найден пользователь с id=" + Id));
     }
+
+    @Override
+    public void updateStatus(Long userId, boolean online){
+        userRepository.updateUserStatus(userId, online);
+    }
 }
