@@ -85,7 +85,8 @@ async function findContacts() {
         lastMessageOwned: rawChats[i].lastMessageOwned,
         avatar: "",
         online: rawChats[i].online,
-        unreadCount: rawChats[i].unreadCount
+        unreadCount: rawChats[i].unreadCount,
+        lastMessageStatus: "NONE"
       })
       if(rawChats[i].firstname && rawChats[i].lastname){
         contactsCopy[i].avatar = rawChats[i].firstname.slice(0, 1) + rawChats[i].lastname.slice(0, 1)
@@ -99,7 +100,13 @@ async function findContacts() {
         contactsCopy[i].lastMessageTime = rawChats[i].messageDate.slice(11, 16)
       }
       if(rawChats[i].lastMessageOwned == props.thisUserId){
-        contactsCopy[i].unreadCount = 0
+        if(contactsCopy[i].unreadCount != 0){
+          contactsCopy[i].unreadCount = 0
+          contactsCopy[i].lastMessageStatus = "UNREAD"
+        }else{
+          contactsCopy[i].lastMessageStatus = "READ"
+        }
+        
       }
     }
     contacts.value = contactsCopy
@@ -141,20 +148,15 @@ onMounted(async () => {
     console.log('Принято:\n' + JSON.stringify(msg))
     if (msg.to == props.thisUserId){
       if (msg.action == 'MESSAGE'){
-        try{
-          await findContacts()
-          if(contacts.value[selectedContactId.value].userId == msg.sender){
-            findMessages(selectedContactId.value)
-          }
-        }catch(e){
-          console.log(e)
+        findContacts()
+        if(contacts.value[selectedContactId.value].userId == msg.sender){
+          findMessages(selectedContactId.value)
         }
       }else if (msg.action == 'CONTACT'){
-        try{
-          findContacts()
-        }catch(e){
-          console.log(e)
-        }
+        findContacts()
+      }else if (msg.action == 'READ'){
+        let id = findContact(msg.sender)
+        contacts.value[id].lastMessageStatus = "READ";
       }
     }else if (msg.to == 'CONTACTS'){
       let senderId = findContact(msg.sender)
@@ -216,6 +218,13 @@ const selectContact = async (contactId) => {
     }catch(e){
       console.log(e)
     }
+
+    let msg = {
+      sender: props.thisUserId,
+      to: contacts.value[selectedContactId.value].userId,
+      action: 'READ'
+    }
+    socket.send(JSON.stringify(msg))
   }
 
   findMessages(contactId)
@@ -286,6 +295,7 @@ const sendMessage = async (message) => {
   const contact = contacts.value[selectedContactId.value];
   contact.lastMessage = message.text;
   contact.lastMessageTime = 'Прямо сейчас';
+  contact.lastMessageStatus = "UNREAD";
 
   const postMessage = {
     userId: props.thisUserId,
