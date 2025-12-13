@@ -71,10 +71,10 @@ async function findContacts() {
     let rawChats = []
     await ax.get('/search/' + props.thisUserId)
       .then(response => rawChats = response.data.content)
-    contacts.value = []
+    let contactsCopy = []
     console.log(rawChats)
     for(let i = 0; i < rawChats.length; i++){
-      contacts.value.push({
+      contactsCopy.push({
         id: i,
         userId: rawChats[i].userId,
         chatId: rawChats[i].chatId,
@@ -82,22 +82,24 @@ async function findContacts() {
         name: rawChats[i].firstname + " " + rawChats[i].lastname,
         lastMessage: rawChats[i].lastMessageText,
         lastMessageTime: "",
+        lastMessageOwned: false,
         avatar: "",
         online: rawChats[i].online,
         unreadCount: 5
       })
       if(rawChats[i].firstname && rawChats[i].lastname){
-        contacts.value[i].avatar = rawChats[i].firstname.slice(0, 1) + rawChats[i].lastname.slice(0, 1)
+        contactsCopy[i].avatar = rawChats[i].firstname.slice(0, 1) + rawChats[i].lastname.slice(0, 1)
       }else{
-        contacts.value[i].avatar = "NN"
+        contactsCopy[i].avatar = "NN"
       }
       if(!rawChats[i].lastMessageText){
-        contacts.value[i].lastMessage = "Диалог пустой"
+        contactsCopy[i].lastMessage = "Диалог пустой"
       }
       if(rawChats[i].messageDate){
-        contacts.value[i].lastMessageTime = rawChats[i].messageDate.slice(11, 16)
+        contactsCopy[i].lastMessageTime = rawChats[i].messageDate.slice(11, 16)
       }
     }
+    contacts.value = contactsCopy
   } catch (e) {
     console.log(e)
   }
@@ -221,7 +223,7 @@ const selectContact = async (contactId) => {
 const messages = ref([])
 
 async function findMessages(contactId){
-  messages.value = []
+  let messagesCopy = []
   if(contactId > -1){
     let chatId = contacts.value[contactId].chatId
     let curY = new Date().getFullYear()
@@ -236,7 +238,7 @@ async function findMessages(contactId){
         .then(response => {console.log(JSON.stringify(response)); rawMessages = response.data.content})
       console.log(JSON.stringify(rawMessages))
       for(let i = 0; i < rawMessages.length; i++){
-        messages.value.push({
+        messagesCopy.push({
           id: i,
           senderId: rawMessages[i].userId,
           sender: "",
@@ -245,19 +247,19 @@ async function findMessages(contactId){
           isOwn: false
         })
         if(rawMessages[i].userId == props.thisUserId){
-          messages.value[i].isOwn = true
-          messages.value[i].sender = "Вы";
+          messagesCopy[i].isOwn = true
+          messagesCopy[i].sender = "Вы";
         }else{
-          messages.value[i].sender = contacts.value[contactId].name
+          messagesCopy[i].sender = contacts.value[contactId].name
         }
         if(curY == rawMessages[i].messageDate.slice(0, 4) && 1 == 0){
           if(curM == rawMessages[i].messageDate.slice(5, 7) && curD == rawMessages[i].messageDate.slice(8, 10)){
-            messages.value[i].time = rawMessages[i].messageDate.slice(11, 16)
+            messagesCopy[i].time = rawMessages[i].messageDate.slice(11, 16)
           }else{
-            messages.value[i].time = rawMessages[i].messageDate.slice(8, 10) + '.' + rawMessages[i].messageDate.slice(5, 7)
+            messagesCopy[i].time = rawMessages[i].messageDate.slice(8, 10) + '.' + rawMessages[i].messageDate.slice(5, 7)
           }
         }else{
-          messages.value[i].time = rawMessages[i].messageDate.slice(8, 10) + '.' + rawMessages[i].messageDate.slice(5, 7) + '.' + rawMessages[i].messageDate.slice(2, 4)
+          messagesCopy[i].time = rawMessages[i].messageDate.slice(8, 10) + '.' + rawMessages[i].messageDate.slice(5, 7) + '.' + rawMessages[i].messageDate.slice(2, 4)
         }
         console.log(rawMessages[i].messageDate)
       }
@@ -265,6 +267,7 @@ async function findMessages(contactId){
       console.log(e)
     }
   }
+  messages.value = messagesCopy
 }
 
 const sendMessage = async (message) => {
