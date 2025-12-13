@@ -82,10 +82,10 @@ async function findContacts() {
         name: rawChats[i].firstname + " " + rawChats[i].lastname,
         lastMessage: rawChats[i].lastMessageText,
         lastMessageTime: "",
-        lastMessageOwned: false,
+        lastMessageOwned: rawChats[i].lastMessageOwned,
         avatar: "",
         online: rawChats[i].online,
-        unreadCount: 5
+        unreadCount: rawChats[i].unreadCount
       })
       if(rawChats[i].firstname && rawChats[i].lastname){
         contactsCopy[i].avatar = rawChats[i].firstname.slice(0, 1) + rawChats[i].lastname.slice(0, 1)
@@ -97,6 +97,9 @@ async function findContacts() {
       }
       if(rawChats[i].messageDate){
         contactsCopy[i].lastMessageTime = rawChats[i].messageDate.slice(11, 16)
+      }
+      if(rawChats[i].lastMessageOwned == props.thisUserId){
+        contactsCopy[i].unreadCount = 0
       }
     }
     contacts.value = contactsCopy
@@ -142,8 +145,6 @@ onMounted(async () => {
           await findContacts()
           if(contacts.value[selectedContactId.value].userId == msg.sender){
             findMessages(selectedContactId.value)
-          }else{
-            contacts.value[selectedContactId.value].unreadCount += 1
           }
         }catch(e){
           console.log(e)
@@ -291,7 +292,11 @@ const sendMessage = async (message) => {
     messageText: message.text
   }
 
-  await ax.post('/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
+  try{
+    await ax.post('/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
+  }catch(e){
+    console.log(e)
+  }
 
   let msg = {
     sender: props.thisUserId,

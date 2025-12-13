@@ -100,6 +100,7 @@ public class MessengerController {
                                                @AuthenticationPrincipal MyUserDetails userDetails){
         log.info("Request PATCH /chat/: {} + {}", chatId, changeUnreadCountDTO);
         if (userDetails.getName().equals(changeUnreadCountDTO.userId().toString())) {
+            chatService.updateCount(chatId, changeUnreadCountDTO.newCount());
             log.info("Response PATCH /chat/: OK");
             return new ResponseEntity<>("Количество изменено", HttpStatus.OK);
         } else {

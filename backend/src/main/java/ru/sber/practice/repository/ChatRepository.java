@@ -23,6 +23,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
         u.firstname as firstname,
         u.lastname as lastname,
         m.message_text as lastMessageText,
+        m.user_id as lastMessageOwner,
         m.message_creation_date as messageDate,
         u.image_url as imageUrl,
         u.is_online as isOnline,

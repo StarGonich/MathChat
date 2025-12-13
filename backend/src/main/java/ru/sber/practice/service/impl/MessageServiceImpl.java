@@ -58,6 +58,7 @@ public class MessageServiceImpl implements MessageService {
         message.setMessageDate(OffsetDateTime.now());
         message = messageRepository.save(message);
         chat.setLastMessageId(message);
+        chat.setUnreadCount(chat.getUnreadCount()+1);
         chatRepository.save(chat);
         return MessageMapper.toWebSocketDTO(message);
     }
