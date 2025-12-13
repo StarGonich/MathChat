@@ -21,7 +21,7 @@
 
 <script setup>
 import router from '@/router'
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import SideBar from './SideBar.vue';
 import ChatWindow from './ChatWindow.vue';
 import axios from 'axios'
@@ -185,6 +185,16 @@ onMounted(async () => {
 
   findThisUser()
   findContacts()
+})
+
+onUnmounted(() => {
+  let msg = {
+    sender: props.thisUserId,
+    to: 'CONTACTS',
+    action: 'OFFLINE'
+  }
+  socket.send(JSON.stringify(msg))
+  console.log('Отослано:\n' + JSON.stringify(msg))
 })
 
 const selectedContact = computed(() => {
