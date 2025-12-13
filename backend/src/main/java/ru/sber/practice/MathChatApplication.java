@@ -19,12 +19,21 @@ public class MathChatApplication {
     @Bean
     public CommandLineRunner initData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         User user = new User();
-        user.setFirstname("find");
-        user.setEmail("test@mail.ru");
-        user.setPassword(passwordEncoder.encode("12321"));
+        user.setFirstname("Alice");
+        user.setLastname("AAA");
+        user.setEmail("aaaaa@mail.ru");
+        user.setPassword(passwordEncoder.encode("aaaaa"));
         user.setEnabled(true);
+
+        User user1 = new User();
+        user1.setFirstname("Bob");
+        user1.setLastname("BBB");
+        user1.setEmail("bbbbb@mail.ru");
+        user1.setPassword(passwordEncoder.encode("bbbbb"));
+        user1.setEnabled(true);
         return (args) -> {
             userRepository.save(user);
+            userRepository.save(user1);
         };
     }
 }
