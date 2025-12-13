@@ -19,6 +19,7 @@ CREATE TABLE chats (
     first_user_id bigint NOT NULL,
     second_user_id bigint NOT NULL,
     last_message_id bigint, -- Здесь нет NOT NULL,
+    unread_count bigint NOT NULL DEFAULT 0,
     -- то есть сначала создаётся чат, а потом уже сообщение
     CONSTRAINT UC_FUserSUser UNIQUE (first_user_id, second_user_id)
 );

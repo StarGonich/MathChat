@@ -120,7 +120,12 @@ const createContact = async (id) => {
     console.log(e)
   }
 
-  
+  let msg = {
+    sender: props.thisUserId,
+    to: id,
+    action: 'CONTACT'
+  }
+  socket.send(JSON.stringify(msg))
 }
 
 onMounted(async () => {
@@ -132,7 +137,7 @@ onMounted(async () => {
     if (msg.to == props.thisUserId){
       if (msg.action == 'MESSAGE'){
         try{
-          findContacts()
+          await findContacts()
           if(contacts.value[selectedContactId.value].userId == msg.sender){
             findMessages(selectedContactId.value)
           }else{
@@ -192,7 +197,12 @@ const selectContact = async (contactId) => {
   let contact = contacts.value[contactId];
   if(contact.unreadCount != 0){
     contact.unreadCount = 0;
-    //Запрос на бэк
+    try{
+      await ax.patch('/chat/' + contact.chatId, {userId: props.thisUserId, newCount: 0})
+        .then(resp => {console.log(resp)})
+    }catch(e){
+      console.log(e)
+    }
   }
 
   findMessages(contactId)
@@ -213,7 +223,8 @@ async function findMessages(contactId){
     try{
       let rawMessages = []
       await ax.get('/chat/'+ chatId + "?id=" +  props.thisUserId)
-        .then(response => rawMessages = response.data)
+        .then(response => {console.log(JSON.stringify(response)); rawMessages = response.data.content})
+      console.log(JSON.stringify(rawMessages))
       for(let i = 0; i < rawMessages.length; i++){
         messages.value.push({
           id: i,
@@ -268,6 +279,13 @@ const sendMessage = async (message) => {
   }
 
   await ax.post('/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
+
+  let msg = {
+    sender: props.thisUserId,
+    to: contacts.value[selectedContactId.value].userId,
+    action: 'MESSAGE'
+  }
+  socket.send(JSON.stringify(msg))
 }
 
 async function quit() {
