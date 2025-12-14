@@ -8,7 +8,7 @@
           v-model="inputValue"
           @keypress.enter="handleSend"
         />
-        <div v-if="isPreview" class="ui pointing below label"">
+        <div v-if="isPreview" class="ui pointing below label">
           <div v-for="line in formatArr(inputValue, 45)" :key="line.id">
             <div v-if="line.isLatex">
               <vue-latex  :expression="line.content"/>
