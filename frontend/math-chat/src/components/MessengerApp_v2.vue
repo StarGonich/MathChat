@@ -82,7 +82,7 @@ async function findContacts() {
         name: rawChats[i].firstname + " " + rawChats[i].lastname,
         lastMessage: rawChats[i].lastMessageText,
         lastMessageTime: "",
-        lastMessageOwned: rawChats[i].lastMessageOwned,
+        lastMessageOwner: rawChats[i].lastMessageOwner,
         avatar: "",
         online: rawChats[i].online,
         unreadCount: rawChats[i].unreadCount,
@@ -99,15 +99,15 @@ async function findContacts() {
       if(rawChats[i].messageDate){
         contactsCopy[i].lastMessageTime = rawChats[i].messageDate.slice(11, 16)
       }
-      if(rawChats[i].lastMessageOwned == props.thisUserId){
+      if(rawChats[i].lastMessageOwner == props.thisUserId){
         if(contactsCopy[i].unreadCount != 0){
           contactsCopy[i].unreadCount = 0
           contactsCopy[i].lastMessageStatus = "UNREAD"
         }else{
           contactsCopy[i].lastMessageStatus = "READ"
         }
-        
       }
+      console.log(rawChats[i].lastMessageOwner)
     }
     contacts.value = contactsCopy
   } catch (e) {
@@ -149,7 +149,7 @@ onMounted(async () => {
     if (msg.to == props.thisUserId){
       if (msg.action == 'MESSAGE'){
         findContacts()
-        if(contacts.value[selectedContactId.value].userId == msg.sender){
+        if(selectedContactId.value > -1 && contacts.value[selectedContactId.value].userId == msg.sender){
           findMessages(selectedContactId.value)
         }
       }else if (msg.action == 'CONTACT'){
@@ -262,7 +262,7 @@ async function findMessages(contactId){
         }else{
           messagesCopy[i].sender = contacts.value[contactId].name
         }
-        if(curY == rawMessages[i].messageDate.slice(0, 4) && 1 == 0){
+        if(curY == rawMessages[i].messageDate.slice(0, 4)){
           if(curM == rawMessages[i].messageDate.slice(5, 7) && curD == rawMessages[i].messageDate.slice(8, 10)){
             messagesCopy[i].time = rawMessages[i].messageDate.slice(11, 16)
           }else{
