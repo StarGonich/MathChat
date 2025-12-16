@@ -1,6 +1,9 @@
 package ru.sber.practice.service.impl;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.minio.errors.*;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -35,6 +38,22 @@ public class UserServiceImpl implements UserService {
     private final MailSenderService mailSenderService;
     private final S3Service s3Service;
 
+    private User setToken(User user) {
+        user.setToken(UUID.randomUUID());
+        user.setTokenDate(ZonedDateTime.now());
+        user = userRepository.save(user);
+
+        String message = String.format(
+                "%s! \n" + "Для подтверждения почты перейдите по ссылке: http://localhost:8080/activate/%s",
+                user.getFirstname(),
+                user.getToken()
+        );
+
+        mailSenderService.send(user.getEmail(), "Activation code", message);
+
+        return user;
+    }
+
     @Override
     public User register(SignUpDTO signUpDTO) {
         log.info("UserService: регистрация SignUpDTO {}", signUpDTO);
@@ -44,10 +63,7 @@ public class UserServiceImpl implements UserService {
 
         if (tmp.isPresent()) {
             User userExisted = tmp.get();
-
-            //
             // Если пользователь не активирован, то создаём новый токен для подтверждения почты
-            //
             if (userExisted.isEnabled()) {
                 return userExisted;
             } else {
@@ -56,36 +72,12 @@ public class UserServiceImpl implements UserService {
                 userExisted.setFirstname(user.getFirstname());
                 userExisted.setLastname(user.getLastname());
                 userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
-                userExisted.setToken(UUID.randomUUID());
-                userExisted.setTokenDate(ZonedDateTime.now());
-                userExisted = userRepository.save(userExisted);
-
-                String message = String.format(
-                        "%s! \n" + "Для подтверждения почты перейдите по ссылке: https://localhost:8080/activate/%s",
-                        userExisted.getFirstname(),
-                        userExisted.getToken()
-                );
-
-                mailSenderService.send(userExisted.getEmail(), "Activation code", message);
-
-                return userExisted;
+                return setToken(userExisted);
             }
         }
         else {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-            user.setToken(UUID.randomUUID());
-            user.setTokenDate(ZonedDateTime.now());
-            user = userRepository.save(user);
-
-            String message = String.format(
-                    "%s! \n" + "Для подтверждения почты перейдите по ссылке: http://localhost:8080/activate/%s",
-                    user.getFirstname(),
-                    user.getToken()
-            );
-
-            mailSenderService.send(user.getEmail(), "Activation code", message);
-
-            return user;
+            return setToken(user);
         }
     }
 
@@ -107,11 +99,8 @@ public class UserServiceImpl implements UserService {
             User user = userToken.get();
             ZonedDateTime zonedDateTime = ZonedDateTime.now();
             ZonedDateTime tokenDateTime = user.getTokenDate().plusMinutes(5);
-
-            //
             // Если срок службы токена истёк, то возвращаем false
             // (возможно стоит переделать, чтобы пользователь понимал, истёк ли у него токен или он неправильный)
-            //
             if (zonedDateTime.isAfter(tokenDateTime)) {
                 log.info("Срок действия токена активации почты истёк");
                 return false;
@@ -121,7 +110,7 @@ public class UserServiceImpl implements UserService {
             user.setEnabled(true);
 
             userRepository.save(user);
-
+            log.info("Пользователь {} успешно активирован", user.getEmail());
             return true;
         } else {
             // При отсутствии пользователя с таким токеном возвращаем false
