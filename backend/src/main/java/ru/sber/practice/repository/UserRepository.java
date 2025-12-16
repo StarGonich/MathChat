@@ -33,4 +33,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
             "u.isEnabled = true")
     Page<User> findBySearchTerm(String search, Pageable pageable);
+
+    long countByIsEnabledTrue();
 }
