@@ -43,14 +43,9 @@ public class MessengerController {
 
     @GetMapping("/search/global/{search}")
     public ResponseEntity<Page<GlobalChatDTO>> getAllChats(@PathVariable String search,
-                                                           @AuthenticationPrincipal MyUserDetails userDetails,
                                                            @PageableDefault Pageable pageable) {
-        if (userDetails.getName() != null) {
-            Page<GlobalChatDTO> users = chatService.getGlobalChats(search, pageable);
-            return ResponseEntity.ok(users);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        Page<GlobalChatDTO> users = chatService.getGlobalChats(search, pageable);
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("/chat/create/{myUserId}")
