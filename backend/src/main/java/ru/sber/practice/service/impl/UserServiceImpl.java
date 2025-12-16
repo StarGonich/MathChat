@@ -39,7 +39,6 @@ public class UserServiceImpl implements UserService {
     private final S3Service s3Service;
 
     private User setToken(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setToken(UUID.randomUUID());
         user.setTokenDate(ZonedDateTime.now());
         user = userRepository.save(user);
@@ -72,10 +71,12 @@ public class UserServiceImpl implements UserService {
                 userExisted.setUsername(user.getUsername());
                 userExisted.setFirstname(user.getFirstname());
                 userExisted.setLastname(user.getLastname());
+                userExisted.setPassword(passwordEncoder.encode(user.getPassword()));
                 return setToken(userExisted);
             }
         }
         else {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return setToken(user);
         }
     }
