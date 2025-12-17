@@ -32,6 +32,28 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     WHERE c.first_user_id = :userId OR c.second_user_id = :userId""", nativeQuery = true)
     Page<ContactChatDTO> findContactChatsByUserId(Long userId, Pageable pageable);
 
+    @Query(value = """
+    SELECT\s
+        u.id as userId,
+        c.id as chatId,
+        u.firstname as firstname,
+        u.lastname as lastname,
+        u.username as username,
+        m.message_text as lastMessageText,
+        m.message_creation_date as messageDate,
+        u.image_url as imageUrl
+    FROM chats c
+    JOIN users u ON u.id = CASE\s
+        WHEN c.first_user_id = :userId THEN c.second_user_id\s
+        ELSE c.first_user_id\s
+    END
+    LEFT JOIN messages m ON m.id = c.last_message_id
+    WHERE (c.first_user_id = :userId OR c.second_user_id = :userId)
+    AND (LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))
+    OR LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%'))
+    OR LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%')))""", nativeQuery = true)
+    Page<ContactChatDTO> findContactChatsByUserIdBySearch(Long userId, Pageable pageable, String search);
+
     @Query(value = "SELECT CASE WHEN first_user_id = :userId THEN second_user_id ELSE first_user_id END " +
             "FROM chats WHERE id = :chatId AND (first_user_id = :userId OR second_user_id = :userId)",
             nativeQuery = true)

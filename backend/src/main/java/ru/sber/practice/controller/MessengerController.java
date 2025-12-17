@@ -29,11 +29,11 @@ public class MessengerController {
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<Page<ContactChatDTO>> getChats(@PathVariable Long userId,
+                                                         @RequestParam String search,
                                                          @AuthenticationPrincipal MyUserDetails userDetails,
                                                          @PageableDefault Pageable pageable) {
-        //Логика с AuthenticationPrincipal
         if (userDetails.getName().equals(userId.toString())) {
-            Page<ContactChatDTO> chats = chatService.getChats(userId, pageable);
+            Page<ContactChatDTO> chats = chatService.getChats(userId, pageable, search);
             return ResponseEntity.ok(chats);
         }
         else {

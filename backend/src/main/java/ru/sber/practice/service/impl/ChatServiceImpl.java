@@ -31,8 +31,12 @@ public class ChatServiceImpl implements ChatService {
     private final UserRepository userRepository;
 
     @Override
-    public Page<ContactChatDTO> getChats(Long userId, Pageable pageable) {
-        return chatRepository.findContactChatsByUserId(userId, pageable);
+    public Page<ContactChatDTO> getChats(Long userId, Pageable pageable, String search) {
+        if (search != null && !search.trim().isEmpty()) {
+            return chatRepository.findContactChatsByUserIdBySearch(userId, pageable, search);
+        } else {
+            return chatRepository.findContactChatsByUserId(userId, pageable);
+        }
     }
 
     @Override

@@ -21,9 +21,10 @@ public interface ChatService {
      * Метод для находнеия всех чатов пользователя по его id.
      *
      * @param userId id пользователя, у которого ищем чаты.
+     * @param search поисковская подстрока.
      * @return список чатов или BAD_REQUEST.
      */
-    Page<ContactChatDTO> getChats(Long userId, Pageable pageable);
+    Page<ContactChatDTO> getChats(Long userId, Pageable pageable, String search);
     /**
      * Метод для создания чата между пользователями.
      *
