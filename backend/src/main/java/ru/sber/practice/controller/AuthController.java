@@ -1,6 +1,7 @@
 package ru.sber.practice.controller;
 
 import ch.qos.logback.core.model.Model;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
@@ -26,9 +27,16 @@ public class AuthController {
 
     // при аутентификации через admin ничего не выдаст, но какого-то чёрта у него всё равно будет роль ADMIN
     @GetMapping("/")
-    public MyUserDetails test(@AuthenticationPrincipal MyUserDetails userDetails) {
+    public MyUserDetails test(@AuthenticationPrincipal MyUserDetails userDetails, HttpServletRequest request) {
         log.info("Тест произошёл на /, {}", userDetails);
+        log.info("Порт теста - {}", request.getLocalPort());
         return userDetails;
+    }
+
+    @GetMapping("/testPort")
+    public int testPort(@AuthenticationPrincipal MyUserDetails userDetails, HttpServletRequest request) {
+        log.info("Порт теста - {}", request.getLocalPort());
+        return request.getLocalPort();
     }
 
     @PostMapping("/register")

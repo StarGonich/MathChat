@@ -1,5 +1,6 @@
 package ru.sber.practice.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -16,6 +17,7 @@ import ru.sber.practice.service.ChatService;
 import ru.sber.practice.service.MessageService;
 
 import java.util.List;
+import java.util.Random;
 
 @Slf4j
 @RestController
@@ -27,11 +29,11 @@ public class MessengerController {
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<Page<ContactChatDTO>> getChats(@PathVariable Long userId,
+                                                         @RequestParam(required = false) String search,
                                                          @AuthenticationPrincipal MyUserDetails userDetails,
                                                          @PageableDefault Pageable pageable) {
-        //Логика с AuthenticationPrincipal
         if (userDetails.getName().equals(userId.toString())) {
-            Page<ContactChatDTO> chats = chatService.getChats(userId, pageable);
+            Page<ContactChatDTO> chats = chatService.getChats(userId, pageable, search);
             return ResponseEntity.ok(chats);
         }
         else {
@@ -41,14 +43,9 @@ public class MessengerController {
 
     @GetMapping("/search/global/{search}")
     public ResponseEntity<Page<GlobalChatDTO>> getAllChats(@PathVariable String search,
-                                                           @AuthenticationPrincipal MyUserDetails userDetails,
                                                            @PageableDefault Pageable pageable) {
-        if (userDetails.getName() != null) {
-            Page<GlobalChatDTO> users = chatService.getGlobalChats(search, pageable);
-            return ResponseEntity.ok(users);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        Page<GlobalChatDTO> users = chatService.getGlobalChats(search, pageable);
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("/chat/create/{myUserId}")
@@ -75,6 +72,26 @@ public class MessengerController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
+
+//    @GetMapping("/chatTest")
+//    public ResponseEntity<List<GetMessagesDTO>> getMessagesByChatIdTest(HttpServletRequest request) {
+//        Random random = new Random();
+//        Long tmp = random.nextLong(6) + 1;
+//        List<GetMessagesDTO> messages = messageService.getMessagesByChatId(tmp);
+//        log.info("Порт теста - {}", request.getLocalPort());
+//        return ResponseEntity.ok(messages);
+//    }
+
+//    @GetMapping("/chatTest2")
+//    public ResponseEntity<List<GetMessagesDTO>> testAhah() {
+//        Random random = new Random();
+//        for (int i = 0; i < 100; i++) {
+//            Long tmp = random.nextLong(100000000);
+//        }
+//        List<GetMessagesDTO> messages = messageService.getMessagesByChatId((long)6);
+//        log.info("чето типо жизнь проходит мимо");
+//        return ResponseEntity.ok(messages);
+//    }
 
     @PostMapping("/chat/{chatId}")
     public ResponseEntity<?> sendMessage(@PathVariable Long chatId, @RequestBody SendMessageDTO sendMessageDTO,

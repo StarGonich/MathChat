@@ -23,6 +23,13 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByIdAndIsEnabledFalse(Long id);
 
     @Query("SELECT u FROM User u WHERE " +
+            "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%'))")
+    Page<User> searchUsers(@Param("search") String search, Pageable pageable);
+
+    @Query("SELECT u FROM User u WHERE " +
             "(LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
@@ -34,4 +41,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User SET online = :online " +
             "WHERE id = :id")
     void updateUserStatus(Long id, Boolean online);
+    long countByIsEnabledTrue();
 }

@@ -70,7 +70,7 @@ public class SecurityConfig{
 //                        .requestMatchers("/register", "/activate/*", "/login/*").permitAll()
 //                        .anyRequest().authenticated())
                 .authorizeHttpRequests(auth -> auth // Разрешение всех запросов
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api/admin/**", "/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll())
                 .oauth2Login(oauth2 -> oauth2
                         .defaultSuccessUrl("http://localhost:9000/", true)
