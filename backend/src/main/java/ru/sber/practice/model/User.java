@@ -67,4 +67,7 @@ public class User {
     @OneToMany(mappedBy = "userId", fetch = FetchType.EAGER)
     private List<Message> userMessages;
 
+    @Column(nullable = false, name = "is_online")
+    @ColumnDefault("false")
+    private boolean online;
 }

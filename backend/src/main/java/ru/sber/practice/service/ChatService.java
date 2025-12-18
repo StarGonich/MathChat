@@ -48,4 +48,11 @@ public interface ChatService {
      * @return id собеседника.
      */
     Long getRecipientId(Long userId, Long chatId);
+    /**
+     * Метод для изменения количества прочитанных сообщений.
+     *
+     * @param chatId id чата.
+     * @param newCount новое значение.
+     */
+    void updateCount(Long chatId, Long newCount);
 }

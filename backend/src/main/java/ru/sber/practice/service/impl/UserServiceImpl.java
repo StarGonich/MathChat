@@ -265,4 +265,9 @@ public class UserServiceImpl implements UserService {
     public Page<User> searchUsers(String search, Pageable pageable) {
         return userRepository.searchUsers(search, pageable);
     }
+
+    @Override
+    public void updateStatus(Long userId, boolean online){
+        userRepository.updateUserStatus(userId, online);
+    }
 }

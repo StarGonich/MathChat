@@ -58,6 +58,7 @@ public class ChatServiceImpl implements ChatService {
                     "Чат между пользователями уже существует");
         }
 
+        chat.setUnreadCount(0L);
         chat = chatRepository.save(chat);
         log.info("Чат создан {}", chat);
 //        log.info("Первый пользователь {}, {}, {}", firstUser.getUsername(), firstUser.getFirstname(), firstUser.getLastname());
@@ -75,5 +76,10 @@ public class ChatServiceImpl implements ChatService {
         return chatRepository.findRecipientIdByUserIdAndChatId(userId, ChatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Не можем найти собеседника"));
+    }
+
+    @Override
+    public void updateCount(Long chatId, Long newCount){
+        chatRepository.updateCount(chatId, newCount);
     }
 }

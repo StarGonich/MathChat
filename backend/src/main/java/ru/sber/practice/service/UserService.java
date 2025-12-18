@@ -86,4 +86,11 @@ public interface UserService {
      */
     String changeAvatar(Long userId, MultipartFile file) throws IOException, ServerException, InsufficientDataException, ErrorResponseException, NoSuchAlgorithmException, InvalidKeyException, InvalidResponseException, XmlParserException, InternalException;
     void updatePassword(Long userId, ChangePasswordDTO passwords);
+    /**
+     * Метод для обновления статуса пользователя (онлайн/оффлайн).
+     *
+     * @param userId id пользователя.
+     * @param online статус, на который меняем
+     */
+    void updateStatus(Long userId, boolean online);
 }

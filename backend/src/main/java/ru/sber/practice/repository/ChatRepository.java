@@ -1,8 +1,10 @@
 package ru.sber.practice.repository;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import ru.sber.practice.dto.ContactChatDTO;
 import ru.sber.practice.model.Chat;
@@ -17,12 +19,15 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     SELECT\s
         u.id as userId,
         c.id as chatId,
+        u.username as username,
         u.firstname as firstname,
         u.lastname as lastname,
-        u.username as username,
         m.message_text as lastMessageText,
+        m.user_id as lastMessageOwner,
         m.message_creation_date as messageDate,
-        u.image_url as imageUrl
+        u.image_url as imageUrl,
+        u.is_online as isOnline,
+        c.unread_count as unreadCount
     FROM chats c
     JOIN users u ON u.id = CASE\s
         WHEN c.first_user_id = :userId THEN c.second_user_id\s
@@ -65,4 +70,10 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     OR (second_user_id = :firstUserId AND first_user_id = :secondUserId)
     """, nativeQuery = true)
     Optional<Chat> findChatBy2UserId(Long firstUserId, Long secondUserId);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE Chat SET unreadCount = :unreadCount " +
+            "WHERE id = :chatId")
+    void updateCount(Long chatId, Long unreadCount);
 }

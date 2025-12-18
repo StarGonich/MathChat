@@ -21,7 +21,7 @@
 
 <script setup>
 import router from '@/router'
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 import SideBar from './SideBar.vue';
 import ChatWindow from './ChatWindow.vue';
 import axios from 'axios'
@@ -37,12 +37,14 @@ const props = defineProps({
   }
 });
 
+let socket = {}
+
 const thisUser = ref({})
 
 async function findThisUser() {
   try {
     let rawUser = {}
-    await ax.get('http://localhost:8080/api/user/find/' + props.thisUserId)
+    await ax.get('/api/user/find/' + props.thisUserId)
       .then(response => rawUser = response.data)
     thisUser.value = {
       id: rawUser.id,
@@ -60,74 +62,19 @@ async function findThisUser() {
   }
 }
 
-const contacts = ref([
-  {
-    id: 0,
-    name: 'Alice Johnson',
-    avatar: 'AJ',
-    online: true,
-    lastMessage: 'Hey! How are you?',
-    unreadCount: 2,
-    lastMessageTime: '2m ago'
-  },
-  {
-    id: 1,
-    name: 'Alice Johnson',
-    avatar: 'AJ',
-    online: true,
-    lastMessage: 'Hey! How are you?',
-    unreadCount: 2,
-    lastMessageTime: '2m ago'
-  },
-  {
-    id: 2,
-    name: 'Bob Smith',
-    avatar: 'BS',
-    online: true,
-    lastMessage: 'Can you check the equation?',
-    unreadCount: 0,
-    lastMessageTime: '1h ago'
-  },
-  {
-    id: 3,
-    name: 'Charlie Brown',
-    avatar: 'CB',
-    online: false,
-    lastMessage: 'Thanks for the help!',
-    unreadCount: 0,
-    lastMessageTime: '3h ago'
-  },
-  {
-    id: 4,
-    name: 'Diana Prince',
-    avatar: 'DP',
-    online: true,
-    lastMessage: 'See you tomorrow',
-    unreadCount: 5,
-    lastMessageTime: '5h ago'
-  },
-  {
-    id: 5,
-    name: 'Eve Anderson',
-    avatar: 'EA',
-    online: false,
-    lastMessage: 'Got it!',
-    unreadCount: 0,
-    lastMessageTime: '1d ago'
-  }
-]);
+const contacts = ref([]);
 
 const selectedContactId = ref(-1);
 
 async function findContacts() {
   try {
     let rawChats = []
-    await ax.get('http://localhost:8080/search/' + props.thisUserId)
-      .then(response => rawChats = response.data)
-    contacts.value = []
+    await ax.get('/search/' + props.thisUserId)
+      .then(response => rawChats = response.data.content)
+    let contactsCopy = []
     console.log(rawChats)
     for(let i = 0; i < rawChats.length; i++){
-      contacts.value.push({
+      contactsCopy.push({
         id: i,
         userId: rawChats[i].userId,
         chatId: rawChats[i].chatId,
@@ -135,158 +82,150 @@ async function findContacts() {
         name: rawChats[i].firstname + " " + rawChats[i].lastname,
         lastMessage: rawChats[i].lastMessageText,
         lastMessageTime: "",
-        avatar: ""
+        lastMessageOwner: rawChats[i].lastMessageOwner,
+        avatar: "",
+        online: rawChats[i].online,
+        unreadCount: rawChats[i].unreadCount,
+        lastMessageStatus: "NONE"
       })
       if(rawChats[i].firstname && rawChats[i].lastname){
-        contacts.value[i].avatar = rawChats[i].firstname.slice(0, 1) + rawChats[i].lastname.slice(0, 1)
+        contactsCopy[i].avatar = rawChats[i].firstname.slice(0, 1) + rawChats[i].lastname.slice(0, 1)
       }else{
-        contacts.value[i].avatar = "NN"
+        contactsCopy[i].avatar = "NN"
       }
       if(!rawChats[i].lastMessageText){
-        contacts.value[i].lastMessage = "Диалог пустой"
+        contactsCopy[i].lastMessage = "Диалог пустой"
       }
       if(rawChats[i].messageDate){
-        contacts.value[i].lastMessageTime = rawChats[i].messageDate.slice(11, 16)
+        contactsCopy[i].lastMessageTime = rawChats[i].messageDate.slice(11, 16)
       }
+      if(rawChats[i].lastMessageOwner == props.thisUserId){
+        if(contactsCopy[i].unreadCount != 0){
+          contactsCopy[i].unreadCount = 0
+          contactsCopy[i].lastMessageStatus = "UNREAD"
+        }else{
+          contactsCopy[i].lastMessageStatus = "READ"
+        }
+      }
+      console.log(rawChats[i].lastMessageOwner)
     }
+    contacts.value = contactsCopy
   } catch (e) {
     console.log(e)
   }
 }
 
+function findContact(id){
+  for(let i = 0; i < contacts.value.length; i++){
+    if(contacts.value[i].userId == id){
+      return i
+    }
+  }
+  return -1
+}
+
 const createContact = async (id) => {
   try{
-    await ax.post('http://localhost:8080/chat/create/'+ props.thisUserId + "?with=" + id)
+    await ax.post('/chat/create/'+ props.thisUserId + "?with=" + id)
     findContacts()
   }catch(e){
     console.log(e)
   }
+
+  let msg = {
+    sender: props.thisUserId,
+    to: id,
+    action: 'CONTACT'
+  }
+  socket.send(JSON.stringify(msg))
 }
 
-/*const allMessages = ref({
-  0: [
-    {
-      id: 1,
-      sender: 'Alice Johnson',
-      text: 'Hey! How are you?',
-      time: '10:30 AM',
-      isOwn: false
-    }
-  ],
-  1: [
-    {
-      id: 1,
-      sender: 'Alice Johnson',
-      text: 'Hey! How are you?',
-      time: '10:30 AM',
-      isOwn: false
-    },
-    {
-      id: 2,
-      sender: 'You',
-      text: 'I\'m good! Working on some math problems.',
-      time: '10:32 AM',
-      isOwn: true
-    },
-    {
-      id: 3,
-      sender: 'Alice Johnson',
-      text: 'Need any help with them?',
-      time: '10:33 AM',
-      isOwn: false
-    }
-  ],
-  2: [
-    {
-      id: 1,
-      sender: 'Bob Smith',
-      text: 'Can you check this equation?',
-      time: '9:15 AM',
-      isOwn: false
-    },
-    {
-      id: 2,
-      sender: 'Bob Smith',
-      latex: 'E = mc^2',
-      time: '9:15 AM',
-      isOwn: false
-    },
-    {
-      id: 3,
-      sender: 'You',
-      text: 'Looks perfect!',
-      time: '9:20 AM',
-      isOwn: true
-    }
-  ],
-  3: [
-    {
-      id: 1,
-      sender: 'You',
-      text: 'Let me know if you need anything else',
-      time: '8:00 AM',
-      isOwn: true
-    },
-    {
-      id: 2,
-      sender: 'Charlie Brown',
-      text: 'Thanks for the help!',
-      time: '8:05 AM',
-      isOwn: false
-    }
-  ],
-  4: [
-    {
-      id: 1,
-      sender: 'Diana Prince',
-      text: 'See you tomorrow',
-      time: '6:30 AM',
-      isOwn: false
-    },
-    {
-      id: 2,
-      sender: 'Diana Prince',
-      latex: '\\int_0^\\infty e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}',
-      time: '6:31 AM',
-      isOwn: false
-    }
-  ],
-  5: [
-    {
-      id: 1,
-      sender: 'You',
-      text: 'Don\'t forget about the meeting',
-      time: 'Yesterday',
-      isOwn: true
-    },
-    {
-      id: 2,
-      sender: 'Eve Anderson',
-      text: 'Got it!',
-      time: 'Yesterday',
-      isOwn: false
-    }
-  ]
-})*/
-
 onMounted(async () => {
+  socket = await new WebSocket('ws://localhost:8080/ws')
+
+  socket.onmessage = async (event) => {
+    let msg = JSON.parse(event.data)
+    console.log('Принято:\n' + JSON.stringify(msg))
+    if (msg.to == props.thisUserId){
+      if (msg.action == 'MESSAGE'){
+        findContacts()
+        if(selectedContactId.value > -1 && contacts.value[selectedContactId.value].userId == msg.sender){
+          findMessages(selectedContactId.value)
+        }
+      }else if (msg.action == 'CONTACT'){
+        findContacts()
+      }else if (msg.action == 'READ'){
+        let id = findContact(msg.sender)
+        contacts.value[id].lastMessageStatus = "READ";
+      }
+    }else if (msg.to == 'CONTACTS'){
+      let senderId = findContact(msg.sender)
+      if(senderId != -1){
+        if(msg.action == 'ONLINE'){
+          contacts.value[senderId].online = true
+        }else if(msg.action == 'OFFLINE'){
+          contacts.value[senderId].online = false
+        }else if(msg.action == 'PROFILE'){
+          findContacts()
+        }
+      }
+    }
+  }
+  socket.onopen = async () => {
+    let msg = {
+      sender: props.thisUserId,
+      to: 'CONTACTS',
+      action: 'ONLINE'
+    }
+    socket.send(JSON.stringify(msg))
+    console.log('Отослано:\n' + JSON.stringify(msg))
+    try{
+      await ax.get('/api/user/online/' + props.thisUserId).then(
+        resp => console.log(resp.data)
+      )
+    }catch(e){
+      console.log(e)
+    }
+  }
+
   findThisUser()
   findContacts()
+})
+
+onUnmounted(() => {
+  let msg = {
+    sender: props.thisUserId,
+    to: 'CONTACTS',
+    action: 'OFFLINE'
+  }
+  socket.send(JSON.stringify(msg))
+  console.log('Отослано:\n' + JSON.stringify(msg))
 })
 
 const selectedContact = computed(() => {
   return contacts.value[selectedContactId.value];
 })
 
-/*const messages = computed(() => {
-  return allMessages.value[selectedContactId.value] || [];
-})*/
-
 const selectContact = async (contactId) => {
   selectedContactId.value = contactId;
   
   let contact = contacts.value[contactId];
-  contact.unreadCount = 0;
+  if(contact.unreadCount != 0){
+    contact.unreadCount = 0;
+    try{
+      await ax.patch('/chat/' + contact.chatId, {userId: props.thisUserId, newCount: 0})
+        .then(resp => {console.log(resp)})
+    }catch(e){
+      console.log(e)
+    }
+
+    let msg = {
+      sender: props.thisUserId,
+      to: contacts.value[selectedContactId.value].userId,
+      action: 'READ'
+    }
+    socket.send(JSON.stringify(msg))
+  }
 
   findMessages(contactId)
 }
@@ -294,7 +233,7 @@ const selectContact = async (contactId) => {
 const messages = ref([])
 
 async function findMessages(contactId){
-  messages.value = []
+  let messagesCopy = []
   if(contactId > -1){
     let chatId = contacts.value[contactId].chatId
     let curY = new Date().getFullYear()
@@ -305,10 +244,11 @@ async function findMessages(contactId){
     let curD = new Date().getDate()
     try{
       let rawMessages = []
-      await ax.get('http://localhost:8080/chat/'+ chatId + "?id=" +  props.thisUserId)
-        .then(response => rawMessages = response.data)
+      await ax.get('/chat/'+ chatId + "?id=" +  props.thisUserId)
+        .then(response => {console.log(JSON.stringify(response)); rawMessages = response.data.content})
+      console.log(JSON.stringify(rawMessages))
       for(let i = 0; i < rawMessages.length; i++){
-        messages.value.push({
+        messagesCopy.push({
           id: i,
           senderId: rawMessages[i].userId,
           sender: "",
@@ -317,19 +257,19 @@ async function findMessages(contactId){
           isOwn: false
         })
         if(rawMessages[i].userId == props.thisUserId){
-          messages.value[i].isOwn = true
-          messages.value[i].sender = "Вы";
+          messagesCopy[i].isOwn = true
+          messagesCopy[i].sender = "Вы";
         }else{
-          messages.value[i].sender = contacts.value[contactId].name
+          messagesCopy[i].sender = contacts.value[contactId].name
         }
-        if(curY == rawMessages[i].messageDate.slice(0, 4) && 1 == 0){
+        if(curY == rawMessages[i].messageDate.slice(0, 4)){
           if(curM == rawMessages[i].messageDate.slice(5, 7) && curD == rawMessages[i].messageDate.slice(8, 10)){
-            messages.value[i].time = rawMessages[i].messageDate.slice(11, 16)
+            messagesCopy[i].time = rawMessages[i].messageDate.slice(11, 16)
           }else{
-            messages.value[i].time = rawMessages[i].messageDate.slice(8, 10) + '.' + rawMessages[i].messageDate.slice(5, 7)
+            messagesCopy[i].time = rawMessages[i].messageDate.slice(8, 10) + '.' + rawMessages[i].messageDate.slice(5, 7)
           }
         }else{
-          messages.value[i].time = rawMessages[i].messageDate.slice(8, 10) + '.' + rawMessages[i].messageDate.slice(5, 7) + '.' + rawMessages[i].messageDate.slice(2, 4)
+          messagesCopy[i].time = rawMessages[i].messageDate.slice(8, 10) + '.' + rawMessages[i].messageDate.slice(5, 7) + '.' + rawMessages[i].messageDate.slice(2, 4)
         }
         console.log(rawMessages[i].messageDate)
       }
@@ -337,6 +277,7 @@ async function findMessages(contactId){
       console.log(e)
     }
   }
+  messages.value = messagesCopy
 }
 
 const sendMessage = async (message) => {
@@ -354,16 +295,44 @@ const sendMessage = async (message) => {
   const contact = contacts.value[selectedContactId.value];
   contact.lastMessage = message.text;
   contact.lastMessageTime = 'Прямо сейчас';
+  contact.lastMessageStatus = "UNREAD";
 
   const postMessage = {
     userId: props.thisUserId,
     messageText: message.text
   }
 
-  await ax.post('http://localhost:8080/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
+  try{
+    await ax.post('/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
+  }catch(e){
+    console.log(e)
+  }
+
+  let msg = {
+    sender: props.thisUserId,
+    to: contacts.value[selectedContactId.value].userId,
+    action: 'MESSAGE'
+  }
+  socket.send(JSON.stringify(msg))
 }
 
-function quit() {
+async function quit() {
+  let msg = {
+    sender: props.thisUserId,
+    to: 'CONTACTS',
+    action: 'OFFLINE'
+  }
+  socket.send(JSON.stringify(msg))
+  console.log('Отослано:\n' + JSON.stringify(msg))
+
+  try{
+    await ax.get('/api/user/offline/' + props.thisUserId).then(
+      resp => console.log(resp.data)
+    )
+  }catch(e){
+    console.log(e)
+  }
+
   router.push({name: 'Home'})
 }
 </script>

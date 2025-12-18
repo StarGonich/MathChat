@@ -111,4 +111,18 @@ public class MessengerController {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
+
+    @PatchMapping("/chat/{chatId}")
+    public ResponseEntity<?> changeUnreadCount(@PathVariable Long chatId, @RequestBody ChangeUnreadCountDTO changeUnreadCountDTO,
+                                               @AuthenticationPrincipal MyUserDetails userDetails){
+        log.info("Request PATCH /chat/: {} + {}", chatId, changeUnreadCountDTO);
+        if (userDetails.getName().equals(changeUnreadCountDTO.userId().toString())) {
+            chatService.updateCount(chatId, changeUnreadCountDTO.newCount());
+            log.info("Response PATCH /chat/: OK");
+            return new ResponseEntity<>("Количество изменено", HttpStatus.OK);
+        } else {
+            log.info("Response PATCH /chat/: FORBIDDEN");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
 }
