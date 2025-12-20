@@ -1,5 +1,6 @@
 package ru.sber.practice;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,25 +13,32 @@ import ru.sber.practice.service.UserService;
 
 @SpringBootApplication
 @EnableScheduling
-public class MathChatApplication {
+public class MathChatApplication implements CommandLineRunner{
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(MathChatApplication.class, args);
     }
 
-   @Bean
-   public CommandLineRunner initData(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-       User user = new User();
-       user.setEmail("test@mail.ru");
-       user.setPassword(passwordEncoder.encode("12321"));
-       user.setEnabled(true);
+    @Override
+    public void run(String... args) throws Exception {
+        User user = new User();
+        user.setEmail("test@mail.ru");
+        user.setUsername("Test1");
+        user.setPassword(passwordEncoder.encode("12321"));
+        user.setEnabled(true);
+        userRepository.save(user);
+
 //        User user2 = new User();
 //        user2.setEmail("test2@mail.ru");
+//        user.setUsername("Test2");
 //        user2.setPassword(passwordEncoder.encode("12321"));
 //        user2.setEnabled(true);
-       return (args) -> {
-           userRepository.save(user);
-//            userRepository.save(user2);
-       };
-   }
+//        userRepository.save(user2);
+    }
 }
