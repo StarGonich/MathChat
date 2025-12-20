@@ -7,14 +7,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import ru.sber.practice.model.User;
 import ru.sber.practice.repository.UserRepository;
 import ru.sber.practice.service.UserService;
 
 @SpringBootApplication
 @EnableScheduling
+@EnableRedisHttpSession
 public class MathChatApplication implements CommandLineRunner{
-
+  
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -25,6 +27,10 @@ public class MathChatApplication implements CommandLineRunner{
         SpringApplication.run(MathChatApplication.class, args);
     }
 
+    // @Override
+    // public void run(String... args) throws Exception {
+    // }
+  
     @Override
     public void run(String... args) throws Exception {
         User user = new User();
@@ -34,11 +40,11 @@ public class MathChatApplication implements CommandLineRunner{
         user.setEnabled(true);
         userRepository.save(user);
 
-//        User user2 = new User();
-//        user2.setEmail("test2@mail.ru");
-//        user.setUsername("Test2");
-//        user2.setPassword(passwordEncoder.encode("12321"));
-//        user2.setEnabled(true);
-//        userRepository.save(user2);
+       // User user2 = new User();
+       // user2.setEmail("test2@mail.ru");
+       // user.setUsername("Test2");
+       // user2.setPassword(passwordEncoder.encode("12321"));
+       // user2.setEnabled(true);
+       // userRepository.save(user2);
     }
 }

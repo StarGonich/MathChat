@@ -21,25 +21,25 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByProviderId(String id);
     Optional<User> findByIdAndIsEnabledTrue(Long id);
     Optional<User> findByIdAndIsEnabledFalse(Long id);
-
-    @Query("SELECT u FROM User u WHERE " +
+    
+   @Query(value = "SELECT * FROM \"user\" u WHERE " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
-            "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%'))")
+            "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%'))", nativeQuery=true)
     Page<User> searchUsers(@Param("search") String search, Pageable pageable);
 
-    @Query("SELECT u FROM User u WHERE " +
+    @Query(value = "SELECT * FROM \"user\" u WHERE " +
             "(LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
-            "u.isEnabled = true")
+            "u.is_enabled = true", nativeQuery = true)
     Page<User> findBySearchTerm(String search, Pageable pageable);
 
     @Modifying
     @Transactional
-    @Query("UPDATE User SET online = :online " +
-            "WHERE id = :id")
+    @Query(value = "UPDATE \"user\" SET online = :online " +
+            "WHERE id = :id", nativeQuery=true)
     void updateUserStatus(Long id, Boolean online);
 
     // Для метрик

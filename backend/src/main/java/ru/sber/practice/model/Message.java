@@ -13,13 +13,14 @@ import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "message", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     @ManyToOne

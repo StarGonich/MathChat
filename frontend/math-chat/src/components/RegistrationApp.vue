@@ -116,10 +116,12 @@ function onInputPass(){
     isCorrectPass.value = user.value.password === password.value
 }
 
+const baseURL = 'http://localhost:80'
+
 async function register() {
     try {
         let resp = {}
-        await axios.post('http://localhost:8080/register', user.value)
+        await axios.post(baseURL + '/register', user.value)
             .then(response => resp = response.data)
         if (!resp.firstname){
             msg.value = resp

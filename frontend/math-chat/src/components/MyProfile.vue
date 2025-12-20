@@ -59,9 +59,11 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 const ax = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://localhost:80',
     withCredentials: true
 })
+
+const baseURL = 'http://localhost:80'
 
 const props = defineProps({
     user: {
@@ -83,7 +85,7 @@ const msg = ref('')
 
 async function update(){
     try{
-        await ax.put('http://localhost:8080/update/'+props.user.id, user.value)
+        await ax.put(baseURL + '/update/'+props.user.id, user.value)
             .then(response => user.value = response.data)
         username.value = user.value.username
         emit('updateProfile')

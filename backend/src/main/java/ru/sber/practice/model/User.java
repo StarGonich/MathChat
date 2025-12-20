@@ -3,36 +3,43 @@ package ru.sber.practice.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "users")
+@Table(name = "user", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(unique = true, name = "username")
     private String username;
 
+    @Column(name = "firstname")
     private String firstname;
 
+    @Column(name = "lastname")
     private String lastname;
 
-    @Column(unique = true)
+    @Column(unique = true, name = "email")
     private String email;
 
+    @Column(name = "password")
     private String password;
 
     // Токен для подтверждения регистрации по почте
+    @Column(name = "token")
     private UUID token;
 
     @Column(nullable = false, name = "is_enabled")
@@ -46,6 +53,7 @@ public class User {
 
     // OAuth2 провайдер (github, google, etc.)
     @Enumerated(EnumType.STRING)
+    @Column(name = "provider")
     private AuthProvider provider;
 
     // ID пользователя в системе провайдера

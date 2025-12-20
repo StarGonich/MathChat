@@ -65,9 +65,11 @@
 import { ref } from 'vue'
 import axios from 'axios'
 const ax = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://localhost:80',
     withCredentials: true
 })
+
+const baseURL = 'http://localhost:80'
 
 const props = defineProps({
     user: {
@@ -89,7 +91,7 @@ const changes = ref(false)
 
 async function update(){
     try{
-        await ax.put('http://localhost:8080/api/user/update', user.value)
+        await ax.put(baseURL + '/api/user/update', user.value)
             .then(response => user.value = response.data)
         username.value = user.value.username
         changes.value = true
@@ -125,7 +127,7 @@ function drawBackground(){
 
 async function createChat() {
     try{
-        await ax.post('http://localhost:8080/chat/create/'+props.watchId + "?with=" + user.value.id)
+        await ax.post(baseURL + '/chat/create/'+props.watchId + "?with=" + user.value.id)
         changes.value = true
         quit()
     }catch(e){

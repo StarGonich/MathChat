@@ -26,9 +26,11 @@ import SideBar from './SideBar.vue';
 import ChatWindow from './ChatWindow.vue';
 import axios from 'axios'
 const ax = axios.create({
-  baseURL: 'http://localhost:8080',
+  baseURL: 'http://localhost:80',
   withCredentials: true
 })
+
+const baseURL = 'http://localhost:80';
 
 const props = defineProps({
   thisUserId: {
@@ -44,7 +46,7 @@ const thisUser = ref({})
 async function findThisUser() {
   try {
     let rawUser = {}
-    await ax.get('/api/user/find/' + props.thisUserId)
+    await ax.get(ax.baseURL + '/api/user/find/' + props.thisUserId)
       .then(response => rawUser = response.data)
     thisUser.value = {
       id: rawUser.id,
@@ -69,7 +71,7 @@ const selectedContactId = ref(-1);
 async function findContacts() {
   try {
     let rawChats = []
-    await ax.get('/search/' + props.thisUserId)
+    await ax.get(baseURL + '/search/' + props.thisUserId)
       .then(response => rawChats = response.data.content)
     let contactsCopy = []
     console.log(rawChats)
@@ -126,7 +128,7 @@ function findContact(id){
 
 const createContact = async (id) => {
   try{
-    await ax.post('/chat/create/'+ props.thisUserId + "?with=" + id)
+    await ax.post(baseURL + '/chat/create/'+ props.thisUserId + "?with=" + id)
     findContacts()
   }catch(e){
     console.log(e)
@@ -244,7 +246,7 @@ async function findMessages(contactId){
     let curD = new Date().getDate()
     try{
       let rawMessages = []
-      await ax.get('/chat/'+ chatId + "?id=" +  props.thisUserId)
+      await ax.get(baseURL + '/chat/'+ chatId + "?id=" +  props.thisUserId)
         .then(response => {console.log(JSON.stringify(response)); rawMessages = response.data.content})
       console.log(JSON.stringify(rawMessages))
       for(let i = 0; i < rawMessages.length; i++){
@@ -302,8 +304,9 @@ const sendMessage = async (message) => {
     messageText: message.text
   }
 
+  
   try{
-    await ax.post('/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
+    await ax.post(baseURL + '/chat/'+ contacts.value[selectedContactId.value].chatId, postMessage)
   }catch(e){
     console.log(e)
   }

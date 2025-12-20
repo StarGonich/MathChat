@@ -42,7 +42,7 @@ import router from '@/router'
 import { ref, watch } from 'vue'
 import axios from 'axios'
 const ax = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://localhost:80',
     withCredentials: true
 })
 
@@ -73,7 +73,7 @@ async function auth() {
         let req = "username=" + user.value.email + "&password=" + user.value.password
         req = req.replace("@", "%40")
         let resp = ""
-        await ax.post('http://localhost:8080/login', req).then(response => resp = response.data)
+        await ax.post('http://localhost:80/login', req).then(response => resp = response.data)
         console.log(resp)
         if(!resp.name){
             msg.value = "Неудачная попытка входа"
@@ -92,7 +92,7 @@ function register(){
 
 async function forgot(){
     try{
-        await axios.post('http://localhost:8080/changePassword', {email: user.value.email})
+        await axios.post(ax.baseURL + '/changePassword', {email: user.value.email})
             .then(response => msg.value = response.data)
     }catch(e){
         msg.value = "Не удалось поменять пароль, попробуйте позже"
