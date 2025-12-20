@@ -41,5 +41,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("UPDATE User SET online = :online " +
             "WHERE id = :id")
     void updateUserStatus(Long id, Boolean online);
+
+    // Для метрик
     long countByIsEnabledTrue();
+    long countByOnlineTrue();
 }

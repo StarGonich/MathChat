@@ -15,12 +15,17 @@ public class UserMetrics {
 
     private final AtomicLong registeredUsers;
     private final AtomicLong sendedMessages;
+    private final AtomicLong onlineUsers;
+    private final AtomicLong countLaTeX;
+
     private final UserRepository userRepository;
     private final MessageRepository messageRepository;
 
     public UserMetrics(MeterRegistry meterRegistry, UserRepository userRepository, MessageRepository messageRepository) {
         registeredUsers = meterRegistry.gauge("custom_registered_users", new AtomicLong(-1));
         sendedMessages = meterRegistry.gauge("custom_sended_messages", new AtomicLong(-1));
+        onlineUsers = meterRegistry.gauge("custom_online_users", new AtomicLong(-1));
+        countLaTeX = meterRegistry.gauge("custom_latex_messages", new AtomicLong(-1));
         this.userRepository = userRepository;
         this.messageRepository = messageRepository;
     }
@@ -29,6 +34,8 @@ public class UserMetrics {
     public void schedulingTask() {
         registeredUsers.set(userRepository.countByIsEnabledTrue());
         sendedMessages.set(messageRepository.count());
+        onlineUsers.set(userRepository.countByOnlineTrue());
+        countLaTeX.set(messageRepository.getCountOfLaTeXMessages());
     }
 
 }
