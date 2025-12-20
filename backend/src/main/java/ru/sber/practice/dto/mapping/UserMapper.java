@@ -25,7 +25,8 @@ public final class UserMapper {
                 user.getUsername(),
                 user.getFirstname(),
                 user.getLastname(),
-                user.getEmail()
+                user.getEmail(),
+                user.isOnline()
         );
     }
 

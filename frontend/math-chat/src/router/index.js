@@ -6,21 +6,19 @@ import MessengerApp_v2 from '@/components/MessengerApp_v2.vue'
 
 const routes = [
   {
-    path: '/',             // URL адрес
-    name: 'Home',          // Имя маршрута
-    component: AuthApp        // Компонент, который отобразится
+    path: '/',
+    name: 'Home',
+    component: AuthApp
   },
   {
     path: '/reg',
     name: "Register",
-    component: RegistrationApp,
-    children: [
-        {
-            path: 'email',
-            name: "SendEmail",
-            component: SendEmailApp
-        }
-    ]
+    component: RegistrationApp
+  },
+  {
+    path: '/email',
+    name: "SendEmail",
+    component: SendEmailApp
   },
   {
     path: '/mes:thisUserId',

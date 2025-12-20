@@ -30,11 +30,11 @@ public class MessengerController {
 
     @GetMapping("/search/{userId}")
     public ResponseEntity<Page<ContactChatDTO>> getChats(@PathVariable Long userId,
+                                                         @RequestParam(required = false) String search,
                                                          @AuthenticationPrincipal MyUserDetails userDetails,
                                                          @PageableDefault Pageable pageable) {
-        //Логика с AuthenticationPrincipal
         if (userDetails.getName().equals(userId.toString())) {
-            Page<ContactChatDTO> chats = chatService.getChats(userId, pageable);
+            Page<ContactChatDTO> chats = chatService.getChats(userId, pageable, search);
             return ResponseEntity.ok(chats);
         }
         else {
@@ -44,14 +44,9 @@ public class MessengerController {
 
     @GetMapping("/search/global/{search}")
     public ResponseEntity<Page<GlobalChatDTO>> getAllChats(@PathVariable String search,
-                                                           @AuthenticationPrincipal MyUserDetails userDetails,
                                                            @PageableDefault Pageable pageable) {
-        if (userDetails.getName() != null) {
-            Page<GlobalChatDTO> users = chatService.getGlobalChats(search, pageable);
-            return ResponseEntity.ok(users);
-        } else {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-        }
+        Page<GlobalChatDTO> users = chatService.getGlobalChats(search, pageable);
+        return ResponseEntity.ok(users);
     }
 
     @PostMapping("/chat/create/{myUserId}")
@@ -123,6 +118,20 @@ public class MessengerController {
 //            );
             return new ResponseEntity<>("Сообщение отправлено", HttpStatus.CREATED);
         } else {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @PatchMapping("/chat/{chatId}")
+    public ResponseEntity<?> changeUnreadCount(@PathVariable Long chatId, @RequestBody ChangeUnreadCountDTO changeUnreadCountDTO,
+                                               @AuthenticationPrincipal MyUserDetails userDetails){
+        log.info("Request PATCH /chat/: {} + {}", chatId, changeUnreadCountDTO);
+        if (userDetails.getName().equals(changeUnreadCountDTO.userId().toString())) {
+            chatService.updateCount(chatId, changeUnreadCountDTO.newCount());
+            log.info("Response PATCH /chat/: OK");
+            return new ResponseEntity<>("Количество изменено", HttpStatus.OK);
+        } else {
+            log.info("Response PATCH /chat/: FORBIDDEN");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }

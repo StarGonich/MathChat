@@ -1,32 +1,31 @@
 <template>
   <div class="message-input-container">
-    
-    <div v-if="isLatexMode && latexPreview" class="latex-preview">
-      <div class="preview-label">Preview:</div>
-      <div class="preview-content" ref="previewContent"></div>
-    </div>
-    
     <div class="input-area">
       <div class="ui action fluid input">
         <input
-          v-if="!isLatexMode"
           type="text"
-          :placeholder="isLatexMode ? 'Enter LaTeX expression (e.g., E = mc^2)' : 'Введите сообщение...'"
+          placeholder="Введите сообщение..."
           v-model="inputValue"
           @keypress.enter="handleSend"
         />
-        <textarea
-          v-else
-          :placeholder="'Enter LaTeX expression (e.g., E = mc^2)'"
-          v-model="inputValue"
-          @keypress.enter.prevent="handleSend"
-          rows="1"
-          class="latex-textarea"
-        ></textarea>
+        <div v-if="isPreview" class="ui pointing below label">
+          <div v-for="line in formatArr(inputValue, 45)" :key="line.id">
+            <div v-if="line.isLatex">
+              <vue-latex  :expression="line.content"/>
+            </div>
+            <div v-else>{{ line.content }}</div>
+          </div>
+        </div>
+        <button 
+          class="ui icon button"
+          @click="isPreview = !isPreview"
+        >
+          <i :class="isPreview ? 'pencil alternate icon' : 'eye icon'"></i>
+        </button>
         <button 
           class="ui blue icon button"
           @click="handleSend"
-          :disabled="!inputValue.trim()"
+          :disabled="!inputValue.trim() || isPreview"
         >
           <i class="paper plane icon"></i>
         </button>
@@ -36,51 +35,79 @@
 </template>
 
 <script setup>
-import { ref, watch, nextTick } from 'vue';
-import katex from 'katex';
+import { ref } from 'vue'
 
-const emit = defineEmits(['send']);
+const emit = defineEmits(['send'])
 
-const isLatexMode = ref(false);
-const inputValue = ref('');
-const latexPreview = ref('');
-const previewContent = ref(null);
+const isPreview = ref(false)
+const inputValue = ref('')
 
-const renderPreview = () => {
-  if (isLatexMode.value && inputValue.value.trim() && previewContent.value) {
-    try {
-      katex.render(inputValue.value, previewContent.value, {
-        displayMode: true,
-        throwOnError: false
-      });
-      latexPreview.value = inputValue.value;
-    } catch (error) {
-      console.error('Error rendering preview:', error);
-      if (previewContent.value) {
-        previewContent.value.textContent = inputValue.value;
-      }
+function formatArr(str, n){
+    let ss = []
+    let s = str.split(' ')
+    let i = 0
+    let j = 0
+    let cur = ''
+    let latex = false
+    while(i < s.length){
+        if(s[i] == '$'){
+            if(latex){
+                latex = false
+                ss.push(
+                    {
+                        id: j,
+                        content: cur.slice(0),
+                        isLatex: true
+                    }
+                )
+                j++
+                cur = ''
+            }else{
+                latex = true
+                if(cur != ''){
+                    ss.push(
+                        {
+                            id: j,
+                            content: cur.slice(0),
+                            isLatex: false
+                        }
+                    )
+                    j++
+                    cur = ''
+                }
+            }
+        }else if(cur.length + s[i].length <= n){
+            cur += ' ' + s[i]
+        }else if(!latex){
+            ss.push(
+                {
+                    id: j,
+                    content: cur.slice(0),
+                    isLatex: false
+                }
+            )
+            j++
+            cur = s[i]
+        }
+        i++
     }
-  } else {
-    latexPreview.value = '';
-  }
-};
-
-watch([isLatexMode, inputValue], () => {
-  nextTick(() => {
-    renderPreview();
-  });
-});
+    ss.push(
+        {
+            id: j,
+            content: cur.slice(0),
+            isLatex: false
+        }
+    )
+    return ss
+}
 
 const handleSend = () => {
   if (!inputValue.value.trim()) return;
   
-  const message = isLatexMode.value
-    ? { latex: inputValue.value }
-    : { text: inputValue.value };
+  const message = { text: inputValue.value };
   
   emit('send', message);
   inputValue.value = '';
-  latexPreview.value = '';
 };
 </script>
 

@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.checkerframework.checker.units.qual.C;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.util.List;
@@ -36,4 +37,8 @@ public class Chat {
     @JsonIgnore
     @OneToMany(mappedBy = "chatId", fetch = FetchType.EAGER)
     private List<Message> chatMessages;
+
+    @Column(name = "unread_count", nullable = false)
+    @ColumnDefault("0")
+    private Long unreadCount;
 }

@@ -7,8 +7,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.sber.practice.config.MyUserDetails;
+import ru.sber.practice.dto.GetMessagesDTO;
 import ru.sber.practice.dto.UpdatableUserDTO;
 import ru.sber.practice.dto.UserDTO;
 import ru.sber.practice.model.User;
@@ -36,5 +39,31 @@ public class UserController {
     public User findById(@PathVariable Long id) {
         log.info("Request /api/user/find: {}", id);
         return userService.findById(id);
+    }
+
+    @GetMapping("/online/{id}")
+    public ResponseEntity<?> setOnline(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails userDetails){
+        log.info("Request /api/user/online/: {}", id);
+        if (userDetails.getName().equals(id.toString())) {
+            userService.updateStatus(id, true);
+            log.info("Response /api/user/online/: OK");
+            return new ResponseEntity<>("Статус обновлен", HttpStatus.OK);
+        } else {
+            log.info("Response /api/user/online/: FORBIDDEN");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+    }
+
+    @GetMapping("/offline/{id}")
+    public ResponseEntity<?> setOffline(@PathVariable Long id, @AuthenticationPrincipal MyUserDetails userDetails){
+        log.info("Request /api/user/offline/: {}", id);
+        if (userDetails.getName().equals(id.toString())) {
+            userService.updateStatus(id, false);
+            log.info("Response /api/user/offline/: OK");
+            return new ResponseEntity<>("Статус обновлен", HttpStatus.OK);
+        } else {
+            log.info("Response /api/user/offline/: FORBIDDEN");
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
     }
 }

@@ -5,5 +5,6 @@ public record UserDTO(Long id,
                       String username,
                       String firstname,
                       String lastname,
-                      String email) {
+                      String email,
+                      boolean online) {
 }

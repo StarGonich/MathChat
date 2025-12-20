@@ -126,7 +126,7 @@ async function findGlobal() {
     let rawChats = []
     let globalContactsCopy = []
     await ax.get(baseURL + '/api/user/findAll')
-      .then(response => rawChats = response.data)
+      .then(response => rawChats = response.data.content)
     for(let i = 0; i < rawChats.length; i++){
       globalContactsCopy.push({
         id: i,
@@ -157,15 +157,12 @@ async function findFilterGlobal() {
     filteredGlobal.value = globalContacts.value;
   }else{
     const query = searchQuery.value.toLowerCase();
-    /*filteredGlobal.value = globalContacts.value.filter(contact =>
-      contact.name.toLowerCase().includes(query)
-    );*/
     if(query){
       try{
         let rawChats = []
         let filteredContactsCopy = []
         await ax.get(baseURL + '/search/global/' + query)
-          .then(response => rawChats = response.data)
+          .then(response => rawChats = response.data.content)
         console.log(rawChats)
         for(let i = 0; i < rawChats.length; i++){
           filteredContactsCopy.push({

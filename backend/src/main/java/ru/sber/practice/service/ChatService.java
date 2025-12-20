@@ -21,9 +21,10 @@ public interface ChatService {
      * Метод для находнеия всех чатов пользователя по его id.
      *
      * @param userId id пользователя, у которого ищем чаты.
+     * @param search поисковская подстрока.
      * @return список чатов или BAD_REQUEST.
      */
-    Page<ContactChatDTO> getChats(Long userId, Pageable pageable);
+    Page<ContactChatDTO> getChats(Long userId, Pageable pageable, String search);
     /**
      * Метод для создания чата между пользователями.
      *
@@ -47,4 +48,11 @@ public interface ChatService {
      * @return id собеседника.
      */
     Long getRecipientId(Long userId, Long chatId);
+    /**
+     * Метод для изменения количества прочитанных сообщений.
+     *
+     * @param chatId id чата.
+     * @param newCount новое значение.
+     */
+    void updateCount(Long chatId, Long newCount);
 }

@@ -11,7 +11,8 @@ CREATE TABLE IF NOT EXISTS users (
     token_creation_date timestamp with time zone,
     provider character varying(36) DEFAULT 'LOCAL',  -- LOCAL, GITHUB, GOOGLE
     provider_id varchar,
-    image_url character varying(255)
+    image_url character varying(255),
+    is_online boolean NOT NULL DEFAULT false
 );
 
 CREATE TABLE IF NOT EXISTS chats (
@@ -20,6 +21,7 @@ CREATE TABLE IF NOT EXISTS chats (
     first_user_id bigint NOT NULL,
     second_user_id bigint NOT NULL,
     last_message_id bigint, -- Здесь нет NOT NULL,
+    unread_count bigint NOT NULL DEFAULT 0,
     -- то есть сначала создаётся чат, а потом уже сообщение
     CONSTRAINT UC_FUserSUser UNIQUE (first_user_id, second_user_id)
 );

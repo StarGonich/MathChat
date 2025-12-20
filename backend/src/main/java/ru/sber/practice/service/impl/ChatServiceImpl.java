@@ -31,8 +31,12 @@ public class ChatServiceImpl implements ChatService {
     private final UserRepository userRepository;
 
     @Override
-    public Page<ContactChatDTO> getChats(Long userId, Pageable pageable) {
-        return chatRepository.findContactChatsByUserId(userId, pageable);
+    public Page<ContactChatDTO> getChats(Long userId, Pageable pageable, String search) {
+        if (search != null && !search.trim().isEmpty()) {
+            return chatRepository.findContactChatsByUserIdBySearch(userId, pageable, search);
+        } else {
+            return chatRepository.findContactChatsByUserId(userId, pageable);
+        }
     }
 
     @Override
@@ -54,6 +58,7 @@ public class ChatServiceImpl implements ChatService {
                     "Чат между пользователями уже существует");
         }
 
+        chat.setUnreadCount(0L);
         chat = chatRepository.save(chat);
         log.info("Чат создан {}", chat);
 //        log.info("Первый пользователь {}, {}, {}", firstUser.getUsername(), firstUser.getFirstname(), firstUser.getLastname());
@@ -71,5 +76,10 @@ public class ChatServiceImpl implements ChatService {
         return chatRepository.findRecipientIdByUserIdAndChatId(userId, ChatId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,
                         "Не можем найти собеседника"));
+    }
+
+    @Override
+    public void updateCount(Long chatId, Long newCount){
+        chatRepository.updateCount(chatId, newCount);
     }
 }
