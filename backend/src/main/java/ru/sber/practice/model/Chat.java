@@ -9,10 +9,11 @@ import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Table(name = "chat", uniqueConstraints={@UniqueConstraint(columnNames = {"first_user_id" , "second_user_id"})}, schema = "public")
+@Table(name = "chats", uniqueConstraints={@UniqueConstraint(columnNames = {"first_user_id" , "second_user_id"})}, schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

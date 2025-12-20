@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "message", schema = "public")
+@Table(name = "messages", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -37,7 +38,7 @@ public class Message {
 
     @Column(name = "message_creation_date")
 //    @ColumnDefault("CURRENT_TIMESTAMP")
-    private OffsetDateTime messageDate;
+    private ZonedDateTime messageDate;
 
     @JsonIgnore
     @OneToOne(mappedBy = "lastMessageId")

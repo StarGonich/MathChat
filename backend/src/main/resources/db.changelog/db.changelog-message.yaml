@@ -2,10 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: create-table-chat
       author: ansveer
-      comment: message created
+      comment: messages created
       changes:
         - createTable:
-            tableName: message
+            tableName: messages
             columns:
               - column:
                   name: id
@@ -19,11 +19,15 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
+#                    foreignKeyName: fk_messages_users
+#                    references: users(id)
               - column:
                   name: chat_id
                   type: bigint
                   constraints:
                     nullable: false
+#                    foreignKeyName: fk_messages_chats
+#                    references: chats(id)
               - column:
                   name: message_text
                   type: text

@@ -2,10 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: create-table-chat
       author: ansveer
-      comment: chat created
+      comment: chats created
       changes:
         - createTable:
-            tableName: chat
+            tableName: chats
             columns:
               - column:
                   name: id
@@ -19,15 +19,28 @@ databaseChangeLog:
                   type: bigint
                   constraints:
                     nullable: false
+#                    foreignKeyName: fk_chats_user1
+#                    references: users(id)
               - column:
                   name: second_user_id
                   type: bigint
                   constraints:
                     nullable: false
+#                    foreignKeyName: fk_chats_user2
+#                    references: users(id)
               - column:
                   name: last_message_id
                   type: bigint
+#                  constraints:
+#                    foreignKeyName: fk_chats_messages
+#                    references: messages(id)
+              - column:
+                  name: unread_count
+                  type: bigint
+                  constraints:
+                    nullable: false
+                  defaultValue: '0'
         - addUniqueConstraint:
-            tableName: chat
+            tableName: chats
             columnNames: first_user_id, second_user_id
             constraintName: UC_FUserSUser

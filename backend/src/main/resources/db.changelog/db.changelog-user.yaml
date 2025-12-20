@@ -2,10 +2,10 @@ databaseChangeLog:
   - changeSet:
       id: create-table-user
       author: ansveer
-      comment: user created
+      comment: users created
       changes:
         - createTable:
-            tableName: user
+            tableName: users
             columns:
               - column:
                   name: id
@@ -55,3 +55,9 @@ databaseChangeLog:
               - column:
                   name: image_url
                   type: varchar(255)
+              - column:
+                  name: is_online
+                  type: boolean
+                  defaultValue: false
+                  constraints:
+                    nullable: false

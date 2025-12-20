@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db.changelog/db.changelog-user.yaml
   - include:
       file: db.changelog/db.changelog-sequence.yaml
+  - include:
+      file: db.changelog/db.changelog-fk.yaml

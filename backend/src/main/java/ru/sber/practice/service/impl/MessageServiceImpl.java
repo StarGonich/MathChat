@@ -55,7 +55,7 @@ public class MessageServiceImpl implements MessageService {
         message.setUserId(userAuthor);
         message.setChatId(chat);
         message.setMessageText(sendMessageDTO.messageText());
-        message.setMessageDate(OffsetDateTime.now());
+        message.setMessageDate(ZonedDateTime.now());
         message = messageRepository.save(message);
         chat.setLastMessageId(message);
         chat.setUnreadCount(chat.getUnreadCount()+1);

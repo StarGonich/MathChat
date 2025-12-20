@@ -2,7 +2,7 @@ databaseChangeLog:
   - changeSet:
       id: create-sequence-username
       author: ansveer
-      comment: user created
+      comment: users created
       changes:
         - createSequence:
             sequenceName: username_seq
