@@ -1,0 +1,57 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-user
+      author: ansveer
+      comment: user created
+      changes:
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: firstname
+                  type: varchar(50)
+              - column:
+                  name: lastname
+                  type: varchar(50)
+              - column:
+                  name: email
+                  type: varchar(50)
+                  constraints:
+                    unique: true
+              - column:
+                  name: password
+                  type: varchar(255)
+              - column:
+                  name: token
+                  type: uuid
+              - column:
+                  name: is_enabled
+                  type: boolean
+                  constraints:
+                    nullable: false
+                  defaultValue: false
+              - column:
+                  name: token_creation_date
+                  type: timestamp with time zone
+              - column:
+                  name: provider
+                  type: varchar(36)
+                  defaultValue: 'LOCAL'
+              - column:
+                  name: provider_id
+                  type: varchar
+              - column:
+                  name: image_url
+                  type: varchar(255)

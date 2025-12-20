@@ -1,6 +1,7 @@
 package ru.sber.practice.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -87,7 +88,7 @@ public class MessengerController {
 //        return ResponseEntity.ok(messages);
 //    }
 
-//    @GetMapping("/chatTest2")
+//    @GetMapping("/chatTest1")
 //    public ResponseEntity<List<GetMessagesDTO>> testAhah() {
 //        Random random = new Random();
 //        for (int i = 0; i < 100; i++) {
@@ -97,6 +98,15 @@ public class MessengerController {
 //        log.info("чето типо жизнь проходит мимо");
 //        return ResponseEntity.ok(messages);
 //    }
+
+    @GetMapping("/chatTest2")
+    public boolean testAhah2(HttpSession session, HttpServletRequest request) {
+        log.info("Сессия - {}", session);
+        log.info("Сессия - {}", session.getId());
+        log.info("Порт - {}", request.getLocalPort());
+        return true;
+    }
+
 
     @PostMapping("/chat/{chatId}")
     public ResponseEntity<?> sendMessage(@PathVariable Long chatId, @RequestBody SendMessageDTO sendMessageDTO,

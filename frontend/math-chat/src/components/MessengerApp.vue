@@ -107,9 +107,11 @@ import ProfileApp from './ProfileApp.vue'
 import FindApp from './FindApp.vue'
 import axios from 'axios'
 const ax = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://localhost:80',
     withCredentials: true
 })
+
+const baseURL = 'http://localhost:80'
 
 let allUsers = ref([])
 let allUsers1 = ref([])
@@ -149,10 +151,10 @@ onMounted(async () => {
 
     socket.onmessage = async () => {
         try{
-            await ax.get('http://localhost:8080/search/' + props.userId)
+            await ax.get(baseURL + '/search/' + props.userId)
                 .then(response => chats.value = response.data)
             if(chatId.value != -1){
-                await ax.get('http://localhost:8080/chat/' + chatId.value + '?id=' + props.userId)
+                await ax.get(baseURL + '/chat/' + chatId.value + '?id=' + props.userId)
                     .then(response => messages.value = response.data)
             }
         }catch(e){
@@ -161,7 +163,7 @@ onMounted(async () => {
     }
 
     try {
-        await ax.get('http://localhost:8080/api/user/findAll')
+        await ax.get(baseURL + '/api/user/findAll')
             .then(response => allUsers.value = response.data)
     } catch (e) {
         console.log(e)
@@ -178,20 +180,20 @@ onMounted(async () => {
     }
 
     try {
-        await ax.get('http://localhost:8080/api/user/find/' + props.userId)
+        await ax.get(baseURL + '/api/user/find/' + props.userId)
             .then(response => user.value = response.data)
     } catch (e) {
         console.log(e)
     }
     
     try {
-        await ax.get('http://localhost:8080/search/' + props.userId)
+        await ax.get(baseURL + '/search/' + props.userId)
             .then(response => chats.value = response.data)
     } catch (e) {
         console.log(e)
     }
     for(let i = 0; i < chats.value.length; i++){
-        try{await ax.get('http://localhost:8080/api/user/find/' + (chats.value[i].userId))
+        try{await ax.get(baseURL + '/api/user/find/' + (chats.value[i].userId))
             .then(response => chatUsers.value.push({
                 id: response.data.id,
                 login: response.data.firstname + " " + response.data.lastname,
@@ -209,7 +211,7 @@ async function updateChat(idCh, us) {
     chatId.value = idCh
     chatUser = us
     try {
-        await ax.get('http://localhost:8080/chat/' + chatId.value + '?id=' + props.userId)
+        await ax.get(baseURL + '/chat/' + chatId.value + '?id=' + props.userId)
             .then(response => messages.value = response.data)
     } catch (e) {
         console.log(e)
@@ -293,14 +295,14 @@ function position(id){
 
 async function post(){
     try{
-        await ax.post('http://localhost:8080/chat/' + chatId.value, {
+        await ax.post(baseURL + '/chat/' + chatId.value, {
             id: messages.value.length,
             userId: props.userId,
             chatId: chatId.value,
             messageText: textMessage.value,
             messageDate: new Date()
         })
-        await ax.get('http://localhost:8080/chat/' + chatId.value + '?id=' + props.userId)
+        await ax.get(baseURL + '/chat/' + chatId.value + '?id=' + props.userId)
             .then(response => messages.value = response.data)
     }catch(e){
         console.log(e)
@@ -312,7 +314,7 @@ async function post(){
 async function showProf(user, type){
     if(type == 'chat'){
         try{
-            await ax.get('http://localhost:8080/api/user/find/' + user.id)
+            await ax.get(baseURL + '/api/user/find/' + user.id)
             .then(response => user = response.data)
         }catch(e){
             console.log(e)
@@ -328,16 +330,16 @@ async function updateProfApp(ch){
     if(ch){
         if(profType.value == "own"){
             try {
-                await ax.get('http://localhost:8080/api/user/find/' + props.userId)
+                await ax.get(baseURL + '/api/user/find/' + props.userId)
                     .then(response => user.value = response.data)
             } catch (e) {
                 console.log(e)
             }
         }else if(profType.value == "stranger"){
             try {
-                await ax.get('http://localhost:8080/search/' + props.userId)
+                await ax.get(baseURL + '/search/' + props.userId)
                     .then(response => chats.value = response.data)
-                await ax.get('http://localhost:8080/api/user/find/' + (chats.value[chats.value.length-1].userId))
+                await ax.get(baseURL + '/api/user/find/' + (chats.value[chats.value.length-1].userId))
                     .then(response => chatUsers.value.push({
                         id: response.data.id,
                         login: response.data.firstname + " " + response.data.lastname,
@@ -363,7 +365,7 @@ async function select(id){
     if (id != -1){
         let user = {}
         try {
-            await ax.get('http://localhost:8080/api/user/find/' + id)
+            await ax.get(baseURL + '/api/user/find/' + id)
                 .then(response => user = response.data)
         } catch (e) {
             console.log(e)

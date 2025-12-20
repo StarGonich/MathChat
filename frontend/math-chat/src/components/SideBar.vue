@@ -63,9 +63,11 @@ import MyProfile from './MyProfile.vue';
 import GlobalItem from './GlobalItem.vue';
 import axios from 'axios'
 const ax = axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'http://localhost:80',
     withCredentials: true
 })
+
+const baseURL = 'http://localhost:80'
 
 const props = defineProps({
   thisUser: {
@@ -123,7 +125,7 @@ async function findGlobal() {
   try{
     let rawChats = []
     let globalContactsCopy = []
-    await ax.get('http://localhost:8080/api/user/findAll')
+    await ax.get(baseURL + '/api/user/findAll')
       .then(response => rawChats = response.data)
     for(let i = 0; i < rawChats.length; i++){
       globalContactsCopy.push({
@@ -162,7 +164,7 @@ async function findFilterGlobal() {
       try{
         let rawChats = []
         let filteredContactsCopy = []
-        await ax.get('http://localhost:8080/search/global/' + query)
+        await ax.get(baseURL + '/search/global/' + query)
           .then(response => rawChats = response.data)
         console.log(rawChats)
         for(let i = 0; i < rawChats.length; i++){

@@ -20,10 +20,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByIdAndIsEnabledTrue(Long id);
     Optional<User> findByIdAndIsEnabledFalse(Long id);
 
-    @Query("SELECT u FROM User u WHERE " +
+    @Query(value = "SELECT * FROM \"user\" u WHERE " +
             "(LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.lastname) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
             "LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
-            "u.isEnabled = true")
+            "u.is_enabled = true", nativeQuery = true)
     Page<User> findBySearchTerm(String search, Pageable pageable);
 }

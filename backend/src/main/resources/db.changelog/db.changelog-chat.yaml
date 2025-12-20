@@ -1,0 +1,33 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-chat
+      author: ansveer
+      comment: chat created
+      changes:
+        - createTable:
+            tableName: chat
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: first_user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: second_user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_message_id
+                  type: bigint
+        - addUniqueConstraint:
+            tableName: chat
+            columnNames: first_user_id, second_user_id
+            constraintName: UC_FUserSUser

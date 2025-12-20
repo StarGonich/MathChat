@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - include:
+      file: db.changelog/db.changelog-chat.yaml
+  - include:
+      file: db.changelog/db.changelog-message.yaml
+  - include:
+      file: db.changelog/db.changelog-user.yaml
+  - include:
+      file: db.changelog/db.changelog-sequence.yaml

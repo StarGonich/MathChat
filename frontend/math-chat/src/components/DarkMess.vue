@@ -114,10 +114,11 @@ let profUser = ref({})
 let profType = ref('none')
 
 const emit = defineEmits(['quitEvent'])
+const baseURL = 'http://localhost:80'
 
 onMounted(async () => {
     try {
-        await axios.get('http://localhost:8080/api/user/findAll')
+        await axios.get(baseURL + '/api/user/findAll')
             .then(response => allUsers.value = response.data)
     } catch (e) {
         console.log(e)
@@ -230,14 +231,14 @@ onMounted(async () => {
         console.log(allUsers1)
     }
     try {
-        await axios.get('http://localhost:8080/api/user/find/' + props.userId)
+        await axios.get(baseURL + '/api/user/find/' + props.userId)
             .then(response => user.value = response.data)
     } catch (e) {
         console.log(e)
         user.value = allUsers1.value[props.userId-1]
     }
     try {
-        await axios.get('http://localhost:8080/search/' + props.userId)
+        await axios.get(baseURL + '/search/' + props.userId)
             .then(response => chats.value = response.data)
     } catch (e) {
         console.log(e)
@@ -275,7 +276,7 @@ onMounted(async () => {
         ]
     }
     for(let i = 0; i < chats.value.length; i++){
-        try{await axios.get('http://localhost:8080/api/user/find/' + (chats.value[i].userId))
+        try{await axios.get(baseURL + '/api/user/find/' + (chats.value[i].userId))
             .then(response => chatUsers.value.push({
                 id: response.data.id,
                 login: response.data.firstname + " " + response.data.lastname,
@@ -292,7 +293,7 @@ onMounted(async () => {
 async function updateChat(idCh) {
     chatId.value = idCh
     try {
-        await axios.get('http://localhost:8080/api/user/find/' + (chats.value[idCh].userId))
+        await axios.get(baseURL + '/api/user/find/' + (chats.value[idCh].userId))
             .then(response => chatUser.value = {
                 id: response.data.id,
                 login: response.data.firstname + " " + response.data.lastname,
@@ -300,7 +301,7 @@ async function updateChat(idCh) {
                 chatId: idCh,
                 lastMessage: ''
             })
-        await axios.get('http://localhost:8080/chat/' + chatId.value)
+        await axios.get(baseURL + '/chat/' + chatId.value)
             .then(response => messages.value = response.data)
     } catch (e) {
         console.log(e)
@@ -534,14 +535,14 @@ function position(id){
 
 async function post(){
     try{
-        await axios.post('http://localhost:8080/chat/' + chatId.value, {
+        await axios.post(baseURL + '/chat/' + chatId.value, {
             id: messages.value.length,
             userId: props.userId,
             chatId: chatId.value,
             messageText: textMessage.value,
             messageDate: new Date()
         })
-        await axios.get('http://localhost:8080/chat/' + chatId.value)
+        await axios.get(baseURL + '/chat/' + chatId.value)
             .then(response => messages.value = response.data)
     }catch(e){
         console.log(e)
@@ -552,7 +553,7 @@ async function post(){
 async function showProf(user, type){
     if(type == 'chat'){
         try{
-            await axios.get('http://localhost:8080/api/user/find/' + user.id)
+            await axios.get(baseURL + '/api/user/find/' + user.id)
             .then(response => user = response.data)
         }catch(e){
             console.log(e)
@@ -568,16 +569,16 @@ async function updateProfApp(ch){
     if(ch){
         if(profType.value == "own"){
             try {
-                await axios.get('http://localhost:8080/api/user/find/' + props.userId)
+                await axios.get(baseURL + '/api/user/find/' + props.userId)
                     .then(response => user.value = response.data)
             } catch (e) {
                 console.log(e)
             }
         }else if(profType.value == "stranger"){
             try {
-                await axios.get('http://localhost:8080/search/' + props.userId)
+                await axios.get(baseURL + '/search/' + props.userId)
                     .then(response => chats.value = response.data)
-                await axios.get('http://localhost:8080/api/user/find/' + (chats.value[chats.value.length-1].userId))
+                await axios.get(baseURL + '/api/user/find/' + (chats.value[chats.value.length-1].userId))
                     .then(response => chatUsers.value.push({
                         id: response.data.id,
                         login: response.data.firstname + " " + response.data.lastname,
@@ -603,7 +604,7 @@ async function select(id){
     if (id != -1){
         let user = {}
         try {
-            await axios.get('http://localhost:8080/api/user/find/' + id)
+            await axios.get(baseURL + '/api/user/find/' + id)
                 .then(response => user = response.data)
         } catch (e) {
             console.log(e)
