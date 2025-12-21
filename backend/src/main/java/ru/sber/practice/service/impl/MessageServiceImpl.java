@@ -19,7 +19,9 @@ import ru.sber.practice.repository.MessageRepository;
 import ru.sber.practice.repository.UserRepository;
 import ru.sber.practice.service.MessageService;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -52,10 +54,14 @@ public class MessageServiceImpl implements MessageService {
         if (!(userAuthor == chat.getFirstUserId() || userAuthor == chat.getSecondUserId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "У вас нет чата с данным пользователем");
         }
+
+        Instant instant = Instant.now();
+        OffsetDateTime offsetDateTime = instant.atOffset(ZoneOffset.UTC);
+
         message.setUserId(userAuthor);
         message.setChatId(chat);
         message.setMessageText(sendMessageDTO.messageText());
-        message.setMessageDate(OffsetDateTime.now());
+        message.setMessageDate(offsetDateTime);
         message = messageRepository.save(message);
         chat.setLastMessageId(message);
         chat.setUnreadCount(chat.getUnreadCount()+1);

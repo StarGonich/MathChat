@@ -26,8 +26,6 @@ import ru.sber.practice.service.impl.UserServiceImpl;
 @Transactional
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Sql("classpath:/sql/data.sql")
-//@WebMvcTest(UserController.class)
-//@Import(SecurityConfig.class) // Не работает, нужно "мокитировать" зависимости из него
 class UserControllerTest {
 
     @Autowired

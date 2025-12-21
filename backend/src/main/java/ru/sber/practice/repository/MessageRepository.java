@@ -9,7 +9,7 @@ import ru.sber.practice.model.Message;
 import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Long> {
-    @Query(value = "select * from message where chat_id = :chatId", nativeQuery = true)
+    @Query(value = "select * from messages where chat_id = :chatId", nativeQuery = true)
     Page<Message> getMessagesByChatId(Long chatId, Pageable pageable);
 
     @Query(value = "SELECT COUNT(*) FROM messages WHERE message_text LIKE '%$ % $%'", nativeQuery = true)

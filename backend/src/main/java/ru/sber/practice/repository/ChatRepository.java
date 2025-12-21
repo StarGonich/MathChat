@@ -29,11 +29,11 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
         u.is_online as isOnline,
         c.unread_count as unreadCount
     FROM chats c
-    JOIN "user" u ON u.id = CASE\s
+    JOIN users u ON u.id = CASE\s
         WHEN c.first_user_id = :userId THEN c.second_user_id\s
         ELSE c.first_user_id\s
     END
-    LEFT JOIN message m ON m.id = c.last_message_id
+    LEFT JOIN messages m ON m.id = c.last_message_id
     WHERE c.first_user_id = :userId OR c.second_user_id = :userId""", nativeQuery = true)
     Page<ContactChatDTO> findContactChatsByUserId(Long userId, Pageable pageable);
 
@@ -47,12 +47,12 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
         m.message_text as lastMessageText,
         m.message_creation_date as messageDate,
         u.image_url as imageUrl
-    FROM chat c
-    JOIN user u ON u.id = CASE\s
+    FROM chats c
+    JOIN users u ON u.id = CASE\s
         WHEN c.first_user_id = :userId THEN c.second_user_id\s
         ELSE c.first_user_id\s
     END
-    LEFT JOIN message m ON m.id = c.last_message_id
+    LEFT JOIN messages m ON m.id = c.last_message_id
     WHERE (c.first_user_id = :userId OR c.second_user_id = :userId)
     AND (LOWER(u.username) LIKE LOWER(CONCAT('%', :search, '%'))
     OR LOWER(u.firstname) LIKE LOWER(CONCAT('%', :search, '%'))
@@ -65,7 +65,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
     Optional<Long> findRecipientIdByUserIdAndChatId(Long userId, Long chatId);
 
     @Query(value = """
-    SELECT * FROM chat
+    SELECT * FROM chats
     WHERE (first_user_id = :firstUserId AND second_user_id = :secondUserId)
     OR (second_user_id = :firstUserId AND first_user_id = :secondUserId)
     """, nativeQuery = true)
@@ -73,7 +73,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE chat SET unreadCount = :unreadCount " +
+    @Query(value = "UPDATE chats SET unreadCount = :unreadCount " +
             "WHERE id = :chatId", nativeQuery = true)
     void updateCount(Long chatId, Long unreadCount);
 }

@@ -27,18 +27,18 @@ public class MathChatApplication implements CommandLineRunner{
         SpringApplication.run(MathChatApplication.class, args);
     }
 
-    // @Override
-    // public void run(String... args) throws Exception {
-    // }
+     @Override
+     public void run(String... args) throws Exception {
+     }
   
-    @Override
-    public void run(String... args) throws Exception {
-        User user = new User();
-        user.setEmail("test@mail.ru");
-        user.setUsername("Test1");
-        user.setPassword(passwordEncoder.encode("12321"));
-        user.setEnabled(true);
-        userRepository.save(user);
+//    @Override
+//    public void run(String... args) throws Exception {
+//        User user = new User();
+//        user.setEmail("test@mail.ru");
+//        user.setUsername("Test1");
+//        user.setPassword(passwordEncoder.encode("12321"));
+//        user.setEnabled(true);
+//        userRepository.save(user);
 
        // User user2 = new User();
        // user2.setEmail("test2@mail.ru");
@@ -46,5 +46,5 @@ public class MathChatApplication implements CommandLineRunner{
        // user2.setPassword(passwordEncoder.encode("12321"));
        // user2.setEnabled(true);
        // userRepository.save(user2);
-    }
+//    }
 }

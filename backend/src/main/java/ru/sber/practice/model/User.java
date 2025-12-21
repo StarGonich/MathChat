@@ -8,12 +8,13 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
 import java.io.Serializable;
+import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user", schema = "public")
+@Table(name = "users", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,6 +51,7 @@ public class User implements Serializable {
     @Column(name = "token_creation_date")
     @ColumnDefault("CURRENT_TIMESTAMP")
     private ZonedDateTime tokenDate;
+//    private OffsetDateTime tokenDate;
 
     // OAuth2 провайдер (github, google, etc.)
     @Enumerated(EnumType.STRING)

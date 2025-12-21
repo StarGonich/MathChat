@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-fk-tables
+      author: ansveer
+      comment: foreign keys created
+      changes:
+        - addForeignKeyConstraint:
+            baseColumnNames: first_user_id
+            baseTableName: chats
+            constraintName: fk_chats_user1
+            referencedColumnNames: id
+            referencedTableName: users
+
+        - addForeignKeyConstraint:
+            baseColumnNames: second_user_id
+            baseTableName: chats
+            constraintName: fk_chats_user2
+            referencedColumnNames: id
+            referencedTableName: users
+
+        - addForeignKeyConstraint:
+            baseColumnNames: last_message_id
+            baseTableName: chats
+            constraintName: fk_chats_messages
+            referencedColumnNames: id
+            referencedTableName: messages
+
+        - addForeignKeyConstraint:
+            baseColumnNames: user_id
+            baseTableName: messages
+            constraintName: fk_messages_users
+            referencedColumnNames: id
+            referencedTableName: users
+
+        - addForeignKeyConstraint:
+            baseColumnNames: chat_id
+            baseTableName: messages
+            constraintName: fk_messages_chats
+            referencedColumnNames: id
+            referencedTableName: chats

@@ -8,16 +8,17 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.time.OffsetDateTime;
 import java.time.ZonedDateTime;
 
 @Entity
-@Table(name = "message", schema = "public")
+@Table(name = "messages", schema = "public")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class Message implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

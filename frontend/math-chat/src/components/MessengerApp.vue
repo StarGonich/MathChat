@@ -147,7 +147,8 @@ let profType = ref('none')
 let socket = {}
 
 onMounted(async () => {
-    socket = new WebSocket('ws://localhost:8080/ws')
+    // socket = new WebSocket('ws://localhost:8080/ws')
+    socket = new WebSocket('ws://localhost:80/ws')
 
     socket.onmessage = async () => {
         try{
