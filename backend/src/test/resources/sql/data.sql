@@ -1,3 +1,7 @@
+DELETE FROM messages;
+DELETE FROM chats;
+DELETE FROM users;
+
 ALTER SEQUENCE users_id_seq RESTART WITH 1;
 ALTER SEQUENCE chats_id_seq RESTART WITH 1;
 ALTER SEQUENCE messages_id_seq RESTART WITH 1;
