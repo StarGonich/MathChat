@@ -8,7 +8,7 @@ import java.time.ZonedDateTime;
 public record GetMessagesDTO(
         Long userId,
         String messageText,
-        ZonedDateTime messageDate
+        OffsetDateTime messageDate
 ) {
 
 }

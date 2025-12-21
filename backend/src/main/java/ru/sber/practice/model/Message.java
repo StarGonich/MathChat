@@ -18,7 +18,7 @@ import java.time.ZonedDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Message {
+public class Message implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -38,7 +38,7 @@ public class Message {
 
     @Column(name = "message_creation_date")
 //    @ColumnDefault("CURRENT_TIMESTAMP")
-    private ZonedDateTime messageDate;
+    private OffsetDateTime messageDate;
 
     @JsonIgnore
     @OneToOne(mappedBy = "lastMessageId")

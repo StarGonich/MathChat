@@ -46,7 +46,7 @@ const thisUser = ref({})
 async function findThisUser() {
   try {
     let rawUser = {}
-    await ax.get(ax.baseURL + '/api/user/find/' + props.thisUserId)
+    await ax.get(baseURL + '/api/user/find/' + props.thisUserId)
       .then(response => rawUser = response.data)
     thisUser.value = {
       id: rawUser.id,
@@ -144,6 +144,7 @@ const createContact = async (id) => {
 
 onMounted(async () => {
   socket = await new WebSocket('ws://localhost:8080/ws')
+  // socket = await new WebSocket('ws://localhost:80/ws')
 
   socket.onmessage = async (event) => {
     let msg = JSON.parse(event.data)
@@ -182,7 +183,7 @@ onMounted(async () => {
     socket.send(JSON.stringify(msg))
     console.log('Отослано:\n' + JSON.stringify(msg))
     try{
-      await ax.get('/api/user/online/' + props.thisUserId).then(
+      await ax.get(baseURL + '/api/user/online/' + props.thisUserId).then(
         resp => console.log(resp.data)
       )
     }catch(e){
@@ -215,7 +216,7 @@ const selectContact = async (contactId) => {
   if(contact.unreadCount != 0){
     contact.unreadCount = 0;
     try{
-      await ax.patch('/chat/' + contact.chatId, {userId: props.thisUserId, newCount: 0})
+      await ax.patch(baseURL + '/chat/' + contact.chatId, {userId: props.thisUserId, newCount: 0})
         .then(resp => {console.log(resp)})
     }catch(e){
       console.log(e)
@@ -329,7 +330,7 @@ async function quit() {
   console.log('Отослано:\n' + JSON.stringify(msg))
 
   try{
-    await ax.get('/api/user/offline/' + props.thisUserId).then(
+    await ax.get(baseURL + '/api/user/offline/' + props.thisUserId).then(
       resp => console.log(resp.data)
     )
   }catch(e){

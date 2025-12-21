@@ -7,6 +7,6 @@ import java.time.ZonedDateTime;
 public record WebSocketMessageDTO (Long chatId,
                                    Long userId,
                                    String messageText,
-                                   ZonedDateTime messageDate){
+                                   OffsetDateTime messageDate){
 
 }
