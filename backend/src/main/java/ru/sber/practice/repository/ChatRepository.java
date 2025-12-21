@@ -73,7 +73,7 @@ public interface ChatRepository extends JpaRepository<Chat, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE chats SET unreadCount = :unreadCount " +
+    @Query(value = "UPDATE chats SET unread_count = :unreadCount " +
             "WHERE id = :chatId", nativeQuery = true)
     void updateCount(Long chatId, Long unreadCount);
 }

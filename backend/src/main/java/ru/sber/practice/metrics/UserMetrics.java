@@ -32,10 +32,10 @@ public class UserMetrics {
 
     @Scheduled(fixedRateString = "5000", initialDelayString = "0")
     public void schedulingTask() {
-//        registeredUsers.set(userRepository.countByIsEnabledTrue());
-//        sendedMessages.set(messageRepository.count());
-//        onlineUsers.set(userRepository.countByOnlineTrue());
-//        countLaTeX.set(messageRepository.getCountOfLaTeXMessages());
+        registeredUsers.set(userRepository.countByIsEnabledTrue());
+        sendedMessages.set(messageRepository.count());
+        onlineUsers.set(userRepository.countByOnlineTrue());
+        countLaTeX.set(messageRepository.getCountOfLaTeXMessages());
     }
 
 }
