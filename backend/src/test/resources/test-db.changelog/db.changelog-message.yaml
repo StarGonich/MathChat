@@ -1,0 +1,40 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-chat
+      author: ansveer
+      comment: messages created
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+#                    foreignKeyName: fk_messages_users
+#                    references: users(id)
+              - column:
+                  name: chat_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+#                    foreignKeyName: fk_messages_chats
+#                    references: chats(id)
+              - column:
+                  name: message_text
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message_creation_date
+                  type: timestamp with time zone
+                  constraints:
+                    nullable: false

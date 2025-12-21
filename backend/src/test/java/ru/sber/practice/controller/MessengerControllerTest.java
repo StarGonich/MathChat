@@ -23,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc(printOnlyOnFailure = false)
 @Transactional
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @Sql("classpath:/sql/data.sql")
 public class MessengerControllerTest {
 
@@ -37,7 +36,7 @@ public class MessengerControllerTest {
     @WithUserDetails(value = "12321alexey8837@gmail.com", userDetailsServiceBeanName = "myUserDetailsServiceImpl")
     void getChats_ShouldReturnChatsList_WhenUserExists() throws Exception {
         // Given
-        Long userId = 2L;
+        Long userId = 1L;
 
         // When & Then
         mockMvc.perform(get("/search/{userId}", userId))
@@ -86,8 +85,8 @@ public class MessengerControllerTest {
     @Test
     @WithUserDetails(value = "12321alexey8837@gmail.com", userDetailsServiceBeanName = "myUserDetailsServiceImpl")
     void createChat_ShouldCreateChat_WhenUsersExistAndChatDoesNotExist() throws Exception {
-        Long firstUserId = 2L;
-        Long secondUserId = 5L;
+        Long firstUserId = 1L;
+        Long secondUserId = 4L;
 
         // When & Then
         mockMvc.perform(post("/chat/create/{firstUserId}", firstUserId)
@@ -112,8 +111,8 @@ public class MessengerControllerTest {
     @Test
     @WithUserDetails(value = "12321alexey8837@gmail.com", userDetailsServiceBeanName = "myUserDetailsServiceImpl")
     void createChat_ShouldCreateChat_WhenFirstUser1IsUser2() throws Exception {
-        Long firstUserId = 2L;
-        Long secondUserId = 2L;
+        Long firstUserId = 1L;
+        Long secondUserId = 1L;
 
         // When & Then
         mockMvc.perform(post("/chat/create/{firstUserId}", firstUserId)
@@ -125,7 +124,7 @@ public class MessengerControllerTest {
     @Test
     @WithUserDetails(value = "12321alexey8837@gmail.com", userDetailsServiceBeanName = "myUserDetailsServiceImpl")
     void createChat_ShouldReturnBadRequest_WhenSecondUserNotFound() throws Exception {
-        Long firstUserId = 2L;
+        Long firstUserId = 1L;
         Long secondUserId = 999L;
 
         // When & Then
@@ -139,8 +138,8 @@ public class MessengerControllerTest {
     @WithUserDetails(value = "12321alexey8837@gmail.com", userDetailsServiceBeanName = "myUserDetailsServiceImpl")
     void createChat_ShouldReturnBadRequest_WhenUserNotEnabled() throws Exception {
         // Given
-        Long firstUserId = 2L;
-        Long secondUserId = 3L; // NotActivated user from data.sql
+        Long firstUserId = 1L;
+        Long secondUserId = 2L; // NotActivated user from data.sql
 
         // When & Then
         mockMvc.perform(post("/chat/create/{firstUserId}", firstUserId)
@@ -156,7 +155,7 @@ public class MessengerControllerTest {
         Long chatId = 1L;
 
         // When & Then
-        mockMvc.perform(get("/chat/{chatId}?id=2", chatId))
+        mockMvc.perform(get("/chat/{chatId}?id=1", chatId))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.content").isArray());
@@ -179,7 +178,7 @@ public class MessengerControllerTest {
         // Given
         Long chatId = 1L;
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("userId", 2L);
+        requestBody.put("userId", 1L);
         requestBody.put("messageText", "Test message");
 
         // When & Then
@@ -195,7 +194,7 @@ public class MessengerControllerTest {
         // Given
         Long nonExistentChatId = 999L;
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("userId", 2L);
+        requestBody.put("userId", 1L);
         requestBody.put("messageText", "Test message");
 
         // When & Then
@@ -227,7 +226,7 @@ public class MessengerControllerTest {
         // Given
         Long chatId = 1L;
         Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("userId", 5L); // User who is not in the chat
+        requestBody.put("userId", 4L); // User who is not in the chat
         requestBody.put("messageText", "Test message");
 
         // When & Then

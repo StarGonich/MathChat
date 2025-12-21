@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-sequence-username
+      author: ansveer
+      comment: users created
+      changes:
+        - createSequence:
+            sequenceName: username_seq
+            startValue: 1
+            incrementBy: 1
