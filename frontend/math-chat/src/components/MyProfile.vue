@@ -59,11 +59,11 @@
 import { ref, computed } from 'vue'
 import axios from 'axios'
 const ax = axios.create({
-    baseURL: 'http://localhost:80',
+    baseURL: process.env.VUE_APP_SERVER_URL,
     withCredentials: true
 })
 
-const baseURL = 'http://localhost:80'
+const baseURL = process.env.VUE_APP_SERVER_URL
 
 const props = defineProps({
     user: {

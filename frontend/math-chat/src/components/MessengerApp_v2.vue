@@ -26,11 +26,11 @@ import SideBar from './SideBar.vue';
 import ChatWindow from './ChatWindow.vue';
 import axios from 'axios'
 const ax = axios.create({
-  baseURL: 'http://localhost:80',
+  baseURL: process.env.VUE_APP_SERVER_URL,
   withCredentials: true
 })
 
-const baseURL = 'http://localhost:80';
+const baseURL = process.env.VUE_APP_SERVER_URL;
 
 const props = defineProps({
   thisUserId: {
@@ -143,7 +143,7 @@ const createContact = async (id) => {
 }
 
 onMounted(async () => {
-  socket = await new WebSocket('ws://localhost:8080/ws')
+  socket = await new WebSocket(process.env.VUE_APP_WEBSOCKET_URL)
   // socket = await new WebSocket('ws://localhost:80/ws')
 
   socket.onmessage = async (event) => {

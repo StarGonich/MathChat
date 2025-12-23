@@ -116,7 +116,7 @@ function onInputPass(){
     isCorrectPass.value = user.value.password === password.value
 }
 
-const baseURL = 'http://localhost:80'
+const baseURL = process.env.VUE_APP_SERVER_URL
 
 async function register() {
     try {
