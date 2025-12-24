@@ -11,7 +11,7 @@
       <div v-else class="status-indicator offline"></div>
     </div>
     
-    <div class="contact-info">
+    <div class="contact-info" align="left">
       <div class="contact-header">
         <span class="contact-name" align="left">{{ contact.name }}</span>
         <span class="last-message-time" align="right">{{ contact.lastMessageTime }}</span>
@@ -133,7 +133,7 @@ defineEmits(['click']);
 
 .contact-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin-bottom: 4px;
 }
@@ -150,7 +150,7 @@ defineEmits(['click']);
 
 .contact-footer {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 
