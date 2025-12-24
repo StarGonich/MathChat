@@ -1,4 +1,4 @@
-FROM maven:3.9.11-eclipse-temurin-24 as builder
+FROM maven:3.9.11-eclipse-temurin-24 AS builder
 WORKDIR /app
 COPY mvnw pom.xml ./
 COPY ./src ./src

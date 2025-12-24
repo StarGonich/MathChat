@@ -1,2 +1,2 @@
-FROM grafana/grafana
+FROM grafana/grafana:latest
 ADD ./provisioning /etc/grafana/provisioning
