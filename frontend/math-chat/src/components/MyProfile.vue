@@ -14,10 +14,6 @@
             <form class="ui form">
                 <p>Личная информация</p>
                 <div class="my-avatar">
-                    <img class="avatar-circle" v-if="user.imageUrl && user.imageUrl.length > 0" :src="imageUrl" />
-                    <div class="avatar-circle" v-else>{{ avatar }}</div>
-                </div>
-                <div class="my-avatar">
                     <img class="avatar-circle" v-if="imageUrl && imageUrl.length > 0" :src="imageUrl" />
                     <div class="avatar-circle" v-else>{{ avatar }}</div>
                 </div>
