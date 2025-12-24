@@ -117,6 +117,7 @@ async function findContacts() {
     contacts.value = contactsCopy
   } catch (e) {
     console.log(e)
+    error()
   }
 }
 
@@ -281,6 +282,7 @@ async function findMessages(contactId){
       }
     }catch(e){
       console.log(e)
+      error()
     }
   }
   messages.value = messagesCopy
@@ -341,6 +343,10 @@ async function quit() {
   }
 
   router.push({name: 'Home'})
+}
+
+function error(){
+  router.push({name: 'Error'})
 }
 </script>
 

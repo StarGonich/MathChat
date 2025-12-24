@@ -25,6 +25,11 @@ const routes = [
     name: "Messenger",
     component: MessengerApp_v2,
     props: true
+  },
+  {
+    path: '/error',
+    name: "Error",
+    component: ErrorPage
   }
 ]
 
