@@ -44,12 +44,14 @@ const baseURL = process.env.VUE_APP_SERVER_URL
 const imageUrl = ref(null)
 
 async function parseAvatar(){
+  if(props.contact.imageUrl && props.contact.imageUrl.length>0){
   try{
     ax_file.get(baseURL + '/api/files/download/' + props.contact.imageUrl)
     .then((response) => {image.value = response.data; imageUrl.value = URL.createObjectURL(image.value)})
   }catch(e){
     console.log(e)
   }
+}
 }
 
 onMounted(async () => {
