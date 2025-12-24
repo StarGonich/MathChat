@@ -164,7 +164,9 @@ async function uploadAvatar() {
 }
 
 onMounted(async () => {
-    parseAvatar()
+    if(user.value.imageUrl && user.value.imageUrl > 0){
+        parseAvatar()
+    }
     console.log(process.env.VUE_APP_SERVER_URL)
 })
 
