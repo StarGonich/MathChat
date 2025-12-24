@@ -130,7 +130,7 @@ async function parseAvatar(){
     if(user.value.imageUrl && user.value.imageUrl.length > 0){
         try{
             ax_file.get(baseURL + '/api/files/download/'+user.value.imageUrl)
-            .then((response) => image.value = response.data)
+            .then((response) => {image.value = response.data; imageUrl.value = URL.createObjectURL(image.value)})
         }catch(e){
             console.log(e)
         }
