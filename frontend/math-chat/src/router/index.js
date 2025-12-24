@@ -3,6 +3,7 @@ import AuthApp from '@/components/AuthApp.vue'
 import RegistrationApp from '@/components/RegistrationApp.vue'
 import SendEmailApp from '@/components/SendEmailApp.vue'
 import MessengerApp_v2 from '@/components/MessengerApp_v2.vue'
+import ErrorPage from '@/components/ErrorPage.vue'
 
 const routes = [
   {

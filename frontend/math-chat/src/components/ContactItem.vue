@@ -38,7 +38,7 @@ const ax_file = axios.create({
     responseType: 'blob'
 })
 
-const baseUrl = process.env.VUE_APP_SERVER_URL
+const baseURL = process.env.VUE_APP_SERVER_URL
 
 const props = defineProps({
   contact: {

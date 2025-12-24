@@ -89,6 +89,7 @@ async function auth() {
 }
 
 function register(){
+    console.log(process.env.VUE_APP_SERVER_URL)
     router.push({name: 'Register'})
 }
 

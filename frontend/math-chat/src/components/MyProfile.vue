@@ -165,6 +165,7 @@ async function uploadAvatar() {
 
 onMounted(async () => {
     parseAvatar()
+    console.log(process.env.VUE_APP_SERVER_URL)
 })
 
 const emit = defineEmits(['closeWindow', 'updateProfile', 'quit'])
