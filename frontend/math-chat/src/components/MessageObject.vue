@@ -2,8 +2,12 @@
   <div class="message-wrapper" :class="{ 'own-message': message.isOwn }">
     <div class="message" :class="{ 'own': message.isOwn }">
       <div class="message-content">
-        <div v-if="message.latex" class="latex-content" ref="latexContent"></div>
-        <div v-else class="text-content" align="left">{{ message.text }}</div>
+        <div v-for="line in formatArr(message.text, 45)" :key="line.id">
+          <div v-if="line.isLatex">
+            <vue-latex  :expression="line.content"/>
+          </div>
+          <div v-else>{{ line.content }}</div>
+        </div>
       </div>
        <div class="message-footer">
         <span class="time" align="right">{{ message.time }}</span>
