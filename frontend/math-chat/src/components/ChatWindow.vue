@@ -149,6 +149,7 @@ const handleSendMessage = (message) => {
 
 .header-text {
   display: flex;
+  justify-content: flex-start;
   flex-direction: column;
 }
 
