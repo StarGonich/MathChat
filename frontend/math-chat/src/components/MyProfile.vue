@@ -127,11 +127,13 @@ function onChange(e) {
 }
 
 async function parseAvatar(){
-    try{
-        ax_file.get(baseURL + '/api/files/download/'+user.value.imageUrl)
-        .then((response) => imageUrl.value = response.data)
-    }catch(e){
-        console.log(e)
+    if(user.value.imageUrl && user.value.imageUrl.length > 0){
+        try{
+            ax_file.get(baseURL + '/api/files/download/'+user.value.imageUrl)
+            .then((response) => imageUrl.value = response.data)
+        }catch(e){
+            console.log(e)
+        }
     }
 }
 
