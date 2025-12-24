@@ -63,6 +63,13 @@ async function findThisUser() {
   } catch (e) {
     console.log(e)
   }
+
+  let msg = {
+    sender: props.thisUserId,
+    to: 'CONTACTS',
+    action: 'PROFILE'
+  }
+  socket.send(JSON.stringify(msg))
 }
 
 const contacts = ref([]);
@@ -193,9 +200,10 @@ onMounted(async () => {
     }catch(e){
       console.log(e)
     }
+    findThisUser()
   }
 
-  findThisUser()
+  
   findContacts()
 })
 
