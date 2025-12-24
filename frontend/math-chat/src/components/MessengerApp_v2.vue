@@ -259,7 +259,7 @@ async function findMessages(contactId){
     let curD = new Date().getDate()
     try{
       let rawMessages = []
-      await ax.get(baseURL + '/chat/'+ chatId + "?id=" +  props.thisUserId + "&sort=id,desc&page=2")
+      await ax.get(baseURL + '/chat/'+ chatId + "?id=" +  props.thisUserId + "&per_page=100")
         .then(response => {console.log(JSON.stringify(response)); rawMessages = response.data.content})
       console.log(JSON.stringify(rawMessages))
       for(let i = 0; i < rawMessages.length; i++){

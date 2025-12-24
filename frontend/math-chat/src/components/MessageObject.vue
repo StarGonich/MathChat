@@ -50,6 +50,65 @@ onMounted(() => {
 watch(() => props.message.latex, () => {
   renderLatex();
 });
+
+function formatArr(str, n){
+    let ss = []
+    let s = str.split(' ')
+    let i = 0
+    let j = 0
+    let cur = ''
+    let latex = false
+    while(i < s.length){
+        if(s[i] == '$'){
+            if(latex){
+                latex = false
+                ss.push(
+                    {
+                        id: j,
+                        content: cur.slice(0),
+                        isLatex: true
+                    }
+                )
+                j++
+                cur = ''
+            }else{
+                latex = true
+                if(cur != ''){
+                    ss.push(
+                        {
+                            id: j,
+                            content: cur.slice(0),
+                            isLatex: false
+                        }
+                    )
+                    j++
+                    cur = ''
+                }
+            }
+        }else if(cur.length + s[i].length <= n){
+            cur += ' ' + s[i]
+        }else if(!latex){
+            ss.push(
+                {
+                    id: j,
+                    content: cur.slice(0),
+                    isLatex: false
+                }
+            )
+            j++
+            cur = s[i]
+        }
+        i++
+    }
+    ss.push(
+        {
+            id: j,
+            content: cur.slice(0),
+            isLatex: false
+        }
+    )
+    return ss
+}
 </script>
 
 <style scoped>
