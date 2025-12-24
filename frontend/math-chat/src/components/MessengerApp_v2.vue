@@ -53,6 +53,7 @@ async function findThisUser() {
       username: rawUser.username,
       name: rawUser.firstname + " " + rawUser.lastname,
       email: rawUser.email,
+      imageUrl: rawUser.imageUrl
     }
     if(rawUser.firstname && rawUser.lastname){
       thisUser.value.avatar = rawUser.firstname.slice(0, 1) + rawUser.lastname.slice(0, 1)
@@ -73,6 +74,7 @@ async function findContacts() {
     let rawChats = []
     await ax.get(baseURL + '/search/' + props.thisUserId)
       .then(response => rawChats = response.data.content)
+    rawChats = rawChats.sort((chat1, chat2) => chat1.lastMessageTime > chat2.lastMessageTime ? 1 : -1)
     let contactsCopy = []
     console.log(rawChats)
     for(let i = 0; i < rawChats.length; i++){
@@ -86,6 +88,7 @@ async function findContacts() {
         lastMessageTime: "",
         lastMessageOwner: rawChats[i].lastMessageOwner,
         avatar: "",
+        imageUrl: rawChats[i].imageUrl,
         online: rawChats[i].online,
         unreadCount: rawChats[i].unreadCount,
         lastMessageStatus: "NONE"

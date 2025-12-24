@@ -14,8 +14,10 @@
             <form class="ui form">
                 <p>Личная информация</p>
                 <div class="my-avatar">
-                    <div class="avatar-circle">{{ avatar }}</div>
+                    <img class="avatar-circle" v-if="user.imageUrl && user.imageUrl.length > 0" :src="imageUrl" />
+                    <div class="avatar-circle" v-else>{{ avatar }}</div>
                 </div>
+                <input type="file" accept="image/*" @change="onChange" />
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
@@ -56,11 +58,16 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
 const ax = axios.create({
     baseURL: process.env.VUE_APP_SERVER_URL,
     withCredentials: true
+})
+const ax_file = axios.create({
+    baseURL: process.env.VUE_APP_SERVER_URL,
+    withCredentials: true,
+    responseType: 'blob'
 })
 
 const baseURL = process.env.VUE_APP_SERVER_URL
@@ -74,6 +81,8 @@ const props = defineProps({
 
 const username = ref(props.user.username)
 const user = ref(props.user)
+const image = ref(null)
+const imageUrl = ref(null)
 const avatar = computed(() => {
     if(user.value.firstname && user.value.lastname){
         return user.value.firstname.slice(0, 1) + user.value.lastname.slice(0, 1)
@@ -84,16 +93,76 @@ const avatar = computed(() => {
 const msg = ref('')
 
 async function update(){
+    if(image.value){
+        uploadAvatar()
+    }
+    updateProfile()
+    if(user.value.imageUrl && user.value.imageUrl.length > 0){
+        parseAvatar()
+    }
+    username.value = user.value.username
+    emit('updateProfile')
+}
+
+async function updateProfile() {
     try{
-        await ax.put(baseURL + '/update/'+props.user.id, user.value)
+        await ax.put(baseURL + '/update/' + props.user.id, user.value)
             .then(response => user.value = response.data)
-        username.value = user.value.username
-        emit('updateProfile')
+        
     }catch(e){
         console.log(e)
         msg.value = 'Изменения не сохранены, попробуйте позже'
     }
 }
+
+function onChange(e) {
+    const file = e.target.files[0]
+    image.value = file
+    imageUrl.value = URL.createObjectURL(file)
+    console.log(image.value)
+    console.log(user.value.imageUrl)
+}
+
+async function parseAvatar(){
+    try{
+        ax_file.get(baseURL + '/api/files/download/'+user.value.imageUrl)
+        .then((response) => imageUrl.value = response.data)
+    }catch(e){
+        console.log(e)
+    }
+}
+
+async function uploadAvatar() {
+    try{
+        const reader = new FileReader();
+        reader.readAsDataURL(image);
+        reader.onload = e =>{
+            this.previewImage = e.target.result;
+            console.log(this.previewImage);
+        };
+
+        let data = new FormData();
+        data.append('name', 'my-picture');
+        data.append('file', e.target.files[0]); 
+
+        let config = {
+            header : {
+                'Content-Type' : 'image/*'
+            }
+        }
+
+        ax.put(baseURL+'/api/files/upload', data, config).then(response => {
+            console.log('image upload response > ', response)
+        })
+    }catch(e){
+        console.log(e)
+        msg.value = 'Изменения не сохранены, попробуйте позже'
+    }
+}
+
+onMounted(async () => {
+    parseAvatar()
+})
 
 const emit = defineEmits(['closeWindow', 'updateProfile', 'quit'])
 

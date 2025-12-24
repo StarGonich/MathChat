@@ -1,7 +1,8 @@
 <template>
 <div class="contact-item">
   <div class="contact-avatar">
-    <div class="avatar-circle">{{ contact.avatar }}</div>
+    <img class="avatar-circle" v-if="contact.imageUrl && contact.imageUrl.length > 0" :src="imageUrl" />
+    <div class="avatar-circle" v-else>{{ contact.avatar }}</div>
   </div>
     
   <div class="contact-info">
@@ -15,7 +16,7 @@
       <span class="contact-name" align="left">{{ contact.name }}</span>
     </div>
     <div class="contact-footer">
-      <span class="contact-email" align="left">{{ contact.email }}</span>
+      <span class="contact-email" align="left">Начните общение!</span>
     </div>
   </div>
 </div>

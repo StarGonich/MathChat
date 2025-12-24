@@ -5,7 +5,8 @@
     @click="$emit('click')"
   >
     <div class="contact-avatar">
-      <div class="avatar-circle">{{ contact.avatar }}</div>
+      <img class="avatar-circle" v-if="contact.imageUrl && contact.imageUrl.length > 0" :src="imageUrl" />
+      <div class="avatar-circle" v-else>{{ contact.avatar }}</div>
       <div v-if="contact.online" class="status-indicator online"></div>
       <div v-else class="status-indicator offline"></div>
     </div>
@@ -28,6 +29,15 @@
 </template>
 
 <script setup>
+import axios from 'axios'
+import { onMounted } from 'vue';
+const ax_file = axios.create({
+    baseURL: process.env.VUE_APP_SERVER_URL,
+    withCredentials: true,
+    responseType: 'blob'
+})
+
+
 defineProps({
   contact: {
     type: Object,
@@ -38,6 +48,21 @@ defineProps({
     default: false
   }
 });
+
+const imageUrl = ref(null)
+
+async function parseAvatar(){
+  try{
+    ax_file.get(baseURL + '/api/files/download/' + props.contact.imageUrl)
+    .then((response) => imageUrl.value = response.data)
+  }catch(e){
+    console.log(e)
+  }
+}
+
+onMounted(async () => {
+  parseAvatar
+})
 
 defineEmits(['click']);
 </script>
