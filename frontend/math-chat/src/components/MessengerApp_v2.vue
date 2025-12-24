@@ -133,10 +133,10 @@ function findContact(id){
 const createContact = async (id) => {
   try{
     await ax.post(baseURL + '/chat/create/'+ props.thisUserId + "?with=" + id)
-    findContacts()
   }catch(e){
     console.log(e)
   }
+  findContacts()
 
   let msg = {
     sender: props.thisUserId,
