@@ -1,7 +1,7 @@
 <template>
 <div class="contact-item">
   <div class="contact-avatar">
-    <img class="avatar-circle" v-if="contact.imageUrl && contact.imageUrl.length > 0" :src="imageUrl" />
+    <img class="avatar-circle" v-if="imageUrl && imageUrl.length > 0" :src="imageUrl" />
     <div class="avatar-circle" v-else>{{ contact.avatar }}</div>
   </div>
     
@@ -23,12 +23,38 @@
 </template>
 
 <script setup>
-defineProps({
+const props = defineProps({
   contact: {
     type: Object,
     required: true
   }
 });
+
+import { ref } from 'vue';
+import axios from 'axios'
+import { onMounted } from 'vue';
+const ax_file = axios.create({
+    baseURL: process.env.VUE_APP_SERVER_URL,
+    withCredentials: true,
+    responseType: 'blob'
+})
+
+const baseURL = process.env.VUE_APP_SERVER_URL
+
+const imageUrl = ref(null)
+
+async function parseAvatar(){
+  try{
+    ax_file.get(baseURL + '/api/files/download/' + props.contact.imageUrl)
+    .then((response) => {image.value = response.data; imageUrl.value = URL.createObjectURL(image.value)})
+  }catch(e){
+    console.log(e)
+  }
+}
+
+onMounted(async () => {
+  parseAvatar()
+})
 
 defineEmits(['createContact']);
 </script>

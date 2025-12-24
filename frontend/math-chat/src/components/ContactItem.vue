@@ -56,14 +56,14 @@ const imageUrl = ref(null)
 async function parseAvatar(){
   try{
     ax_file.get(baseURL + '/api/files/download/' + props.contact.imageUrl)
-    .then((response) => imageUrl.value = response.data)
+    .then((response) => {image.value = response.data; imageUrl.value = URL.createObjectURL(image.value)})
   }catch(e){
     console.log(e)
   }
 }
 
 onMounted(async () => {
-  parseAvatar
+  parseAvatar()
 })
 
 defineEmits(['click']);

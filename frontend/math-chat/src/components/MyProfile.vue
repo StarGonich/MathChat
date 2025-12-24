@@ -130,7 +130,7 @@ async function parseAvatar(){
     if(user.value.imageUrl && user.value.imageUrl.length > 0){
         try{
             ax_file.get(baseURL + '/api/files/download/'+user.value.imageUrl)
-            .then((response) => imageUrl.value = response.data)
+            .then((response) => {image.value = response.data; imageUrl.value = URL.createObjectURL(image.value)})
         }catch(e){
             console.log(e)
         }
@@ -156,7 +156,7 @@ async function uploadAvatar() {
             }
         }
 
-        ax.put(baseURL+'/api/files/upload', data, config).then(response => {
+        ax.post(baseURL+'/api/files/upload', data, config).then(response => {
             console.log('image upload response > ', response)
         })
     }catch(e){
