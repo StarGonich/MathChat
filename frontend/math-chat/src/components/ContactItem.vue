@@ -5,7 +5,7 @@
     @click="$emit('click')"
   >
     <div class="contact-avatar">
-      <img class="avatar-circle" v-if="contact.imageUrl && contact.imageUrl.length > 0" :src="imageUrl" />
+      <img class="avatar-circle" v-if="imageUrl && imageUrl.length > 0" :src="imageUrl" />
       <div class="avatar-circle" v-else>{{ contact.avatar }}</div>
       <div v-if="contact.online" class="status-indicator online"></div>
       <div v-else class="status-indicator offline"></div>
