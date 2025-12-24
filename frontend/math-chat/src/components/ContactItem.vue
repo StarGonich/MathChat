@@ -29,6 +29,7 @@
 </template>
 
 <script setup>
+import { ref } from 'vue';
 import axios from 'axios'
 import { onMounted } from 'vue';
 const ax_file = axios.create({
@@ -37,8 +38,9 @@ const ax_file = axios.create({
     responseType: 'blob'
 })
 
+const baseUrl = process.env.VUE_APP_SERVER_URL
 
-defineProps({
+const props = defineProps({
   contact: {
     type: Object,
     required: true

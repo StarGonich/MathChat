@@ -17,7 +17,14 @@
                     <img class="avatar-circle" v-if="user.imageUrl && user.imageUrl.length > 0" :src="imageUrl" />
                     <div class="avatar-circle" v-else>{{ avatar }}</div>
                 </div>
-                <input type="file" accept="image/*" @change="onChange" />
+                <div class="my-avatar">
+                    <img class="avatar-circle" v-if="imageUrl && imageUrl.length > 0" :src="imageUrl" />
+                    <div class="avatar-circle" v-else>{{ avatar }}</div>
+                </div>
+                <div class="ui left icon input">
+                    <i class="upload icon"></i>
+                    <input type="file" accept="image/*" @change="onChange" />
+                </div>
                 <div class="field">
                     <div class="ui left icon input">
                         <i class="user icon"></i>
